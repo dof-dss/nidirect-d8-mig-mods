@@ -1,0 +1,212 @@
+uuid: ea8d72b6-b7ee-44a0-86df-bc448376439a
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_node_revision_nidirect_ub
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: alterFieldFormatterMigration
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7_node
+label: 'Node revisions (Nidirect umbrella body)'
+source:
+  plugin: d7_node_revision
+  node_type: nidirect_ub
+process:
+  nid:
+    -
+      plugin: get
+      source: nid
+  vid:
+    -
+      plugin: get
+      source: vid
+  langcode:
+    -
+      plugin: default_value
+      source: language
+      default_value: und
+  title:
+    -
+      plugin: get
+      source: title
+  uid:
+    -
+      plugin: get
+      source: node_uid
+  status:
+    -
+      plugin: get
+      source: status
+  created:
+    -
+      plugin: get
+      source: created
+  changed:
+    -
+      plugin: get
+      source: changed
+  promote:
+    -
+      plugin: get
+      source: promote
+  sticky:
+    -
+      plugin: get
+      source: sticky
+  revision_uid:
+    -
+      plugin: get
+      source: revision_uid
+  revision_log:
+    -
+      plugin: get
+      source: log
+  revision_timestamp:
+    -
+      plugin: get
+      source: timestamp
+  comment_node_nidirect_ub/0/status:
+    -
+      plugin: get
+      source: comment
+  body:
+    -
+      plugin: get
+      source: body
+  field_contact_address_01:
+    -
+      plugin: get
+      source: field_contact_address_01
+  field_contact_address_02:
+    -
+      plugin: get
+      source: field_contact_address_02
+  field_contact_address_03:
+    -
+      plugin: get
+      source: field_contact_address_03
+  field_contact_address_04:
+    -
+      plugin: get
+      source: field_contact_address_04
+  field_contact_address_05:
+    -
+      plugin: get
+      source: field_contact_address_05
+  field_contact_phone:
+    -
+      plugin: get
+      source: field_contact_phone
+  field_contact_postcode:
+    -
+      plugin: get
+      source: field_contact_postcode
+  field_contact_town_city:
+    -
+      plugin: get
+      source: field_contact_town_city
+  field_contact_website:
+    -
+      plugin: field_link
+      source: field_contact_website
+  field_county:
+    -
+      plugin: get
+      source: field_county
+  field_district:
+    -
+      plugin: sub_process
+      source: field_district
+      process:
+        target_id: tid
+  field_email_address:
+    -
+      plugin: sub_process
+      source: field_email_address
+      process:
+        value: email
+  field_livelink_url:
+    -
+      plugin: field_link
+      source: field_livelink_url
+  field_map:
+    -
+      plugin: get
+      source: field_map
+  field_ub_all_ni:
+    -
+      plugin: get
+      source: field_ub_all_ni
+  field_ub_contact:
+    -
+      plugin: get
+      source: field_ub_contact
+  field_ub_counties:
+    -
+      plugin: get
+      source: field_ub_counties
+  field_ub_date_issued:
+    -
+      plugin: sub_process
+      source: field_ub_date_issued
+      process:
+        value:
+          plugin: format_date
+          from_format: 'Y-m-d H:i:s'
+          to_format: 'Y-m-d\TH:i:s'
+          source: value
+  field_ub_price:
+    -
+      plugin: get
+      source: field_ub_price
+  field_ub_price_addinfo:
+    -
+      plugin: get
+      source: field_ub_price_addinfo
+  field_ub_price_volunteer:
+    -
+      plugin: get
+      source: field_ub_price_volunteer
+  field_ub_sector:
+    -
+      plugin: sub_process
+      source: field_ub_sector
+      process:
+        target_id: tid
+  field_ub_services:
+    -
+      plugin: sub_process
+      source: field_ub_services
+      process:
+        target_id: tid
+destination:
+  plugin: 'entity_revision:node'
+  default_bundle: nidirect_ub
+migration_dependencies:
+  required:
+    - upgrade_d7_node_application
+    - upgrade_d7_node_article
+    - upgrade_d7_node_cold_weather_payment
+    - upgrade_d7_node_contact
+    - upgrade_d7_node_embargoed_publication
+    - upgrade_d7_node_external_link
+    - upgrade_d7_node_gallery
+    - upgrade_d7_node_health_condition
+    - upgrade_d7_node_homepage
+    - upgrade_d7_node_landing_page
+    - upgrade_d7_node_link
+    - upgrade_d7_node_mas_rss
+    - upgrade_d7_node_news
+    - upgrade_d7_node_nidirect_contact
+    - upgrade_d7_node_nidirect_driving_instructor
+    - upgrade_d7_node_nidirect_gp
+    - upgrade_d7_node_nidirect_gp_practice
+    - upgrade_d7_node_nidirect_recipe
+    - upgrade_d7_node_nidirect_ub
+    - upgrade_d7_node_page
+    - upgrade_d7_node_publication
+    - upgrade_d7_node_webform
+  optional: {  }

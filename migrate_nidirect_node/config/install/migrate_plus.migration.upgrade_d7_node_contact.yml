@@ -1,0 +1,104 @@
+uuid: d0166c58-7013-4c2c-ba77-512a219d1c37
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_node_contact
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: alterFieldInstanceMigration
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7_node
+label: 'Nodes (Contact)'
+source:
+  plugin: d7_node
+  node_type: contact
+process:
+  nid:
+    -
+      plugin: get
+      source: tnid
+  vid:
+    -
+      plugin: get
+      source: vid
+  langcode:
+    -
+      plugin: default_value
+      source: language
+      default_value: und
+  title:
+    -
+      plugin: get
+      source: title
+  uid:
+    -
+      plugin: get
+      source: node_uid
+  status:
+    -
+      plugin: get
+      source: status
+  created:
+    -
+      plugin: get
+      source: created
+  changed:
+    -
+      plugin: get
+      source: changed
+  promote:
+    -
+      plugin: get
+      source: promote
+  sticky:
+    -
+      plugin: get
+      source: sticky
+  revision_uid:
+    -
+      plugin: get
+      source: revision_uid
+  revision_log:
+    -
+      plugin: get
+      source: log
+  revision_timestamp:
+    -
+      plugin: get
+      source: timestamp
+  comment_node_contact/0/status:
+    -
+      plugin: get
+      source: comment
+  body:
+    -
+      plugin: get
+      source: body
+  field_map:
+    -
+      plugin: get
+      source: field_map
+  field_supplementary_contact:
+    -
+      plugin: get
+      source: field_supplementary_contact
+  field_summary:
+    -
+      plugin: get
+      source: field_summary
+  field_enable_toc:
+    -
+      plugin: get
+      source: field_enable_toc
+destination:
+  plugin: 'entity:node'
+  default_bundle: contact
+migration_dependencies:
+  required:
+    - upgrade_d7_user
+    - upgrade_d7_node_type
+  optional:
+    - upgrade_d7_field_instance
+    - upgrade_d7_comment_field_instance

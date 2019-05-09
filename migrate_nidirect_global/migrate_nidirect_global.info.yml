@@ -1,0 +1,12 @@
+name: 'Migrate NIDirect - Global'
+type: module
+description: 'NIDirect migrations for sitewide settings'
+core: 8.x
+package: 'Migrate NIDirect'
+migration_dependencies:
+ required: { }
+dependencies:
+  - drupal:migrate
+  - drupal:migrate_plus
+  - drupal:migrate_tools
+  - drupal:migrate_drupal

@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: migrate_drupal_7_link
+label: 'NIDirect - Link'
+description: 'Drupal 7 links, menus, redirects'
+source_type: 'Drupal 7'
+module: null
+shared_configuration:
+  source:
+    key: legacy

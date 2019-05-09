@@ -1,0 +1,13 @@
+name: 'Migrate NIDirect - Link'
+type: module
+description: 'NIDirect migrations for links, redirects and menus'
+core: 8.x
+package: 'Migrate NIDirect'
+migration_dependencies:
+ required: { }
+dependencies:
+  - drupal:migrate
+  - drupal:migrate_plus
+  - drupal:migrate_tools
+  - drupal:migrate_drupal
+  - migrate_nidirect_global
