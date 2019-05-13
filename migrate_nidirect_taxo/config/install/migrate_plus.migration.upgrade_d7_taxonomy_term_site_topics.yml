@@ -134,7 +134,7 @@ process:
       source: field_taxonomy_rank
 destination:
   plugin: 'entity:taxonomy_term'
-  default_bundle: site_topics
+  default_bundle: site_themes
 migration_dependencies:
   required:
     - upgrade_d7_taxonomy_vocabulary

@@ -82,7 +82,7 @@ process:
       source: language
 destination:
   plugin: 'entity:taxonomy_term'
-  default_bundle: nidirect_contact_categories
+  default_bundle: contact_categories
 migration_dependencies:
   required:
     - upgrade_d7_taxonomy_vocabulary

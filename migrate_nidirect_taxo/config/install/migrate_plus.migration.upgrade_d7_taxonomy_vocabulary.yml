@@ -25,6 +25,16 @@ process:
     -
       plugin: forum_vocabulary
       machine_name: forums
+    -
+      plugin: static_map
+      map:
+        di_categories: drive_instr_categories
+        nidirect_contact_categories: contact_categories
+        nidirect_recipe_course_types: recipe_course_types
+        nidirect_recipe_ingredient: recipe_ingredient
+        nidirect_recipe_special_diet: recipe_special_diet
+        site_topics: site_themes
+      bypass: true
   label:
     -
       plugin: get

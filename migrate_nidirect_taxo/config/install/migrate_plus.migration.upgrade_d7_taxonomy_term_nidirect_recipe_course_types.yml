@@ -82,7 +82,7 @@ process:
       source: language
 destination:
   plugin: 'entity:taxonomy_term'
-  default_bundle: nidirect_recipe_course_types
+  default_bundle: recipe_course_types
 migration_dependencies:
   required:
     - upgrade_d7_taxonomy_vocabulary
