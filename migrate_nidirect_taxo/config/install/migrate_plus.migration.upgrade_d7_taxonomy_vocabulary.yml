@@ -28,6 +28,7 @@ process:
     -
       plugin: static_map
       map:
+        di_categories: drive_instr_categories
         nidirect_contact_categories: contact_categories
         nidirect_recipe_course_types: recipe_course_types
         nidirect_recipe_ingredient: recipe_ingredient

@@ -2,7 +2,7 @@ uuid: 6ceec607-929d-4ce1-bb9b-459f8d93201f
 langcode: en
 status: true
 dependencies: {  }
-id: upgrade_d7_taxonomy_term_di_categories
+id: upgrade_d7_taxonomy_term_drive_instr_categories
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldFormatterMigration
 cck_plugin_method: null
@@ -82,7 +82,7 @@ process:
       source: language
 destination:
   plugin: 'entity:taxonomy_term'
-  default_bundle: di_categories
+  default_bundle: drive_instr_categories
 migration_dependencies:
   required:
     - upgrade_d7_taxonomy_vocabulary
@@ -104,18 +104,3 @@ migration_dependencies:
     - upgrade_d7_taxonomy_term_hc_info_sources
     - upgrade_d7_taxonomy_term_di_categories
     - upgrade_d7_taxonomy_term_ni_postcodes
-    - upgrade_d7_taxonomy_term_ni_postcodes
-    - upgrade_d7_taxonomy_term_di_categories
-    - upgrade_d7_taxonomy_term_hc_info_sources
-    - upgrade_d7_taxonomy_term_hc_symptoms
-    - upgrade_d7_taxonomy_term_hc_condition_type
-    - upgrade_d7_taxonomy_term_hc_body_system
-    - upgrade_d7_taxonomy_term_hc_body_location
-    - upgrade_d7_taxonomy_term_districts_in_northern_ireland
-    - upgrade_d7_taxonomy_term_accessni_ub_services
-    - upgrade_d7_taxonomy_term_accessni_ub_sectors
-    - upgrade_d7_taxonomy_term_nidirect_recipe_special_diet
-    - upgrade_d7_taxonomy_term_nidirect_recipe_ingredient
-    - upgrade_d7_taxonomy_term_nidirect_recipe_course_types
-    - upgrade_d7_taxonomy_term_nidirect_contact_categories
-    - upgrade_d7_taxonomy_term_site_topics
