@@ -1,7 +1,7 @@
 {
     "name": "nics/nidirect-migrations",
     "description": "Drupal Migrate API modules for NI Direct",
-    "type": "drupal-custom-module",
+    "type": "drupal-module",
     "authors": [
         {
             "name": "Stephen Cousins",
