@@ -19,9 +19,10 @@ class VideoUrl extends ProcessPluginBase {
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    $url = str_replace('oembed://', '', $value);
-    $url = urldecode($url);
-    return $url;
+    // This is a text field in D8 and we don't need the 'oembed://' prefix.
+    $url = preg_replace('|^oembed:\/\/|', '', $value);
+    // Remove HTML special chars to give a user readable string.
+    return urldecode($url);
   }
 
 }
