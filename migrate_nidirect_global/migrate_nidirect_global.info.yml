@@ -10,3 +10,4 @@ dependencies:
   - drupal:migrate_plus
   - drupal:migrate_tools
   - drupal:migrate_drupal
+  - media
