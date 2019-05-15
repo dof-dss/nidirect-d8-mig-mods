@@ -14,7 +14,7 @@ source:
   plugin: file_entity
   type: video
   constants:
-    bundle: 'video'
+    bundle: 'remote_video'
 process:
   mid: fid
   bundle: 'constants/bundle'
@@ -40,7 +40,9 @@ process:
   changed: timestamp
 
   # File field see media_entity.bundle.audio.yml.
-  field_media_audio/target_id: fid
+  field_media_oembed_video:
+    - source: uri
+      plugin: video_url
   # Title field.
   field_title: field_title
   # Transcript field.
