@@ -39,7 +39,6 @@ process:
   created: timestamp
   changed: timestamp
 
-  # File field see media_entity.bundle.audio.yml.
   field_media_oembed_video:
     - source: uri
       plugin: video_url
