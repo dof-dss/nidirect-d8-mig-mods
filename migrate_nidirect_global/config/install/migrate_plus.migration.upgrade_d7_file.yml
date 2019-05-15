@@ -35,6 +35,10 @@ process:
     -
       plugin: urlencode
   uri:
+    - plugin: skip_youtube_files
+      source:
+        - '@source_full_path'
+        - uri
     -
       plugin: file_copy
       source:
