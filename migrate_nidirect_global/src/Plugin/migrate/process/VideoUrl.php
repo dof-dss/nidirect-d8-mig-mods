@@ -32,7 +32,8 @@ class VideoUrl extends ProcessPluginBase {
     }
     catch (RequestException $e) {
       // No thumbnail available, so do not migrate this row.
-      throw new MigrateSkipRowException($e->getMessage());
+      $msg = 'fid ' . $row->getSourceProperty('fid') . ' - ' . $e->getMessage();
+      throw new MigrateSkipRowException($msg);
     }
     return $url;
   }
