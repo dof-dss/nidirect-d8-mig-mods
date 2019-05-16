@@ -84,7 +84,6 @@ destination:
   default_bundle: link
 migration_dependencies:
   required:
-    - upgrade_d7_node_application
     - upgrade_d7_node_article
     - upgrade_d7_node_cold_weather_payment
     - upgrade_d7_node_contact

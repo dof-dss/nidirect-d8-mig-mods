@@ -1,5 +1,5 @@
 langcode: en
-status: true
+status: false
 dependencies: {  }
 id: upgrade_d7_node_nidirect_contact
 class: Drupal\migrate\Plugin\Migration
