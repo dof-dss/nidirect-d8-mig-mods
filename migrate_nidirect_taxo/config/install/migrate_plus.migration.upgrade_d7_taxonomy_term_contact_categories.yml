@@ -2,7 +2,7 @@ uuid: 8e0eedfe-684b-4447-929b-a2fc7a1a769c
 langcode: en
 status: true
 dependencies: {  }
-id: upgrade_d7_taxonomy_term_nidirect_contact_categories
+id: upgrade_d7_taxonomy_term_contact_categories
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldFormatterMigration
 cck_plugin_method: null
@@ -10,7 +10,7 @@ migration_tags:
   - 'Drupal 7'
   - Content
 migration_group: migrate_drupal_7_taxo
-label: 'Taxonomy terms (Nidirect contact categories)'
+label: 'Taxonomy terms (contact categories)'
 source:
   plugin: d7_taxonomy_term
   bundle: nidirect_contact_categories
@@ -49,7 +49,7 @@ process:
       plugin: migration_lookup
       migration:
         - upgrade_d7_taxonomy_term_ni_postcodes
-        - upgrade_d7_taxonomy_term_di_categories
+        - upgrade_d7_taxonomy_term_drive_instr_categories
         - upgrade_d7_taxonomy_term_hc_info_sources
         - upgrade_d7_taxonomy_term_hc_symptoms
         - upgrade_d7_taxonomy_term_hc_condition_type
@@ -58,11 +58,11 @@ process:
         - upgrade_d7_taxonomy_term_districts_in_northern_ireland
         - upgrade_d7_taxonomy_term_accessni_ub_services
         - upgrade_d7_taxonomy_term_accessni_ub_sectors
-        - upgrade_d7_taxonomy_term_nidirect_recipe_special_diet
-        - upgrade_d7_taxonomy_term_nidirect_recipe_ingredient
-        - upgrade_d7_taxonomy_term_nidirect_recipe_course_types
-        - upgrade_d7_taxonomy_term_nidirect_contact_categories
-        - upgrade_d7_taxonomy_term_site_topics
+        - upgrade_d7_taxonomy_term_recipe_special_diet
+        - upgrade_d7_taxonomy_term_recipe_ingredient
+        - upgrade_d7_taxonomy_term_recipe_course_types
+        - upgrade_d7_taxonomy_term_contact_categories
+        - upgrade_d7_taxonomy_term_site_themes
   parent:
     -
       plugin: default_value
@@ -84,38 +84,19 @@ destination:
   plugin: 'entity:taxonomy_term'
   default_bundle: contact_categories
 migration_dependencies:
-  required:
-    - upgrade_d7_taxonomy_vocabulary
   optional:
-    - upgrade_d7_field_instance
-    - upgrade_d7_taxonomy_vocabulary
-    - upgrade_d7_taxonomy_term_site_topics
-    - upgrade_d7_taxonomy_term_nidirect_contact_categories
-    - upgrade_d7_taxonomy_term_nidirect_recipe_course_types
-    - upgrade_d7_taxonomy_term_nidirect_recipe_ingredient
-    - upgrade_d7_taxonomy_term_nidirect_recipe_special_diet
-    - upgrade_d7_taxonomy_term_accessni_ub_sectors
     - upgrade_d7_taxonomy_term_accessni_ub_services
+    - upgrade_d7_taxonomy_term_accessni_ub_sectors
+    - upgrade_d7_taxonomy_term_contact_categories
     - upgrade_d7_taxonomy_term_districts_in_northern_ireland
+    - upgrade_d7_taxonomy_term_drive_instr_categories
     - upgrade_d7_taxonomy_term_hc_body_location
     - upgrade_d7_taxonomy_term_hc_body_system
     - upgrade_d7_taxonomy_term_hc_condition_type
-    - upgrade_d7_taxonomy_term_hc_symptoms
-    - upgrade_d7_taxonomy_term_hc_info_sources
-    - upgrade_d7_taxonomy_term_di_categories
-    - upgrade_d7_taxonomy_term_ni_postcodes
-    - upgrade_d7_taxonomy_term_ni_postcodes
-    - upgrade_d7_taxonomy_term_di_categories
     - upgrade_d7_taxonomy_term_hc_info_sources
     - upgrade_d7_taxonomy_term_hc_symptoms
-    - upgrade_d7_taxonomy_term_hc_condition_type
-    - upgrade_d7_taxonomy_term_hc_body_system
-    - upgrade_d7_taxonomy_term_hc_body_location
-    - upgrade_d7_taxonomy_term_districts_in_northern_ireland
-    - upgrade_d7_taxonomy_term_accessni_ub_services
-    - upgrade_d7_taxonomy_term_accessni_ub_sectors
-    - upgrade_d7_taxonomy_term_nidirect_recipe_special_diet
-    - upgrade_d7_taxonomy_term_nidirect_recipe_ingredient
-    - upgrade_d7_taxonomy_term_nidirect_recipe_course_types
-    - upgrade_d7_taxonomy_term_nidirect_contact_categories
-    - upgrade_d7_taxonomy_term_site_topics
+    - upgrade_d7_taxonomy_term_ni_postcodes
+    - upgrade_d7_taxonomy_term_recipe_course_types
+    - upgrade_d7_taxonomy_term_recipe_ingredient
+    - upgrade_d7_taxonomy_term_recipe_special_diet
+    - upgrade_d7_taxonomy_term_site_themes
