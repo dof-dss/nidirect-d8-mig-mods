@@ -87,5 +87,4 @@ migration_dependencies:
   required:
     - upgrade_d7_user
   optional:
-    - upgrade_d7_field_instance
     - upgrade_d7_comment_field_instance
