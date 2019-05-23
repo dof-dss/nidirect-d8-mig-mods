@@ -15,7 +15,7 @@ source:
   plugin: d7_file
   scheme: public
   constants:
-    source_base_path: ../d7/files/
+    source_base_path: '/app/imports/files/'
 process:
   fid:
     -
