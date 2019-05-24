@@ -35,6 +35,5 @@ process:
 destination:
   plugin: 'entity:base_field_override'
 migration_dependencies:
-  required:
-    - upgrade_d7_node_type
+  required: {  }
   optional: {  }

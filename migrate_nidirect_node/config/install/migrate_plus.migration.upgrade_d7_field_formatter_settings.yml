@@ -130,8 +130,6 @@ destination:
   plugin: component_entity_display
 migration_dependencies:
   required:
-    - upgrade_d7_field_instance
     - upgrade_d7_view_modes
   optional:
-    - upgrade_d7_field
     - upgrade_d7_view_modes

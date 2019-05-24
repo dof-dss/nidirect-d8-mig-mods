@@ -110,5 +110,5 @@ process:
 migration_dependencies:
   required:
     - upgrade_d7_user
-    - upgrade_d7_taxo
-    - upgrade_d7_field_instance
+  optional:
+    - upgrade_d7_comment_field_instance
