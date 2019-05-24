@@ -1,0 +1,5 @@
+name: 'Migrate NIDirect Utils'
+type: module
+description: 'Utilities and tools for working with migrations'
+core: 8.x
+package: 'Migrate NIDirect'

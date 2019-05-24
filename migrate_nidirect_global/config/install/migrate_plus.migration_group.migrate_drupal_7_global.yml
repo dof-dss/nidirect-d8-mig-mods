@@ -8,4 +8,4 @@ source_type: 'Drupal 7'
 module: null
 shared_configuration:
   source:
-    key: legacy
+    key: drupal7db

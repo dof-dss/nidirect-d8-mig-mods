@@ -1,0 +1,6 @@
+services:
+  migrate_nidirect_utils.nidirect_migrate_post_taxonomy:
+    class: Drupal\migrate_nidirect_utils\Command\NidirectMigratePostTaxonomyCommand
+    arguments: []
+    tags:
+      - { name: drupal.command }
