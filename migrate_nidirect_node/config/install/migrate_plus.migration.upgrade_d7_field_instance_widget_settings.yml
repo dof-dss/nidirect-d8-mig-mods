@@ -99,8 +99,3 @@ process:
       source: constants/third_party_settings
 destination:
   plugin: component_entity_form_display
-migration_dependencies:
-  required:
-    - upgrade_d7_field_instance
-  optional:
-    - upgrade_d7_field

@@ -96,7 +96,7 @@ process:
         title: title
         width: width
         height: height
-  field_summary:
+  field_theme_summary:
     -
       plugin: get
       source: field_summary
