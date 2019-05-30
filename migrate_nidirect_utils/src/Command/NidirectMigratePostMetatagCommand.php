@@ -75,9 +75,27 @@ class NidirectMigratePostMetatagCommand extends ContainerAwareCommand {
         }
       }
       elseif (isset($new_data['abstract'])) {
-        print_r("abstract found \n");
+        $value = $new_data['abstract']['value'];
+        print_r("ABSTRACT value is " . $value . " \n");
+        // Load the node in D8.
+        $node = Node::load($entity_id);
+        if ($node) {
+          // Retrieve the existing metatags.
+          $meta = unserialize(($node->field_meta_tags->value));
+          // Set the abstract.
+          $meta['abstract'] = $value;
+          // Save the node.
+          $node->field_meta_tags->value = serialize($meta);
+          $node->save();
+          $updated++;
+          print_r("ABSTRACT node updated \n");
+        }
+        else {
+          $failed_updates[] = $entity_id;
+        }
       }
       else {
+        // If it isn't 'abstract' or 'keyword' then fail it.
         $failed_updates[] = $entity_id;
       }
     }
