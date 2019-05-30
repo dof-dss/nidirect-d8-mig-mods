@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate_nidirect_utils\Command;
 
+use Drupal\node\Entity\Node;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Drupal\Console\Core\Command\ContainerAwareCommand;
@@ -37,6 +38,8 @@ class NidirectMigratePostMetatagCommand extends ContainerAwareCommand {
 
     $this->getIo()->info('Attempting to fix metatag issues.');
 
+    // Get a list of custom metatags from NIDirect (D7)
+    // (only take the latest revision).
     $query = $conn_migrate->query("select m1.entity_id, m1.data 
         from {metatag} m1 
         join (select max(revision_id) as revision_id, entity_id  
@@ -47,46 +50,36 @@ class NidirectMigratePostMetatagCommand extends ContainerAwareCommand {
         and m1.revision_id = m2.revision_id");
     $results = $query->fetchAllKeyed();
 
-    $n = 1;
+    // Loop through and update nodes in NIDirect (D8).
     foreach ($results as $entity_id => $data) {
-      $x = 1;
       $this->getIo()->info('Entity ID - ' . $entity_id . ' ,  data - ' . $data);
       $new_data = unserialize($data);
       if (isset($new_data['keywords'])) {
         $value = $new_data['keywords']['value'];
         print_r("value is " . $value . " \n");
-        $node = \Drupal\node\Entity\Node::load($entity_id);
+        // Load the node in D8.
+        $node = Node::load($entity_id);
         if ($node) {
-          print_r("node loaded \n");
-          //print_r($node);
+          // Retrieve the existing metatags.
           $meta = unserialize(($node->field_meta_tags->value));
-          print_r($meta);
-          //$node->field_meta_tags->value = $value;
+          // Set the keyword.
           $meta['keywords'] = $value;
-          print_r($meta);
+          // Save the node.
           $node->field_meta_tags->value = serialize($meta);
-          print_r("node updated \n");
           $node->save();
-        } else {
-          print_r("Failed to load node \n");
+          $updated++;
+          print_r("node updated \n");
         }
-      } elseif (isset($new_data['abstract'])) {
+        else {
+          $failed_updates[] = $entity_id;
+        }
+      }
+      elseif (isset($new_data['abstract'])) {
         print_r("abstract found \n");
-      } else {
+      }
+      else {
         $failed_updates[] = $entity_id;
       }
-      $n++;
-      if ($n > 2) break;
-      /*$result = $conn_drupal8->update('taxonomy_term__parent')
-        ->fields(['parent_target_id' => $parent])
-        ->condition('entity_id', $tid, '=')
-        ->execute();
-      $updated += $result;
-
-      // If we didn't get an update log the entity associated with that failure.
-      if ($result < 1) {
-        $failed_updates[] = entity_id;
-      }*/
     }
 
     $this->getIo()->info('Updated ' . $updated . ' of ' . count($results) . ' custom metatags.');
@@ -95,7 +88,7 @@ class NidirectMigratePostMetatagCommand extends ContainerAwareCommand {
       $this->getIo()->info($this->trans('commands.nidirect.migrate.post.taxonomy.messages.success'));
     }
     else {
-      //$this->getIo()->info('Failed to update metatag entities: ' . explode(',', $failed_updates));
+      $this->getIo()->info('Failed to update metatag entities: ' . implode(',', $failed_updates));
       $this->getIo()->info($this->trans('commands.nidirect.migrate.post.metatag.messages.failure'));
     }
 
