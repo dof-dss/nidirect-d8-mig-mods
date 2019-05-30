@@ -41,7 +41,7 @@ class NidirectMigratePostMetatagCommand extends ContainerAwareCommand {
         from {metatag} m1 
         join (select max(revision_id) as revision_id, entity_id  
               from {metatag} 
-              where data like 'a:1:{s:8:\"keywords\";a:1:{s:5:\"value\";%' 
+              where data like 'a:1:{s:8:%' 
               and entity_type = 'node' group by entity_id) m2
         on m1.entity_id = m2.entity_id
         and m1.revision_id = m2.revision_id");
