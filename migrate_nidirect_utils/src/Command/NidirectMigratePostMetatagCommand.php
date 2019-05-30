@@ -56,7 +56,6 @@ class NidirectMigratePostMetatagCommand extends ContainerAwareCommand {
       $new_data = unserialize($data);
       if (isset($new_data['keywords'])) {
         $value = $new_data['keywords']['value'];
-        print_r("value is " . $value . " \n");
         // Load the node in D8.
         $node = Node::load($entity_id);
         if ($node) {
@@ -68,7 +67,6 @@ class NidirectMigratePostMetatagCommand extends ContainerAwareCommand {
           $node->field_meta_tags->value = serialize($meta);
           $node->save();
           $updated++;
-          print_r("node updated \n");
         }
         else {
           $failed_updates[] = $entity_id;
@@ -76,7 +74,6 @@ class NidirectMigratePostMetatagCommand extends ContainerAwareCommand {
       }
       elseif (isset($new_data['abstract'])) {
         $value = $new_data['abstract']['value'];
-        print_r("ABSTRACT value is " . $value . " \n");
         // Load the node in D8.
         $node = Node::load($entity_id);
         if ($node) {
@@ -88,7 +85,6 @@ class NidirectMigratePostMetatagCommand extends ContainerAwareCommand {
           $node->field_meta_tags->value = serialize($meta);
           $node->save();
           $updated++;
-          print_r("ABSTRACT node updated \n");
         }
         else {
           $failed_updates[] = $entity_id;
