@@ -22,5 +22,3 @@ function migrate_nidirect_utils_help($route_name, RouteMatchInterface $route_mat
     default:
   }
 }
-
-
