@@ -52,35 +52,20 @@ class NidirectMigratePostMetatagCommand extends ContainerAwareCommand {
 
     // Loop through and update nodes in NIDirect (D8).
     foreach ($results as $entity_id => $data) {
-      //$this->getIo()->info('Entity ID - ' . $entity_id . ' ,  data - ' . $data);
       $new_data = unserialize($data);
-      if (isset($new_data['keywords'])) {
-        $value = $new_data['keywords']['value'];
+      if (isset($new_data['keywords']) || isset($new_data['abstract'])) {
+        $key = 'keywords';
+        if (isset($new_data['abstract'])) {
+          $key = 'abstract';
+        }
+        $value = $new_data[$key]['value'];
         // Load the node in D8.
         $node = Node::load($entity_id);
         if ($node) {
           // Retrieve the existing metatags.
           $meta = unserialize(($node->field_meta_tags->value));
-          // Set the keyword.
-          $meta['keywords'] = $value;
-          // Save the node.
-          $node->field_meta_tags->value = serialize($meta);
-          $node->save();
-          $updated++;
-        }
-        else {
-          $failed_updates[] = $entity_id;
-        }
-      }
-      elseif (isset($new_data['abstract'])) {
-        $value = $new_data['abstract']['value'];
-        // Load the node in D8.
-        $node = Node::load($entity_id);
-        if ($node) {
-          // Retrieve the existing metatags.
-          $meta = unserialize(($node->field_meta_tags->value));
-          // Set the abstract.
-          $meta['abstract'] = $value;
+          // Set the keyword/abstract.
+          $meta[$key] = $value;
           // Save the node.
           $node->field_meta_tags->value = serialize($meta);
           $node->save();
