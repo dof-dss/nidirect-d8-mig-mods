@@ -1,6 +1,5 @@
-uuid: b4d8ec3f-58d3-414a-9bab-b84eef1e8444
 langcode: en
-status: true
+status: false
 dependencies: {  }
 id: upgrade_d7_node_external_link
 class: Drupal\migrate\Plugin\Migration

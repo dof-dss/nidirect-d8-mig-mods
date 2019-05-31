@@ -1,6 +1,5 @@
-uuid: e378acad-f1be-4af6-b925-c6d95a52da86
 langcode: en
-status: true
+status: false
 dependencies: {  }
 id: upgrade_d7_node_nidirect_contact
 class: Drupal\migrate\Plugin\Migration

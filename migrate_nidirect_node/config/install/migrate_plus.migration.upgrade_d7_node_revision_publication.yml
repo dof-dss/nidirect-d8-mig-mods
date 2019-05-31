@@ -1,6 +1,5 @@
-uuid: a9d28ac2-62d2-4459-a5d6-364ddfa010ed
 langcode: en
-status: true
+status: false
 dependencies: {  }
 id: upgrade_d7_node_revision_publication
 class: Drupal\migrate\Plugin\Migration
@@ -125,7 +124,6 @@ destination:
   default_bundle: publication
 migration_dependencies:
   required:
-    - upgrade_d7_node_application
     - upgrade_d7_node_article
     - upgrade_d7_node_cold_weather_payment
     - upgrade_d7_node_contact

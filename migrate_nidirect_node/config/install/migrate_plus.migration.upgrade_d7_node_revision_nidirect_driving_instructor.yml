@@ -1,6 +1,5 @@
-uuid: 0c9b1492-5b03-4e7d-a71d-7e538dd899fb
 langcode: en
-status: true
+status: false
 dependencies: {  }
 id: upgrade_d7_node_revision_nidirect_driving_instructor
 class: Drupal\migrate\Plugin\Migration
@@ -119,7 +118,6 @@ destination:
   default_bundle: driving_instructor
 migration_dependencies:
   required:
-    - upgrade_d7_node_application
     - upgrade_d7_node_article
     - upgrade_d7_node_cold_weather_payment
     - upgrade_d7_node_contact
