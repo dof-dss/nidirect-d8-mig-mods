@@ -1,16 +1,12 @@
-uuid: c061fbc6-d5f8-40db-a2d5-9540ab367f50
 langcode: en
 status: true
 dependencies: {  }
-id: upgrade_d7_node_revision_application
+id: node_revision_application
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldFormatterMigration
 cck_plugin_method: null
-migration_tags:
-  - 'Drupal 7'
-  - Content
-migration_group: migrate_drupal_7_node
-label: 'Node revisions (Application)'
+migration_group: migrate_nidirect_node_application
+label: 'Application content type nodes (Revisions)'
 source:
   plugin: d7_node_revision
   node_type: application
@@ -115,25 +111,5 @@ destination:
   default_bundle: application
 migration_dependencies:
   required:
-    - upgrade_d7_node_application
-    - upgrade_d7_node_article
-    - upgrade_d7_node_cold_weather_payment
-    - upgrade_d7_node_contact
-    - upgrade_d7_node_embargoed_publication
-    - upgrade_d7_node_external_link
-    - upgrade_d7_node_gallery
-    - upgrade_d7_node_health_condition
-    - upgrade_d7_node_homepage
-    - upgrade_d7_node_landing_page
-    - upgrade_d7_node_link
-    - upgrade_d7_node_mas_rss
-    - upgrade_d7_node_news
-    - upgrade_d7_node_nidirect_contact
-    - upgrade_d7_node_nidirect_driving_instructor
-    - upgrade_d7_node_nidirect_gp
-    - upgrade_d7_node_nidirect_gp_practice
-    - upgrade_d7_node_nidirect_recipe
-    - upgrade_d7_node_nidirect_ub
-    - upgrade_d7_node_publication
-    - upgrade_d7_node_webform
+    - node_application
   optional: {  }

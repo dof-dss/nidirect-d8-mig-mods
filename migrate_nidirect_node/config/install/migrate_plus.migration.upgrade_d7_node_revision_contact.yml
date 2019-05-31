@@ -1,6 +1,5 @@
-uuid: e5dfd2fd-473b-433e-8657-f7d0db9881f1
 langcode: en
-status: true
+status: false
 dependencies: {  }
 id: upgrade_d7_node_revision_contact
 class: Drupal\migrate\Plugin\Migration
@@ -97,7 +96,6 @@ destination:
   default_bundle: contact
 migration_dependencies:
   required:
-    - upgrade_d7_node_application
     - upgrade_d7_node_article
     - upgrade_d7_node_cold_weather_payment
     - upgrade_d7_node_contact

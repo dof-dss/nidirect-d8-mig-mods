@@ -1,6 +1,5 @@
-uuid: 09ceea30-d67c-411e-9646-16370e87c99b
 langcode: en
-status: true
+status: false
 dependencies: {  }
 id: upgrade_d7_node_revision_gallery
 class: Drupal\migrate\Plugin\Migration
@@ -113,7 +112,6 @@ destination:
   default_bundle: gallery
 migration_dependencies:
   required:
-    - upgrade_d7_node_application
     - upgrade_d7_node_article
     - upgrade_d7_node_cold_weather_payment
     - upgrade_d7_node_contact

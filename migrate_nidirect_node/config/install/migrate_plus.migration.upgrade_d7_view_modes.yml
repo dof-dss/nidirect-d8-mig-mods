@@ -1,6 +1,5 @@
-uuid: 1d7d4698-a153-4f7f-a28f-2bf427f32292
 langcode: en
-status: true
+status: false
 dependencies: {  }
 id: upgrade_d7_view_modes
 class: Drupal\migrate\Plugin\Migration

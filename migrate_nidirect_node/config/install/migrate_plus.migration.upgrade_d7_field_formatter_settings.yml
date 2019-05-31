@@ -1,6 +1,5 @@
-uuid: 4e7e54f1-1f80-4503-b84d-2aad41b82c0f
 langcode: en
-status: true
+status: false
 dependencies: {  }
 id: upgrade_d7_field_formatter_settings
 class: Drupal\migrate_drupal\Plugin\migrate\FieldMigration
