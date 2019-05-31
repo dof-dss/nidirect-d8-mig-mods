@@ -65,5 +65,10 @@ module.exports = {
         browser
             .drupalRelativeURL('/admin/structure/types/manage/article/fields')
             .expect.element('#field-top-level-theme').to.be.present;
+
+        browser
+            .drupalRelativeURL('/admin/content?type=article')
+            .expect.element('#views-form-content-page-1 > table > tbody > tr > td:nth-child(3)')
+            .text.to.contain('Article');
     }
 };
