@@ -4,3 +4,8 @@ services:
     arguments: []
     tags:
       - { name: drupal.command }
+  migrate_nidirect_utils.nidirect_migrate_pre:
+    class: Drupal\migrate_nidirect_utils\Command\NidirectMigratePreCommand
+    arguments: []
+    tags:
+      - { name: drupal.command }
