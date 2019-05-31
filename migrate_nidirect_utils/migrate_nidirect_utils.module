@@ -23,14 +23,4 @@ function migrate_nidirect_utils_help($route_name, RouteMatchInterface $route_mat
   }
 }
 
-/**
- * Implements template_preprocess_page_title().
- */
-function migrate_nidirect_utils_node_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode) {
-  $x = 1;
-  $data_json = 'a:1:{s:8:"keywords";a:1:{s:5:"value";s:5:"groni";}}';
-  $data_json2 = 'a:1:{s:8:';
-  $data = json_decode($data_json);
-}
-
 
