@@ -60,7 +60,7 @@ class NidirectMigratePostTaxonomyCommand extends ContainerAwareCommand {
       $this->getIo()->info($this->trans('commands.nidirect.migrate.post.taxonomy.messages.success'));
     }
     else {
-      $this->getIo()->info('Failed to update for term entities: ' . explode(',', $failed_updates));
+      $this->getIo()->info('Failed to update for term entities: ' . implode(',', $failed_updates));
       $this->getIo()->info($this->trans('commands.nidirect.migrate.post.taxonomy.messages.failure'));
     }
 

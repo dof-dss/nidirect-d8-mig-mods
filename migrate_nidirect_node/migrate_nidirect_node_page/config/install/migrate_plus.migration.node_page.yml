@@ -1,16 +1,10 @@
-uuid: b8efa27d-3360-4670-bda6-d7d12f214544
-langcode: en
+id: node_page
+label: 'Page content type nodes'
 status: true
 dependencies: {  }
-id: upgrade_d7_node_page
+migration_group: migrate_nidirect_node_page
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldInstanceMigration
-cck_plugin_method: null
-migration_tags:
-  - 'Drupal 7'
-  - Content
-migration_group: migrate_drupal_7_node
-label: 'Nodes (Page)'
 source:
   plugin: d7_node
   node_type: page
