@@ -65,8 +65,8 @@ module.exports = {
   'Test whether we have any migrated content for Application nodes': browser => {
     browser
       .drupalLogin({ name: 'admin', password: 'letmein' })
-      .drupalRelativeURL('admin/content?type=application')
+      .drupalRelativeURL('/admin/content?type=application')
       .expect.element('#views-form-content-page-1 > table > tbody > tr')
-      .text.to.not.equal('No content available.');
+      .text.to.not.contain('No content available');
   }
 };

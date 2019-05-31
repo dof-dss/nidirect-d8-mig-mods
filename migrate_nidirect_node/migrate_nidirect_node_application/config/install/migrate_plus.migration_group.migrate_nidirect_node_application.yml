@@ -1,8 +1,8 @@
 langcode: en
 status: true
 dependencies: {  }
-id: migrate_nidirect_node
-label: 'NIDirect - Nodes'
+id: migrate_nidirect_node_application
+label: 'NIDirect - Application nodes'
 description: 'Drupal 7 Application nodes'
 source_type: 'Drupal 7'
 module: null

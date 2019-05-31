@@ -1,6 +1,6 @@
 id: node_application
 label: 'Application content type nodes'
-migration_group: migrate_nidirect_node
+migration_group: migrate_nidirect_node_application
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldInstanceMigration
 status: true

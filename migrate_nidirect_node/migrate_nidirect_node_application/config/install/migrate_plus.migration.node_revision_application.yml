@@ -5,7 +5,7 @@ id: node_revision_application
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldFormatterMigration
 cck_plugin_method: null
-migration_group: migrate_nidirect_node
+migration_group: migrate_nidirect_node_application
 label: 'Application content type nodes (Revisions)'
 source:
   plugin: d7_node_revision
