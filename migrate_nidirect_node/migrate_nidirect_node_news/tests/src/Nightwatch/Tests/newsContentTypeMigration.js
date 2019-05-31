@@ -6,7 +6,7 @@ module.exports = {
       .drupalLogin({ name: 'admin', password: 'letmein' })
       .drupalRelativeURL('/admin/structure/types/manage/news')
       // The text match takes a regex, not a literal string.
-      .expect.element('h1.news-title').text.to.match(/edit news content type/i);
+      .expect.element('h1.page-title').text.to.match(/edit news content type/i);
   },
   'Test whether News content type field exists (field_meta_tags)': browser => {
     browser

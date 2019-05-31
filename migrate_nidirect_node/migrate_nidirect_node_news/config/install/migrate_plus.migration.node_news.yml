@@ -1,13 +1,13 @@
-id: node_page
-label: 'Page content type nodes'
+id: node_news
+label: 'News content type nodes'
 status: true
 dependencies: {  }
-migration_group: migrate_nidirect_node_page
+migration_group: migrate_nidirect_node_news
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldInstanceMigration
 source:
   plugin: d7_node
-  node_type: page
+  node_type: news
 process:
   nid:
     -
@@ -62,7 +62,7 @@ process:
     -
       plugin: get
       source: timestamp
-  comment_node_page/0/status:
+  comment_node_news/0/status:
     -
       plugin: get
       source: comment
@@ -70,13 +70,41 @@ process:
     -
       plugin: get
       source: body
+  field_photo:
+    -
+      plugin: sub_process
+      source: field_photo
+      process:
+        target_id: fid
+        alt: alt
+        title: title
+        width: width
+        height: height
+  field_published_date:
+    -
+      plugin: sub_process
+      source: field_published_date
+      process:
+        value:
+          plugin: format_date
+          from_format: 'Y-m-d H:i:s'
+          to_format: 'Y-m-d\TH:i:s'
+          source: value
+  field_summary:
+    -
+      plugin: get
+      source: field_summary
+  field_teaser:
+    -
+      plugin: get
+      source: field_teaser
   field_enable_toc:
     -
       plugin: get
       source: field_enable_toc
 destination:
   plugin: 'entity:node'
-  default_bundle: page
+  default_bundle: news
 migration_dependencies:
   required:
     - upgrade_d7_user
