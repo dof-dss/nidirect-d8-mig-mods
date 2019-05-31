@@ -33,13 +33,17 @@ class NidirectMigratePreCommand extends ContainerAwareCommand {
   protected function execute(InputInterface $input, OutputInterface $output) {
       
     // Remove the installed default admin shortcuts which trip up config sync import.
-    $default_shortcuts = \Drupal::entityManager()->getStorage("shortcut_set")->load("default");
+    $query = \Drupal::entityTypeManager()->getStorage('shortcut')->getQuery();
+    $nids = $query->condition('shortcut_set', 'default')->execute();
+    $shortcuts = \Drupal::entityTypeManager()->getStorage("shortcut")->loadMultiple($nids);
 
-    if ($default_shortcuts) {
+    if ($shortcuts) {
       $this->getIo()->info('Removing existing default shortcuts.');
-      $default_shortcuts->delete();
+      foreach ($shortcuts as $shortcut) {
+      	$shortcut->delete();
+      }	
     }
-
+    
     global $config_directories;
     $site_config = Yaml::parse(file_get_contents($config_directories['sync'] . '/system.site.yml'));
 
@@ -47,11 +51,13 @@ class NidirectMigratePreCommand extends ContainerAwareCommand {
     // Site UUID.
     if ($site_config) {
       $site_uuid_sync = $site_config['uuid'];
-      $site_uuid_curr = \Drupal::config('system.site')->get('uuid');
 
+      $config = \Drupal::service('config.factory')->getEditable('system.site');
+      $site_uuid_curr = $config->get('uuid');
+      
       if ($site_uuid_sync != $site_uuid_curr) {
         $this->getIo()->info("Updating Site UUID to config/sync ID.");
-        \Drupal::config('system.site')->set('uuid', $site_uuid);
+	$config->set('uuid', $site_uuid_sync)->save();      
       }
     }
   }
