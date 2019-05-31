@@ -13,5 +13,57 @@ module.exports = {
         browser
             .drupalRelativeURL('/admin/structure/types/manage/article/fields')
             .expect.element('#field-banner-image').to.be.present;
+
+        browser
+            .drupalRelativeURL('/admin/structure/types/manage/article/fields')
+            .expect.element('#body').to.be.present;
+
+        browser
+            .drupalRelativeURL('/admin/structure/types/manage/article/fields')
+            .expect.element('#comment').to.be.present;
+
+        browser
+            .drupalRelativeURL('/admin/structure/types/manage/article/fields')
+            .expect.element('#field-enable-toc').to.be.present;
+
+        browser
+            .drupalRelativeURL('/admin/structure/types/manage/article/fields')
+            .expect.element('#field-additional-info').to.be.present;
+
+        browser
+            .drupalRelativeURL('/admin/structure/types/manage/article/fields')
+            .expect.element('#field-image').to.be.present;
+
+        browser
+            .drupalRelativeURL('/admin/structure/types/manage/article/fields')
+            .expect.element('#field-meta-tags').to.be.present;
+
+        browser
+            .drupalRelativeURL('/admin/structure/types/manage/article/fields')
+            .expect.element('#field-photo').to.be.present;
+
+        browser
+            .drupalRelativeURL('/admin/structure/types/manage/article/fields')
+            .expect.element('#field-summary').to.be.present;
+
+        browser
+            .drupalRelativeURL('/admin/structure/types/manage/article/fields')
+            .expect.element('#field-site-topics').to.be.present;
+
+        browser
+            .drupalRelativeURL('/admin/structure/types/manage/article/fields')
+            .expect.element('#field-tags').to.be.present;
+
+        browser
+            .drupalRelativeURL('/admin/structure/types/manage/article/fields')
+            .expect.element('#field-teaser').to.be.present;
+
+        browser
+            .drupalRelativeURL('/admin/structure/types/manage/article/fields')
+            .expect.element('#field-subtheme').to.be.present;
+
+        browser
+            .drupalRelativeURL('/admin/structure/types/manage/article/fields')
+            .expect.element('#field-top-level-theme').to.be.present;
     }
 };
