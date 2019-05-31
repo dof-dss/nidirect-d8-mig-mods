@@ -1,6 +1,5 @@
-uuid: ea8d72b6-b7ee-44a0-86df-bc448376439a
 langcode: en
-status: true
+status: false
 dependencies: {  }
 id: upgrade_d7_node_revision_nidirect_ub
 class: Drupal\migrate\Plugin\Migration
@@ -184,10 +183,9 @@ process:
         target_id: tid
 destination:
   plugin: 'entity_revision:node'
-  default_bundle: nidirect_ub
+  default_bundle: umbrella_body
 migration_dependencies:
   required:
-    - upgrade_d7_node_application
     - upgrade_d7_node_article
     - upgrade_d7_node_cold_weather_payment
     - upgrade_d7_node_contact
@@ -206,7 +204,6 @@ migration_dependencies:
     - upgrade_d7_node_nidirect_gp_practice
     - upgrade_d7_node_nidirect_recipe
     - upgrade_d7_node_nidirect_ub
-    - upgrade_d7_node_page
     - upgrade_d7_node_publication
     - upgrade_d7_node_webform
   optional: {  }

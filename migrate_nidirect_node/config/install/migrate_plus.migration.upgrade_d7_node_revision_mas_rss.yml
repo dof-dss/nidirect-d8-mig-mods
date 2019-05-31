@@ -1,6 +1,5 @@
-uuid: 183658fe-9d22-4a53-a087-3812c00ce906
 langcode: en
-status: true
+status: false
 dependencies: {  }
 id: upgrade_d7_node_revision_mas_rss
 class: Drupal\migrate\Plugin\Migration
@@ -77,7 +76,6 @@ destination:
   default_bundle: mas_rss
 migration_dependencies:
   required:
-    - upgrade_d7_node_application
     - upgrade_d7_node_article
     - upgrade_d7_node_cold_weather_payment
     - upgrade_d7_node_contact
@@ -96,7 +94,6 @@ migration_dependencies:
     - upgrade_d7_node_nidirect_gp_practice
     - upgrade_d7_node_nidirect_recipe
     - upgrade_d7_node_nidirect_ub
-    - upgrade_d7_node_page
     - upgrade_d7_node_publication
     - upgrade_d7_node_webform
   optional: {  }

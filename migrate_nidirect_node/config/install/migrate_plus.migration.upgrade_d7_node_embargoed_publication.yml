@@ -1,6 +1,5 @@
-uuid: ae9bf258-e7f9-49c5-baf2-0065ac168cdc
 langcode: en
-status: true
+status: false
 dependencies: {  }
 id: upgrade_d7_node_embargoed_publication
 class: Drupal\migrate\Plugin\Migration

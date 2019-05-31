@@ -1,6 +1,5 @@
-uuid: 07032e7a-477a-457d-8228-d35a1786e6df
 langcode: en
-status: true
+status: false
 dependencies: {  }
 id: upgrade_d7_node_nidirect_driving_instructor
 class: Drupal\migrate\Plugin\Migration
@@ -116,7 +115,7 @@ process:
       source: field_link_url
 destination:
   plugin: 'entity:node'
-  default_bundle: nidirect_driving_instructor
+  default_bundle: driving_instructor
 migration_dependencies:
   required:
     - upgrade_d7_user

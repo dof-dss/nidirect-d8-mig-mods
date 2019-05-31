@@ -1,19 +1,16 @@
-uuid: 0e33222a-4520-406a-895f-17f32d62c195
-langcode: en
-status: true
-dependencies: {  }
-id: upgrade_d7_node_application
+id: node_application
+label: 'Application content type nodes'
+migration_group: migrate_nidirect_node_application
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldInstanceMigration
-cck_plugin_method: null
-migration_tags:
-  - 'Drupal 7'
-  - Content
-migration_group: migrate_drupal_7_node
-label: 'Nodes (Application)'
+status: true
+dependencies: {  }
 source:
   plugin: d7_node
   node_type: application
+destination:
+  plugin: 'entity:node'
+  default_bundle: application
 process:
   nid:
     -
@@ -110,9 +107,6 @@ process:
       source: field_top_level_theme
       process:
         target_id: tid
-destination:
-  plugin: 'entity:node'
-  default_bundle: application
 migration_dependencies:
   required:
     - upgrade_d7_user

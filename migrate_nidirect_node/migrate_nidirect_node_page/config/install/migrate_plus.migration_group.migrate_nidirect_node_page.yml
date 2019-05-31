@@ -1,9 +1,9 @@
 langcode: en
-status: false
+status: true
 dependencies: {  }
-id: migrate_drupal_7_node
-label: 'NIDirect - Node'
-description: 'Drupal 7 nodes'
+id: migrate_nidirect_node_page
+label: 'NIDirect - Page nodes'
+description: 'Drupal 7 Page nodes'
 source_type: 'Drupal 7'
 module: null
 shared_configuration:

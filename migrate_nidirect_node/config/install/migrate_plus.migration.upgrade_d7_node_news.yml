@@ -1,6 +1,5 @@
-uuid: 509b9f08-857d-4038-981c-5851858d7e50
 langcode: en
-status: true
+status: false
 dependencies: {  }
 id: upgrade_d7_node_news
 class: Drupal\migrate\Plugin\Migration
