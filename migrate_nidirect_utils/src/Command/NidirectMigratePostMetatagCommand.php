@@ -52,7 +52,7 @@ class NidirectMigratePostMetatagCommand extends ContainerAwareCommand {
 
     // Loop through and update nodes in NIDirect (D8).
     foreach ($results as $entity_id => $data) {
-      $this->getIo()->info('Entity ID - ' . $entity_id . ' ,  data - ' . $data);
+      //$this->getIo()->info('Entity ID - ' . $entity_id . ' ,  data - ' . $data);
       $new_data = unserialize($data);
       if (isset($new_data['keywords'])) {
         $value = $new_data['keywords']['value'];
