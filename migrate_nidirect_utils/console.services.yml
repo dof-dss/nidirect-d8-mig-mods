@@ -4,15 +4,13 @@ services:
     arguments: []
     tags:
       - { name: drupal.command }
-
-  migrate_nidirect_utils.nidirect_migrate_post_metatag:
-    class: Drupal\migrate_nidirect_utils\Command\NidirectMigratePostMetatagCommand
+  migrate_nidirect_utils.nidirect_migrate_pre:
+    class: Drupal\migrate_nidirect_utils\Command\NidirectMigratePreCommand
     arguments: []
     tags:
       - { name: drupal.command }
-
-  migrate_nidirect_utils.nidirect_migrate_pre:
-    class: Drupal\migrate_nidirect_utils\Command\NidirectMigratePreCommand
+  migrate_nidirect_utils.nidirect_migrate_post_metatag:
+    class: Drupal\migrate_nidirect_utils\Command\NidirectMigratePostMetatagCommand
     arguments: []
     tags:
       - { name: drupal.command }
