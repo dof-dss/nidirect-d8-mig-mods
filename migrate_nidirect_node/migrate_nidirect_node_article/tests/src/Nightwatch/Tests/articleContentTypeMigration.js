@@ -73,15 +73,21 @@ module.exports = {
             .text.to.contain('Article');
 
         // Now test a random sample of actual nodes.
+
+        // Extract title from old NIDirect page.
         browser
             .url('https://www.nidirect.gov.uk/node/9474')
-            .expect.element('#main-area div #contentTypeArticle div:nth-child(2) h1')
-            .text.to.contains('About PRONI Historical Maps viewer');
-
-        browser
-            .drupalRelativeURL('/node/9474/edit')
-            .expect.element('#edit-title-0-value')
-            .to.have.value.which.contains('About PRONI Historical Maps viewer');
+            .elements('css selector', '#main-area div #contentTypeArticle div:nth-child(2) h1', function(result) {
+                result.value.map(function(element, err) {
+                    browser.elementIdAttribute(element.ELEMENT, 'innerText', function(res) {
+                        // Check that the same title appears in D8 after migration.
+                        browser
+                            .drupalRelativeURL('/node/9474/edit')
+                            .expect.element('#edit-title-0-value')
+                            .to.have.value.which.contains(res.value);
+                    })
+                })
+            });
 
     }
 };
