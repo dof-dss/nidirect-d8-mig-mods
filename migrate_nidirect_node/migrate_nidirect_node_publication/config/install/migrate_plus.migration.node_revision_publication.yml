@@ -1,15 +1,15 @@
 langcode: en
 status: true
 dependencies: {  }
-id: node_revision_application
+id: node_revision_publication
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldFormatterMigration
 cck_plugin_method: null
-migration_group: migrate_nidirect_node_application
-label: 'Application content type nodes (Revisions)'
+migration_group: migrate_nidirect_node_publication
+label: 'Publication content type nodes (Revisions)'
 source:
   plugin: d7_node_revision
-  node_type: application
+  node_type: publication
 process:
   nid:
     -
@@ -64,7 +64,7 @@ process:
     -
       plugin: get
       source: timestamp
-  comment_node_application/0/status:
+  comment_node_publication/0/status:
     -
       plugin: get
       source: comment
@@ -72,14 +72,28 @@ process:
     -
       plugin: get
       source: body
-  field_additional_info:
+  field_attachment:
+    -
+      plugin: sub_process
+      source: field_attachment
+      process:
+        target_id: fid
+        display: display
+        description: description
+  field_publication_type:
     -
       plugin: get
-      source: field_additional_info
-  field_link:
+      source: field_publication_type
+  field_published_date:
     -
-      plugin: field_link
-      source: field_link
+      plugin: sub_process
+      source: field_published_date
+      process:
+        value:
+          plugin: format_date
+          from_format: 'Y-m-d H:i:s'
+          to_format: 'Y-m-d'
+          source: value
   field_site_topics:
     -
       plugin: sub_process
@@ -96,10 +110,6 @@ process:
       source: field_subtheme
       process:
         target_id: tid
-  field_teaser:
-    -
-      plugin: get
-      source: field_teaser
   field_top_level_theme:
     -
       plugin: sub_process
@@ -108,8 +118,8 @@ process:
         target_id: tid
 destination:
   plugin: 'entity_revision:node'
-  default_bundle: application
+  default_bundle: publication
 migration_dependencies:
   required:
-    - node_application
+    - node_publication
   optional: {  }
