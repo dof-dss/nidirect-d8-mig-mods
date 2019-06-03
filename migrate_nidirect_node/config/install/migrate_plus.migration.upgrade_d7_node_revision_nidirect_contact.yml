@@ -193,7 +193,6 @@ migration_dependencies:
     - upgrade_d7_node_landing_page
     - upgrade_d7_node_link
     - upgrade_d7_node_mas_rss
-    - upgrade_d7_node_news
     - upgrade_d7_node_nidirect_contact
     - upgrade_d7_node_nidirect_driving_instructor
     - upgrade_d7_node_nidirect_gp
