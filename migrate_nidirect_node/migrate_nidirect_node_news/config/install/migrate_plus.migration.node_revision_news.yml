@@ -1,23 +1,20 @@
 langcode: en
-status: false
+id: node_revision_news
+label: 'News content type nodes (Revisions)'
+status: true
 dependencies: {  }
-id: upgrade_d7_node_news
 class: Drupal\migrate\Plugin\Migration
-field_plugin_method: alterFieldInstanceMigration
+field_plugin_method: alterFieldFormatterMigration
 cck_plugin_method: null
-migration_tags:
-  - 'Drupal 7'
-  - Content
-migration_group: migrate_drupal_7_node
-label: 'Nodes (News)'
+migration_group: migrate_nidirect_node_news
 source:
-  plugin: d7_node
+  plugin: d7_node_revision
   node_type: news
 process:
   nid:
     -
       plugin: get
-      source: tnid
+      source: nid
   vid:
     -
       plugin: get
@@ -108,10 +105,9 @@ process:
       plugin: get
       source: field_enable_toc
 destination:
-  plugin: 'entity:node'
+  plugin: 'entity_revision:node'
   default_bundle: news
 migration_dependencies:
   required:
-    - upgrade_d7_user
-  optional:
-    - upgrade_d7_comment_field_instance
+    - node_news
+  optional: {  }
