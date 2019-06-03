@@ -66,9 +66,22 @@ module.exports = {
             .drupalRelativeURL('/admin/structure/types/manage/article/fields')
             .expect.element('#field-top-level-theme').to.be.present;
 
+        // See if we have any article nodes created.
         browser
             .drupalRelativeURL('/admin/content?type=article')
             .expect.element('#views-form-content-page-1 > table > tbody > tr > td:nth-child(3)')
             .text.to.contain('Article');
+
+        // Now test a random sample of actual nodes.
+        browser
+            .url('https://www.nidirect.gov.uk/node/9474')
+            .expect.element('#main-area div #contentTypeArticle div:nth-child(2) h1')
+            .text.to.contains('About PRONI Historical Maps viewer');
+
+        browser
+            .drupalRelativeURL('/node/9474/edit')
+            .expect.element('#edit-title-0-value')
+            .to.have.value.which.contains('About PRONI Historical Maps viewer');
+
     }
 };
