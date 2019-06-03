@@ -89,5 +89,38 @@ module.exports = {
                 })
             });
 
+
+
+        // Extract title from old NIDirect page.
+        browser
+            .url('https://www.nidirect.gov.uk/node/1210')
+            .elements('css selector', '#main-area div #contentTypeArticle div h1', function(result) {
+                result.value.map(function(element, err) {
+                    browser.elementIdAttribute(element.ELEMENT, 'innerText', function(res) {
+                        // Check that the same title appears in D8 after migration.
+                        browser
+                            .drupalRelativeURL('/node/1210/edit')
+                            .expect.element('#edit-title-0-value')
+                            .to.have.value.which.contains(res.value);
+                    })
+                })
+            });
+
+        // Extract title from old NIDirect page.
+        browser
+            .url('https://www.nidirect.gov.uk/node/2488')
+            .elements('css selector', '#main-area div #contentTypeArticle div h1', function(result) {
+                result.value.map(function(element, err) {
+                    browser.elementIdAttribute(element.ELEMENT, 'innerText', function(res) {
+                        // Check that the same title appears in D8 after migration.
+                        browser
+                            .drupalRelativeURL('/node/2488/edit')
+                            .expect.element('#edit-title-0-value')
+                            .to.have.value.which.contains(res.value);
+                    })
+                })
+            });
+
+
     }
 };
