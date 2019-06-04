@@ -186,7 +186,6 @@ destination:
   default_bundle: umbrella_body
 migration_dependencies:
   required:
-    - upgrade_d7_node_article
     - upgrade_d7_node_cold_weather_payment
     - upgrade_d7_node_contact
     - upgrade_d7_node_embargoed_publication
