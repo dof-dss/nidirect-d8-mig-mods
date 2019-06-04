@@ -65,7 +65,6 @@ class NidirectMigratePreCommand extends MigrateCommand {
     $shortcuts = \Drupal::entityTypeManager()->getStorage("shortcut")->loadMultiple($nids);
 
     if ($shortcuts) {
-      $this->getIo()->info('Removing existing default shortcuts.');
       foreach ($shortcuts as $shortcut) {
         $shortcut->delete();
       }	
@@ -89,7 +88,6 @@ class NidirectMigratePreCommand extends MigrateCommand {
       $site_uuid_curr = $config->get('uuid');
       
       if ($site_uuid_sync != $site_uuid_curr) {
-        $this->getIo()->info("Updating Site UUID to config/sync ID.");
 	      $config->set('uuid', $site_uuid_sync)->save();
       }
     }
@@ -99,15 +97,10 @@ class NidirectMigratePreCommand extends MigrateCommand {
    * Fix Column 'title' cannot be null issues.
    */
   protected function task_null_titles() {
-    $this->getIo()->info("Fixing titles with null values.");
-
     // Fix nodes.
     $this->drupal7DatabaseQuery("UPDATE node SET node.title = '<none>' WHERE title = '' or title IS NULL");
     // Fix node revisions.
     $this->drupal7DatabaseQuery("UPDATE node_revision SET node_revision.title = '<none>' WHERE title = '' or title IS NULL");
-
-    $this->getIo()->info("👍 Empty titles now replaced with <none>.");
-
   }
 
   /**
@@ -115,11 +108,7 @@ class NidirectMigratePreCommand extends MigrateCommand {
    * Credit to Jaime Contreras.
    */
   protected function task_null_redirect_zero_state() {
-    $this->getIo()->info("Fixing redirect states with zero values.");
-
     $this->drupal7DatabaseQuery("UPDATE redirect SET status_code=301 WHERE status_code=0 OR status_code IS NULL");
-
-    $this->getIo()->info("👍 Zero or null redirect status codes set to 301.");
   }
 
 }
