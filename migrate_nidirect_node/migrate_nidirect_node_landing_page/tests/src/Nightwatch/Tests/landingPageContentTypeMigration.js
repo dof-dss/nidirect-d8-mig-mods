@@ -64,6 +64,20 @@ module.exports = {
 
         // Now test a random sample of actual nodes.
 
+        // Extract title from old NIDirect page.
+        browser
+            .url('https://www.nidirect.gov.uk/node/4005')
+            .elements('css selector', '#main-area div div:nth-child(3) div h1', function(result) {
+                result.value.map(function(element, err) {
+                    browser.elementIdAttribute(element.ELEMENT, 'innerText', function(res) {
+                        // Check that the same title appears in D8 after migration.
+                        browser
+                            .drupalRelativeURL('/node/4005/edit')
+                            .expect.element('#edit-title-0-value')
+                            .to.have.value.which.contains(res.value);
+                    })
+                })
+            });
 
     }
 };
