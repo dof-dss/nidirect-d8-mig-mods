@@ -15,7 +15,7 @@ module.exports = {
 
         browser
             .drupalRelativeURL('/admin/content/media?name=&type=image&status=All&langcode=All')
-            .expect.element('table > tbody > tr > td:nth-child(2)')
+            .expect.element('table > tbody > tr > td:nth-child(4)')
             .text.to.contain('Image');
     },
 
@@ -23,23 +23,23 @@ module.exports = {
 
         browser
             .drupalRelativeURL('/admin/content/media?name=&type=audio&status=All&langcode=All')
-            .expect.element('table > tbody > tr > td:nth-child(2)')
+            .expect.element('table > tbody > tr > td:nth-child(4)')
             .text.to.contain('Audio');
     },
 
     'Test whether any Remote Video media have been migrated': browser => {
 
         browser
-            .drupalRelativeURL('/admin/content/files?filename=&filemime=application%2Fmsword&status=All')
-            .expect.element('table > tbody > tr > td:nth-child(2)')
-            .text.to.contain('Remote Video');
+            .drupalRelativeURL('/admin/content/media?name=&type=remote_video&status=All&langcode=All')
+            .expect.element('table > tbody > tr > td:nth-child(4)')
+            .text.to.contain('Remote video');
     },
 
     'Test whether any Document media have been migrated': browser => {
 
         browser
             .drupalRelativeURL('/admin/content/media?name=&type=document&status=All&langcode=All')
-            .expect.element('table > tbody > tr > td:nth-child(2)')
+            .expect.element('table > tbody > tr > td:nth-child(4)')
             .text.to.contain('Document');
     },
 
@@ -47,7 +47,7 @@ module.exports = {
 
         browser
             .drupalRelativeURL('/admin/content/media?name=Outdoor+gym&type=image&status=All&langcode=All')
-            .expect.element('table > tbody > tr > td:nth-child(2)')
+            .expect.element('table > tbody > tr > td:nth-child(4)')
             .text.to.contain('Image');
     }
 };
