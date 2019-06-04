@@ -124,7 +124,6 @@ destination:
   default_bundle: embargoed_publication
 migration_dependencies:
   required:
-    - upgrade_d7_node_article
     - upgrade_d7_node_cold_weather_payment
     - upgrade_d7_node_contact
     - upgrade_d7_node_embargoed_publication
