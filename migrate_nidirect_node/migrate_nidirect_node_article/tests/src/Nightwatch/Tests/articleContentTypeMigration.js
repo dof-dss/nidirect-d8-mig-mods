@@ -3,12 +3,15 @@ module.exports = {
 
     'Test whether Article content type exists': browser => {
         browser
-            .drupalLogin({ name: 'admin', password: 'letmein' });
+            .drupalLogin({name: 'admin', password: 'letmein'});
 
         browser
             .drupalRelativeURL('/admin/structure/types')
             .expect.element('table > tbody > tr:nth-child(2) > td.menu-label')
             .text.to.equal('Article');
+    },
+
+    'Test whether Article fields exist': browser => {
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/article/fields')
@@ -65,6 +68,9 @@ module.exports = {
         browser
             .drupalRelativeURL('/admin/structure/types/manage/article/fields')
             .expect.element('#field-top-level-theme').to.be.present;
+    },
+
+    'Test whether Article nodes exist': browser => {
 
         // See if we have any article nodes created.
         browser
