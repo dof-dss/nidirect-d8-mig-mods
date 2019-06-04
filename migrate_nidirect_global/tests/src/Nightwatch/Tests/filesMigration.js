@@ -13,6 +13,6 @@ module.exports = {
         browser
             .drupalRelativeURL('/admin/content/files?filename=&filemime=image%2Fjpeg&status=All')
             .expect.element('table > tbody > tr > td:nth-child(2)')
-            .to.have.text.which.contains('image');
+            .text.to.contain('image/jpeg');
     }
 };
