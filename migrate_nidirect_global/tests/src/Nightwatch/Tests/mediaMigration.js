@@ -43,11 +43,19 @@ module.exports = {
             .text.to.contain('Document');
     },
 
-    'Test for specific media file': browser => {
+    'Test for specific media file (brown trout - Image)': browser => {
 
         browser
-            .drupalRelativeURL('/admin/content/media?name=Outdoor+gym&type=image&status=All&langcode=All')
+            .drupalRelativeURL('/admin/content/media?name=Enjoy-fishing-for-brown-trout&type=All&status=All&langcode=All')
             .expect.element('table > tbody > tr > td:nth-child(4)')
             .text.to.contain('Image');
+    },
+
+    'Test for specific media file (Samson & Banana - Remote Video)': browser => {
+
+        browser
+            .drupalRelativeURL('/admin/content/media?name=Samson+%26+Banana&type=remote_video&status=All&langcode=All')
+            .expect.element('table > tbody > tr > td:nth-child(4)')
+            .text.to.contain('Remote video');
     }
 };
