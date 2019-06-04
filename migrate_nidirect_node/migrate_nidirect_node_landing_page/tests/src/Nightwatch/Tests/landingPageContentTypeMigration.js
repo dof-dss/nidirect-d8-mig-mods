@@ -52,5 +52,18 @@ module.exports = {
         browser
             .drupalRelativeURL('/admin/structure/types/manage/landing_page/fields')
             .expect.element('#field-summary').to.be.present;
+    },
+
+    'Test whether Landing Page nodes exist': browser => {
+
+        // See if we have any landing_page nodes created.
+        browser
+            .drupalRelativeURL('/admin/content?type=landing_page')
+            .expect.element('#views-form-content-page-1 > table > tbody > tr > td:nth-child(3)')
+            .text.to.contain('Landing page');
+
+        // Now test a random sample of actual nodes.
+
+
     }
 };
