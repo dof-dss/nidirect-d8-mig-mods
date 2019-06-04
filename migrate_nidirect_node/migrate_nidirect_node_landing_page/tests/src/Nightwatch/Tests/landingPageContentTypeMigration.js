@@ -61,21 +61,37 @@ module.exports = {
             .drupalRelativeURL('/admin/content?type=landing_page')
             .expect.element('#views-form-content-page-1 > table > tbody > tr > td:nth-child(3)')
             .text.to.contain('Landing page');
+    },
 
-        // Now test a random sample of actual nodes.
+    // Now test a random sample of actual nodes.
 
+    'Check title of Landing Page node (Careers)': browser => {
         // Extract title from old NIDirect page.
-
-        // .elements('css selector', '#main-area div div:nth-child(3) div h1'
-
         browser
             .url('https://www.nidirect.gov.uk/node/4005')
-            .elements('xpath', '//h1[@class]', function(result) {
+            .elements('xpath', "//h1[@class='element-invisible']", function (result) {
+                result.value.map(function (element, err) {
+                    browser.elementIdAttribute(element.ELEMENT, 'innerText', function (res) {
+                        // Check that the same title appears in D8 after migration.
+                        browser
+                            .drupalRelativeURL('/node/4005/edit')
+                            .expect.element('#edit-title-0-value')
+                            .to.have.value.which.contains(res.value);
+                    })
+                })
+            });
+    },
+
+    'Check title of Landing Page node (Brexit)': browser => {
+        // Extract title from old NIDirect page.
+        browser
+            .url('https://www.nidirect.gov.uk/node/12694')
+            .elements('xpath', "//h1[@class='element-invisible']", function(result) {
                 result.value.map(function(element, err) {
                     browser.elementIdAttribute(element.ELEMENT, 'innerText', function(res) {
                         // Check that the same title appears in D8 after migration.
                         browser
-                            .drupalRelativeURL('/node/4005/edit')
+                            .drupalRelativeURL('/node/12694/edit')
                             .expect.element('#edit-title-0-value')
                             .to.have.value.which.contains(res.value);
                     })
