@@ -100,6 +100,10 @@ process:
     -
       plugin: get
       source: field_recipe_serves
+  field_recipe_allergens:
+    -
+      plugin: get
+      source: field_recipe_allergens
 destination:
   plugin: 'entity:node'
   default_bundle: recipe
