@@ -118,6 +118,10 @@ process:
     -
       plugin: get
       source: field_recipe_other_options
+  field_recipe_ingredients:
+    -
+      plugin: get
+      source: field_recipe_ingredients
 destination:
   plugin: 'entity:node'
   default_bundle: recipe
