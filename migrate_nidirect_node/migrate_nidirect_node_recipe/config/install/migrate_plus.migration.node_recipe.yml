@@ -122,6 +122,10 @@ process:
     -
       plugin: get
       source: field_recipe_ingredients
+  field_recipe_method:
+    -
+      plugin: get
+      source: field_recipe_method
 destination:
   plugin: 'entity:node'
   default_bundle: recipe
