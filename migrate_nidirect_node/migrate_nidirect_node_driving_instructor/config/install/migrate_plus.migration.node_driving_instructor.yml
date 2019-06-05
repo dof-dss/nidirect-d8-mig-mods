@@ -1,23 +1,20 @@
+id: node_driving_instructor
 langcode: en
-status: false
+status: true
 dependencies: {  }
-id: upgrade_d7_node_revision_nidirect_driving_instructor
 class: Drupal\migrate\Plugin\Migration
-field_plugin_method: alterFieldFormatterMigration
+field_plugin_method: alterFieldInstanceMigration
 cck_plugin_method: null
-migration_tags:
-  - 'Drupal 7'
-  - Content
-migration_group: migrate_drupal_7_node
-label: 'Node revisions (Nidirect driving instructor)'
+migration_group: migrate_nidirect_node_driving_instructor
+label: 'Nodes (Nidirect driving instructor)'
 source:
-  plugin: d7_node_revision
+  plugin: d7_node
   node_type: nidirect_driving_instructor
 process:
   nid:
     -
       plugin: get
-      source: nid
+      source: tnid
   vid:
     -
       plugin: get
@@ -114,27 +111,8 @@ process:
       plugin: field_link
       source: field_link_url
 destination:
-  plugin: 'entity_revision:node'
+  plugin: 'entity:node'
   default_bundle: driving_instructor
 migration_dependencies:
-  required:
-    - upgrade_d7_node_article
-    - upgrade_d7_node_cold_weather_payment
-    - upgrade_d7_node_contact
-    - upgrade_d7_node_embargoed_publication
-    - upgrade_d7_node_external_link
-    - upgrade_d7_node_gallery
-    - upgrade_d7_node_health_condition
-    - upgrade_d7_node_homepage
-    - upgrade_d7_node_landing_page
-    - upgrade_d7_node_link
-    - upgrade_d7_node_mas_rss
-    - upgrade_d7_node_nidirect_contact
-    - upgrade_d7_node_nidirect_driving_instructor
-    - upgrade_d7_node_nidirect_gp
-    - upgrade_d7_node_nidirect_gp_practice
-    - upgrade_d7_node_nidirect_recipe
-    - upgrade_d7_node_nidirect_ub
-    - upgrade_d7_node_publication
-    - upgrade_d7_node_webform
+  required: {  }
   optional: {  }
