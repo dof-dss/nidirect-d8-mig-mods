@@ -1,0 +1,14 @@
+name: 'Migrate NIDirect - Article Nodes'
+type: module
+description: 'Migrate NIDirect - Article content type'
+core: 8.x
+package: 'Migrate NIDirect'
+migration_dependencies:
+  required: { }
+dependencies:
+  - drupal:migrate
+  - drupal:migrate_plus
+  - drupal:migrate_tools
+  - drupal:migrate_drupal
+  - migrate_nidirect_global
+  - migrate_nidirect_node
