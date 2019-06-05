@@ -96,6 +96,10 @@ process:
     -
       plugin: get
       source: field_recipe_season
+  field_recipe_serves:
+    -
+      plugin: get
+      source: field_recipe_serves
 destination:
   plugin: 'entity:node'
   default_bundle: recipe
