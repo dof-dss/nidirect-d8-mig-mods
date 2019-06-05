@@ -114,6 +114,10 @@ process:
         title: title
         width: width
         height: height
+  field_recipe_other_options:
+    -
+      plugin: get
+      source: field_recipe_other_options
 destination:
   plugin: 'entity:node'
   default_bundle: recipe
