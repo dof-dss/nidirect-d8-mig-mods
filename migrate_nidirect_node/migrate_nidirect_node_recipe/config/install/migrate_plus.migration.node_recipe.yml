@@ -8,7 +8,7 @@ field_plugin_method: alterFieldInstanceMigration
 source:
   plugin: d7_node
   node_type: recipe
-zzzz:
+process:
   nid:
     -
       plugin: get
@@ -62,14 +62,27 @@ zzzz:
     -
       plugin: get
       source: timestamp
-  comment_node_news/0/status:
+  comment_node_recipe/0/status:
     -
       plugin: get
       source: comment
-  body:
+  field_recipe_description:
     -
       plugin: get
-      source: body
+      source: field_recipe_description
+  field_recipe_main_ingredient:
+    -
+      plugin: sub_process
+      source: field_recipe_main_ingredient
+      process:
+        target_id: tid
+  field_recipe_course_type:
+    -
+      plugin: sub_process
+      source: field_recipe_course_type
+      process:
+        target_id: tid
+\\\\\\\\\\\\\\\\\\\
   field_photo:
     -
       plugin: sub_process
