@@ -18,39 +18,30 @@ module.exports = {
             .expect.element('#field-banner-image').to.be.present;
 
         browser
-            .drupalRelativeURL('/admin/structure/types/manage/landing_page/fields')
             .expect.element('#field-banner-image-overlay').to.be.present;
 
         browser
-            .drupalRelativeURL('/admin/structure/types/manage/landing_page/fields')
             .expect.element('#body').to.be.present;
 
         browser
-            .drupalRelativeURL('/admin/structure/types/manage/landing_page/fields')
             .expect.element('#field-enable-title').to.be.present;
 
         browser
-            .drupalRelativeURL('/admin/structure/types/manage/landing_page/fields')
             .expect.element('#field-meta-tags').to.be.present;
 
         browser
-            .drupalRelativeURL('/admin/structure/types/manage/landing_page/fields')
             .expect.element('#field-summary').to.be.present;
 
         browser
-            .drupalRelativeURL('/admin/structure/types/manage/landing_page/fields')
             .expect.element('#field-teaser').to.be.present;
 
         browser
-            .drupalRelativeURL('/admin/structure/types/manage/landing_page/fields')
             .expect.element('#field-subtheme').to.be.present;
 
         browser
-            .drupalRelativeURL('/admin/structure/types/manage/landing_page/fields')
             .expect.element('#field-top-level-theme').to.be.present;
 
         browser
-            .drupalRelativeURL('/admin/structure/types/manage/landing_page/fields')
             .expect.element('#field-summary').to.be.present;
     },
 
