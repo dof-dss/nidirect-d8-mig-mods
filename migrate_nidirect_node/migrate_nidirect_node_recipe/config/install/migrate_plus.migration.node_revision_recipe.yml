@@ -148,6 +148,22 @@ process:
     -
       plugin: get
       source: field_livelink_id
+  field_recipe_fat_content:
+    -
+      plugin: get
+      source: field_recipe_fat_content
+  field_recipe_saturates:
+    -
+      plugin: get
+      source: field_recipe_saturates
+  field_recipe_sugar:
+    -
+      plugin: get
+      source: field_recipe_sugar
+  field_recipe_salt:
+    -
+      plugin: get
+      source: field_recipe_salt
 destination:
   plugin: 'entity_revision:node'
   default_bundle: recipe
