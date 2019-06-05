@@ -7,7 +7,7 @@ class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldInstanceMigration
 source:
   plugin: d7_node
-  node_type: recipe
+  node_type: nidirect_recipe
 process:
   nid:
     -
@@ -92,6 +92,10 @@ process:
     -
       plugin: get
       source: field_recipe_preptime
+  field_recipe_season:
+    -
+      plugin: get
+      source: field_recipe_season
 destination:
   plugin: 'entity:node'
   default_bundle: recipe
@@ -99,3 +103,6 @@ migration_dependencies:
   required:
     - upgrade_d7_user
     - upgrade_d7_file
+    - upgrade_d7_recipe_course_type
+    - upgrade_d7_recipe_ingredient
+    - upgrade_d7_recipe_special_diet
