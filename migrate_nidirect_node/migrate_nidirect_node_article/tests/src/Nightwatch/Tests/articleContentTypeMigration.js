@@ -6,9 +6,9 @@ module.exports = {
             .drupalLogin({name: 'admin', password: 'letmein'});
 
         browser
-            .drupalRelativeURL('/admin/structure/types')
-            .expect.element('table > tbody > tr:nth-child(2) > td.menu-label')
-            .text.to.equal('Article');
+            .drupalRelativeURL('/admin/structure/types/manage/article')
+            .expect.element('form > div > #edit-name')
+            .value.to.contain('Article');
     },
 
     'Test whether Article fields exist': browser => {
