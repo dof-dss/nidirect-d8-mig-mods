@@ -104,6 +104,16 @@ process:
     -
       plugin: get
       source: field_recipe_allergens
+  field_recipe_image:
+    -
+      plugin: sub_process
+      source: field_recipe_image
+      process:
+        target_id: fid
+        alt: alt
+        title: title
+        width: width
+        height: height
 destination:
   plugin: 'entity:node'
   default_bundle: recipe
