@@ -67,7 +67,7 @@ class NidirectMigratePreCommand extends MigrateCommand {
     if ($shortcuts) {
       foreach ($shortcuts as $shortcut) {
         $shortcut->delete();
-      }	
+      }
     }
   }
 
@@ -86,10 +86,20 @@ class NidirectMigratePreCommand extends MigrateCommand {
 
       $config = \Drupal::service('config.factory')->getEditable('system.site');
       $site_uuid_curr = $config->get('uuid');
-      
+
       if ($site_uuid_sync != $site_uuid_curr) {
 	      $config->set('uuid', $site_uuid_sync)->save();
       }
+    }
+  }
+
+  /**
+   * Update to lowercase traffic light rating values to match the option keys on the 8.x widget.
+   */
+  protected function task_update_traffic_light_rating_values() {
+    foreach (['fat_content', 'salt', 'sugar', 'saturates'] as $field_id) {
+      $this->drupal7DatabaseQuery("UPDATE field_data_field_recipe_${field_id} SET field_recipe_${field_id}_status = LCASE(field_recipe_${field_id}_status)");
+      $this->drupal7DatabaseQuery("UPDATE field_revision_field_recipe_${field_id} SET field_recipe_${field_id}_status = LCASE(field_recipe_${field_id}_status)");
     }
   }
 
