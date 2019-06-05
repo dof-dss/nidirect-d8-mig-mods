@@ -134,6 +134,10 @@ process:
     -
       plugin: get
       source: field_recipe_allergy_advice
+  field_recipe_food_safety:
+    -
+      plugin: get
+      source: field_recipe_food_safety
 destination:
   plugin: 'entity:node'
   default_bundle: recipe
