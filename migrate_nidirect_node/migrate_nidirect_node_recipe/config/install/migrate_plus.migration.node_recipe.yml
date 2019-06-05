@@ -82,6 +82,12 @@ process:
       source: field_recipe_course_type
       process:
         target_id: tid
+  field_recipe_special_diet:
+    -
+      plugin: sub_process
+      source: field_recipe_special_diet
+      process:
+        target_id: tid
 \\\\\\\\\\\\\\\\\\\
   field_photo:
     -
