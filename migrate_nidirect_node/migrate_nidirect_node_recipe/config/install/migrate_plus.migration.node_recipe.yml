@@ -88,6 +88,11 @@ process:
       source: field_recipe_special_diet
       process:
         target_id: tid
+  field_recipe_preptime:
+    -
+      plugin: get
+      source: field_recipe_preptime
+
 \\\\\\\\\\\\\\\\\\\
   field_photo:
     -
