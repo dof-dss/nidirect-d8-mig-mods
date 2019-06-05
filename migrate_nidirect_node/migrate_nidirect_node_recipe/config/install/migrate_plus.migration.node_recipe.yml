@@ -130,6 +130,10 @@ process:
     -
       plugin: get
       source: field_recipe_nutrition_info
+  field_recipe_allergy_advice:
+    -
+      plugin: get
+      source: field_recipe_allergy_advice
 destination:
   plugin: 'entity:node'
   default_bundle: recipe
