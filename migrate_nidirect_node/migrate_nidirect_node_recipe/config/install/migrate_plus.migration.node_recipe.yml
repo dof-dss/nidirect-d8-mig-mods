@@ -140,7 +140,7 @@ process:
       source: field_recipe_food_safety
   field_livelink_url:
     -
-      plugin: get
+      plugin: field_link
       source: field_livelink_url
   field_livelink_id:
     -
