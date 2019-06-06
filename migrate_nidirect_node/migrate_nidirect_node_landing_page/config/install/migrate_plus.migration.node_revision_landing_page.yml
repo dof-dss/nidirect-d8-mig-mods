@@ -1,23 +1,23 @@
 langcode: en
 status: false
 dependencies: {  }
-id: upgrade_d7_node_publication
+id: node_revision_landing_page
 class: Drupal\migrate\Plugin\Migration
-field_plugin_method: alterFieldInstanceMigration
+field_plugin_method: alterFieldFormatterMigration
 cck_plugin_method: null
 migration_tags:
   - 'Drupal 7'
   - Content
-migration_group: migrate_drupal_7_node
-label: 'Nodes (Publication)'
+migration_group: migrate_nidirect_landing_page_node
+label: 'Node revisions (Landing page)'
 source:
-  plugin: d7_node
-  node_type: publication
+  plugin: d7_node_revision
+  node_type: landing_page
 process:
   nid:
     -
       plugin: get
-      source: tnid
+      source: nid
   vid:
     -
       plugin: get
@@ -67,7 +67,7 @@ process:
     -
       plugin: get
       source: timestamp
-  comment_node_publication/0/status:
+  comment_node_landing_page/0/status:
     -
       plugin: get
       source: comment
@@ -75,55 +75,71 @@ process:
     -
       plugin: get
       source: body
-  field_attachment:
+  field_banner_image:
     -
       plugin: sub_process
-      source: field_attachment
+      source: field_banner_image
       process:
         target_id: fid
-        display: display
-        description: description
-  field_publication_type:
-    -
-      plugin: get
-      source: field_publication_type
-  field_published_date:
-    -
-      plugin: sub_process
-      source: field_published_date
-      process:
-        value:
-          plugin: format_date
-          from_format: 'Y-m-d H:i:s'
-          to_format: 'Y-m-d\TH:i:s'
-          source: value
-  field_site_topics:
-    -
-      plugin: sub_process
-      source: field_site_topics
-      process:
-        target_id: tid
-  field_summary:
-    -
-      plugin: get
-      source: field_summary
+        alt: alt
+        title: title
+        width: width
+        height: height
   field_subtheme:
     -
       plugin: sub_process
       source: field_subtheme
       process:
         target_id: tid
+  field_summary:
+    -
+      plugin: get
+      source: field_summary
+  field_teaser:
+    -
+      plugin: get
+      source: field_teaser
   field_top_level_theme:
     -
       plugin: sub_process
       source: field_top_level_theme
       process:
         target_id: tid
+  field_enable_title:
+    -
+      plugin: get
+      source: field_enable_title
+  field_banner_image_overlay:
+    -
+      plugin: sub_process
+      source: field_banner_image_overlay
+      process:
+        target_id: fid
+        alt: alt
+        title: title
+        width: width
+        height: height
 destination:
-  plugin: 'entity:node'
-  default_bundle: publication
+  plugin: 'entity_revision:node'
+  default_bundle: landing_page
 migration_dependencies:
   required:
-    - upgrade_d7_user
-  optional:
-    - upgrade_d7_comment_field_instance
+    - node_article
+    - node_cold_weather_payment
+    - node_contact
+    - node_embargoed_publication
+    - node_external_link
+    - node_gallery
+    - node_health_condition
+    - node_homepage
+    - node_landing_page
+    - node_link
+    - node_mas_rss
+    - node_nidirect_contact
+    - node_nidirect_driving_instructor
+    - node_nidirect_gp
+    - node_nidirect_gp_practice
+    - node_nidirect_recipe
+    - node_nidirect_ub
+    - node_webform
+  optional: {  }
