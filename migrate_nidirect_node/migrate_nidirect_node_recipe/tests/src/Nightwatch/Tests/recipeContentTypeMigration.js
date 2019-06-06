@@ -40,18 +40,18 @@ module.exports = {
   'Test whether Recipe content type field exists (field_recipe_image)': browser => {
     browser.expect.element('#field-recipe-image').to.be.present;
   },
-  // 'Test whether Recipe content type field exists (field_recipe_fat_content)': browser => {
-  //   browser.expect.element('#field-recipe-fat-content').to.be.present;
-  // },
-  // 'Test whether Recipe content type field exists (field_recipe_saturates)': browser => {
-  //   browser.expect.element('#field-recipe-saturates').to.be.present;
-  // },
-  // 'Test whether Recipe content type field exists (field_recipe_sugar)': browser => {
-  //   browser.expect.element('#field-recipe-sugar').to.be.present;
-  // },
-  // 'Test whether Recipe content type field exists (field_recipe_salt)': browser => {
-  //   browser.expect.element('#field-recipe-salt').to.be.present;
-  // },
+  'Test whether Recipe content type field exists (field_recipe_fat_content)': browser => {
+    browser.expect.element('#field-recipe-fat-content').to.be.present;
+  },
+  'Test whether Recipe content type field exists (field_recipe_saturates)': browser => {
+    browser.expect.element('#field-recipe-saturates').to.be.present;
+  },
+  'Test whether Recipe content type field exists (field_recipe_sugar)': browser => {
+    browser.expect.element('#field-recipe-sugar').to.be.present;
+  },
+  'Test whether Recipe content type field exists (field_recipe_salt)': browser => {
+    browser.expect.element('#field-recipe-salt').to.be.present;
+  },
   'Test whether Recipe content type field exists (field_recipe_other_options)': browser => {
     browser.expect.element('#field-recipe-other-options').to.be.present;
   },
