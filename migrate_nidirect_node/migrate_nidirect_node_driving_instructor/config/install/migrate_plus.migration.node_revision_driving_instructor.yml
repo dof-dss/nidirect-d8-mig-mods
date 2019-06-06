@@ -1,11 +1,14 @@
-id: node_revision_driving_instructor
 langcode: en
-status: true
+status: false
 dependencies: {  }
+id: node_revision_nidirect_driving_instructor
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldFormatterMigration
 cck_plugin_method: null
-migration_group: migrate_nidirect_node_driving_instructor
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7_node
 label: 'Node revisions (Nidirect driving instructor)'
 source:
   plugin: d7_node_revision
@@ -114,5 +117,23 @@ destination:
   plugin: 'entity_revision:node'
   default_bundle: driving_instructor
 migration_dependencies:
-  required: {  }
+  required:
+    - node_article
+    - node_cold_weather_payment
+    - node_contact
+    - node_embargoed_publication
+    - node_external_link
+    - node_gallery
+    - node_health_condition
+    - node_homepage
+    - node_landing_page
+    - node_link
+    - node_mas_rss
+    - node_nidirect_contact
+    - node_nidirect_driving_instructor
+    - node_nidirect_gp
+    - node_nidirect_gp_practice
+    - node_nidirect_recipe
+    - node_nidirect_ub
+    - node_webform
   optional: {  }
