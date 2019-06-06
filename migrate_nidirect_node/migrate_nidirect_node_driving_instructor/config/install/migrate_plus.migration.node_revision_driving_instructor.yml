@@ -1,7 +1,7 @@
 langcode: en
 status: false
 dependencies: {  }
-id: upgrade_d7_node_revision_nidirect_driving_instructor
+id: node_revision_nidirect_driving_instructor
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldFormatterMigration
 cck_plugin_method: null
@@ -118,22 +118,22 @@ destination:
   default_bundle: driving_instructor
 migration_dependencies:
   required:
-    - upgrade_d7_node_article
-    - upgrade_d7_node_cold_weather_payment
-    - upgrade_d7_node_contact
-    - upgrade_d7_node_embargoed_publication
-    - upgrade_d7_node_external_link
-    - upgrade_d7_node_gallery
-    - upgrade_d7_node_health_condition
-    - upgrade_d7_node_homepage
-    - upgrade_d7_node_landing_page
-    - upgrade_d7_node_link
-    - upgrade_d7_node_mas_rss
-    - upgrade_d7_node_nidirect_contact
-    - upgrade_d7_node_nidirect_driving_instructor
-    - upgrade_d7_node_nidirect_gp
-    - upgrade_d7_node_nidirect_gp_practice
-    - upgrade_d7_node_nidirect_recipe
-    - upgrade_d7_node_nidirect_ub
-    - upgrade_d7_node_webform
+    - node_article
+    - node_cold_weather_payment
+    - node_contact
+    - node_embargoed_publication
+    - node_external_link
+    - node_gallery
+    - node_health_condition
+    - node_homepage
+    - node_landing_page
+    - node_link
+    - node_mas_rss
+    - node_nidirect_contact
+    - node_nidirect_driving_instructor
+    - node_nidirect_gp
+    - node_nidirect_gp_practice
+    - node_nidirect_recipe
+    - node_nidirect_ub
+    - node_webform
   optional: {  }
