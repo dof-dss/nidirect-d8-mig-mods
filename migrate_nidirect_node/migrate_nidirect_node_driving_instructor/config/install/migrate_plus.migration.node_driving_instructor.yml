@@ -114,5 +114,6 @@ destination:
   plugin: 'entity:node'
   default_bundle: driving_instructor
 migration_dependencies:
-  required: {  }
+  required:
+    - upgrade_d7_node_type
   optional: {  }
