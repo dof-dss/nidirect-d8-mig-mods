@@ -1,7 +1,7 @@
 langcode: en
 status: true
 dependencies: {  }
-id: migrate_nidirect_article_node
+id: migrate_nidirect_node_article
 label: 'NIDirect - Article Nodes'
 description: 'Drupal 7 Article nodes'
 source_type: 'Drupal 7'
