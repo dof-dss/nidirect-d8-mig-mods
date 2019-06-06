@@ -28,7 +28,7 @@ class MigrateCommand extends ContainerAwareCommand {
       $progressBar = new ProgressBar($output, $total_tasks);
       $progressBar->start();
 
-      foreach($migrate_tasks as $task) {
+      foreach ($migrate_tasks as $task) {
         $progressBar->advance();
         $this->getIo()->info($this->prettyFunctionName($task));
         call_user_func([$this, $task]);
@@ -41,6 +41,14 @@ class MigrateCommand extends ContainerAwareCommand {
     }
   }
 
+  /**
+   * Makes function names more human readable.
+   *
+   * @param string $name
+   *   Function name.
+   * @return string
+   *   Prettified function name.
+   */
   private function prettyFunctionName($name) {
     return ucfirst(substr(str_replace('_', ' ', $name), 5));
   }

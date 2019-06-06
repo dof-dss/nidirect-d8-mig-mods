@@ -1,11 +1,14 @@
-id: node_revision_driving_instructor
 langcode: en
-status: true
+status: false
 dependencies: {  }
+id: node_revision_nidirect_driving_instructor
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldFormatterMigration
 cck_plugin_method: null
-migration_group: migrate_nidirect_node_driving_instructor
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7_node
 label: 'Node revisions (Nidirect driving instructor)'
 source:
   plugin: d7_node_revision

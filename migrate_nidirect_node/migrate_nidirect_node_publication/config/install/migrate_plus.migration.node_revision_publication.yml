@@ -1,23 +1,20 @@
 langcode: en
-status: false
+status: true
 dependencies: {  }
-id: upgrade_d7_node_publication
+id: node_revision_publication
 class: Drupal\migrate\Plugin\Migration
-field_plugin_method: alterFieldInstanceMigration
+field_plugin_method: alterFieldFormatterMigration
 cck_plugin_method: null
-migration_tags:
-  - 'Drupal 7'
-  - Content
-migration_group: migrate_drupal_7_node
-label: 'Nodes (Publication)'
+migration_group: migrate_nidirect_node_publication
+label: 'Publication content type nodes (Revisions)'
 source:
-  plugin: d7_node
+  plugin: d7_node_revision
   node_type: publication
 process:
   nid:
     -
       plugin: get
-      source: tnid
+      source: nid
   vid:
     -
       plugin: get
@@ -95,7 +92,7 @@ process:
         value:
           plugin: format_date
           from_format: 'Y-m-d H:i:s'
-          to_format: 'Y-m-d\TH:i:s'
+          to_format: 'Y-m-d'
           source: value
   field_site_topics:
     -
@@ -120,10 +117,9 @@ process:
       process:
         target_id: tid
 destination:
-  plugin: 'entity:node'
+  plugin: 'entity_revision:node'
   default_bundle: publication
 migration_dependencies:
   required:
-    - upgrade_d7_user
-  optional:
-    - upgrade_d7_comment_field_instance
+    - node_publication
+  optional: {  }
