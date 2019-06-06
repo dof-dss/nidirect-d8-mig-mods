@@ -1,24 +1,20 @@
-uuid: efba0937-d75d-4091-8b3b-f74b8878cf20
 langcode: en
 status: true
 dependencies: {  }
-id: upgrade_d7_node_article
+id: node_revision_publication
 class: Drupal\migrate\Plugin\Migration
-field_plugin_method: alterFieldInstanceMigration
+field_plugin_method: alterFieldFormatterMigration
 cck_plugin_method: null
-migration_tags:
-  - 'Drupal 7'
-  - Content
-migration_group: migrate_nidirect_article_node
-label: 'Nodes (Article)'
+migration_group: migrate_nidirect_node_publication
+label: 'Publication content type nodes (Revisions)'
 source:
-  plugin: d7_node
-  node_type: article
+  plugin: d7_node_revision
+  node_type: publication
 process:
   nid:
     -
       plugin: get
-      source: tnid
+      source: nid
   vid:
     -
       plugin: get
@@ -68,7 +64,7 @@ process:
     -
       plugin: get
       source: timestamp
-  comment_node_article/0/status:
+  comment_node_publication/0/status:
     -
       plugin: get
       source: comment
@@ -76,10 +72,28 @@ process:
     -
       plugin: get
       source: body
-  field_enable_toc:
+  field_attachment:
+    -
+      plugin: sub_process
+      source: field_attachment
+      process:
+        target_id: fid
+        display: display
+        description: description
+  field_publication_type:
     -
       plugin: get
-      source: field_enable_toc
+      source: field_publication_type
+  field_published_date:
+    -
+      plugin: sub_process
+      source: field_published_date
+      process:
+        value:
+          plugin: format_date
+          from_format: 'Y-m-d H:i:s'
+          to_format: 'Y-m-d'
+          source: value
   field_site_topics:
     -
       plugin: sub_process
@@ -96,45 +110,16 @@ process:
       source: field_subtheme
       process:
         target_id: tid
-  field_teaser:
-    -
-      plugin: get
-      source: field_teaser
   field_top_level_theme:
     -
       plugin: sub_process
       source: field_top_level_theme
       process:
         target_id: tid
-  field_photo:
-    -
-      plugin: sub_process
-      source: field_photo
-      process:
-        target_id: fid
-        alt: alt
-        title: title
-        width: width
-        height: height
-  field_banner_image:
-    -
-      plugin: sub_process
-      source: field_banner_image
-      process:
-        target_id: fid
-        alt: alt
-        title: title
-        width: width
-        height: height
-  field_additional_info:
-    -
-      plugin: get
-      source: field_additional_info
 destination:
-  plugin: 'entity:node'
-  default_bundle: article
+  plugin: 'entity_revision:node'
+  default_bundle: publication
 migration_dependencies:
   required:
-    - upgrade_d7_user
-    - upgrade_d7_comment_field_instance
-    - upgrade_d7_taxonomy_term_site_topics
+    - node_publication
+  optional: {  }
