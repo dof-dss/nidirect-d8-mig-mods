@@ -20,12 +20,12 @@ use Drupal\migrate_nidirect_utils\MigrateCommand;
  */
 class NidirectMigratePreCommand extends MigrateCommand {
 
-   /**
+  /**
    * Database connection to migrate db.
    *
    * @var object
    */
-  protected $conn_migrate;
+  protected $connMigrate;
 
   /**
    * {@inheritdoc}
@@ -40,17 +40,17 @@ class NidirectMigratePreCommand extends MigrateCommand {
    */
   public function __construct() {
     parent::__construct();
-    $this->conn_migrate = Database::getConnection('default', 'migrate');
+    $this->connMigrate = Database::getConnection('default', 'migrate');
   }
 
   /**
    * A simple migrate database query wrapper.
    *
-   *  @param string $query
-   *  SQL query to execute.
+   * @param string $query
+   *   SQL query to execute.
    */
   private function drupal7DatabaseQuery($query) {
-    $conn_query =  $this->conn_migrate->query($query);
+    $conn_query = $this->connMigrate->query($query);
     return $conn_query->execute();
   }
 
@@ -58,7 +58,9 @@ class NidirectMigratePreCommand extends MigrateCommand {
    * Removes shortcuts from the default shortcut set to prevent errors
    * during configuration import.
    */
+  // phpcs:disable
   public function task_remove_default_shortcuts() {
+  // phpcs:enable
     // Remove the installed default admin shortcuts which trip up config sync import.
     $query = \Drupal::entityTypeManager()->getStorage('shortcut')->getQuery();
     $nids = $query->condition('shortcut_set', 'default')->execute();
@@ -67,7 +69,7 @@ class NidirectMigratePreCommand extends MigrateCommand {
     if ($shortcuts) {
       foreach ($shortcuts as $shortcut) {
         $shortcut->delete();
-      }	
+      }
     }
   }
 
@@ -75,7 +77,9 @@ class NidirectMigratePreCommand extends MigrateCommand {
    * Update the current site UUID to use the config/sync site UUID or we won't
    * be able to import configuration.
    */
+  // phpcs:disable
   protected function task_update_site_uuid() {
+  // phpcs:enable
     global $config_directories;
     $site_config = Yaml::parse(file_get_contents($config_directories['sync'] . '/system.site.yml'));
 
@@ -86,17 +90,31 @@ class NidirectMigratePreCommand extends MigrateCommand {
 
       $config = \Drupal::service('config.factory')->getEditable('system.site');
       $site_uuid_curr = $config->get('uuid');
-      
+
       if ($site_uuid_sync != $site_uuid_curr) {
-	      $config->set('uuid', $site_uuid_sync)->save();
+        $config->set('uuid', $site_uuid_sync)->save();
       }
+    }
+  }
+
+  /**
+   * Update to lowercase traffic light rating values to match the option keys on the 8.x widget.
+   */
+  // phpcs:disable
+  protected function task_update_traffic_light_rating_values() {
+  // phpcs:enable
+    foreach (['fat_content', 'salt', 'sugar', 'saturates'] as $field_id) {
+      $this->drupal7DatabaseQuery("UPDATE field_data_field_recipe_${field_id} SET field_recipe_${field_id}_status = LCASE(field_recipe_${field_id}_status)");
+      $this->drupal7DatabaseQuery("UPDATE field_revision_field_recipe_${field_id} SET field_recipe_${field_id}_status = LCASE(field_recipe_${field_id}_status)");
     }
   }
 
   /**
    * Fix Column 'title' cannot be null issues.
    */
+  // phpcs:disable
   protected function task_null_titles() {
+  // phpcs:enable
     // Fix nodes.
     $this->drupal7DatabaseQuery("UPDATE node SET node.title = '<none>' WHERE title = '' or title IS NULL");
     // Fix node revisions.
@@ -107,7 +125,9 @@ class NidirectMigratePreCommand extends MigrateCommand {
    * Fix issue with zero status redirect imports to Drupal 8.
    * Credit to Jaime Contreras.
    */
+  // phpcs:disable
   protected function task_null_redirect_zero_state() {
+  // phpcs:enable
     $this->drupal7DatabaseQuery("UPDATE redirect SET status_code=301 WHERE status_code=0 OR status_code IS NULL");
   }
 
