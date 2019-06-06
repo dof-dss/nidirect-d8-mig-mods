@@ -18,10 +18,10 @@ module.exports = {
     },
 
     // Look for keyword 'exercise' on node 1130.
-    'Test whether individual custom metatags have been imported': browser => {
+    'Test whether individual custom metatags have been imported (nid 1130)': browser => {
         browser
             .url('https://www.nidirect.gov.uk/node/1130')
-            .elements('xpath', "//meta[@name=\"keywords\"]", function(result) {
+            .elements('xpath', "//meta[@name='keywords']", function(result) {
                 result.value.map(function(element, err) {
                     browser.elementIdAttribute(element.ELEMENT, 'content', function(res) {
                         // Check that the same title appears in D8 after migration.
@@ -29,7 +29,47 @@ module.exports = {
                         browser
                             .drupalRelativeURL('/node/1130')
                             .useXpath()
-                            .expect.element("//meta[@name=\"keywords\"]")
+                            .expect.element("//meta[@name='keywords']")
+                            .to.have.attribute('content')
+                            .which.equals(res.value);
+                    })
+                })
+            });
+    },
+
+    // Look for keywords 'giant hogweed' on node 1826.
+    'Test whether individual custom metatags have been imported (nid 1826)': browser => {
+        browser
+            .url('https://www.nidirect.gov.uk/node/1826')
+            .elements('xpath', "//meta[@name='keywords']", function(result) {
+                result.value.map(function(element, err) {
+                    browser.elementIdAttribute(element.ELEMENT, 'content', function(res) {
+                        // Check that the same title appears in D8 after migration.
+                        console.log(res.value);
+                        browser
+                            .drupalRelativeURL('/node/1826')
+                            .useXpath()
+                            .expect.element("//meta[@name='keywords']")
+                            .to.have.attribute('content')
+                            .which.equals(res.value);
+                    })
+                })
+            });
+    },
+
+    // Look for abstract 'v0002' on node 4855.
+    'Test whether individual custom metatags have been imported (nid 4855)': browser => {
+        browser
+            .url('https://www.nidirect.gov.uk/node/4855')
+            .elements('xpath', "//meta[@name='abstract']", function(result) {
+                result.value.map(function(element, err) {
+                    browser.elementIdAttribute(element.ELEMENT, 'content', function(res) {
+                        // Check that the same title appears in D8 after migration.
+                        console.log(res.value);
+                        browser
+                            .drupalRelativeURL('/node/4855')
+                            .useXpath()
+                            .expect.element("//meta[@name='abstract']")
                             .to.have.attribute('content')
                             .which.equals(res.value);
                     })
