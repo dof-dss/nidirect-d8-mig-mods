@@ -114,5 +114,6 @@ destination:
   plugin: 'entity_revision:node'
   default_bundle: driving_instructor
 migration_dependencies:
-  required: {  }
+  required:
+    - node_driving_instructor
   optional: {  }

@@ -1,18 +1,19 @@
+uuid: efba0937-d75d-4091-8b3b-f74b8878cf20
 langcode: en
-status: false
+status: true
 dependencies: {  }
-id: upgrade_d7_node_landing_page
+id: node_article
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldInstanceMigration
 cck_plugin_method: null
 migration_tags:
   - 'Drupal 7'
   - Content
-migration_group: migrate_nidirect_landing_page_node
-label: 'Nodes (Landing page)'
+migration_group: migrate_nidirect_article_node
+label: 'Nodes (Article)'
 source:
   plugin: d7_node
-  node_type: landing_page
+  node_type: article
 process:
   nid:
     -
@@ -67,7 +68,7 @@ process:
     -
       plugin: get
       source: timestamp
-  comment_node_landing_page/0/status:
+  comment_node_article/0/status:
     -
       plugin: get
       source: comment
@@ -75,26 +76,26 @@ process:
     -
       plugin: get
       source: body
-  field_banner_image:
+  field_enable_toc:
+    -
+      plugin: get
+      source: field_enable_toc
+  field_site_topics:
     -
       plugin: sub_process
-      source: field_banner_image
-      process:
-        target_id: fid
-        alt: alt
-        title: title
-        width: width
-        height: height
-  field_subtheme:
-    -
-      plugin: sub_process
-      source: field_subtheme
+      source: field_site_topics
       process:
         target_id: tid
   field_summary:
     -
       plugin: get
       source: field_summary
+  field_subtheme:
+    -
+      plugin: sub_process
+      source: field_subtheme
+      process:
+        target_id: tid
   field_teaser:
     -
       plugin: get
@@ -105,27 +106,35 @@ process:
       source: field_top_level_theme
       process:
         target_id: tid
-  field_enable_title:
-    -
-      plugin: get
-      source: field_enable_title
-  field_banner_image_overlay:
+  field_photo:
     -
       plugin: sub_process
-      source: field_banner_image_overlay
+      source: field_photo
       process:
         target_id: fid
         alt: alt
         title: title
         width: width
         height: height
+  field_banner_image:
+    -
+      plugin: sub_process
+      source: field_banner_image
+      process:
+        target_id: fid
+        alt: alt
+        title: title
+        width: width
+        height: height
+  field_additional_info:
+    -
+      plugin: get
+      source: field_additional_info
 destination:
   plugin: 'entity:node'
-  default_bundle: landing_page
+  default_bundle: article
 migration_dependencies:
   required:
     - upgrade_d7_user
-    - upgrade_d7_node_type
-    - upgrade_d7_taxonomy_term_site_topics
-  optional:
     - upgrade_d7_comment_field_instance
+    - upgrade_d7_taxonomy_term_site_topics
