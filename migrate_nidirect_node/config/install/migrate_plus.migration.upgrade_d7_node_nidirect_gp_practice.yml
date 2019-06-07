@@ -1,0 +1,148 @@
+uuid: 4727880c-caa5-4a52-87f3-723909c585be
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_node_nidirect_gp_practice
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: alterFieldInstanceMigration
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7_node
+label: 'Nodes (Nidirect GP practice)'
+source:
+  plugin: d7_node
+  node_type: nidirect_gp_practice
+process:
+  nid:
+    -
+      plugin: get
+      source: tnid
+  vid:
+    -
+      plugin: get
+      source: vid
+  langcode:
+    -
+      plugin: default_value
+      source: language
+      default_value: und
+  title:
+    -
+      plugin: get
+      source: title
+  uid:
+    -
+      plugin: get
+      source: node_uid
+  status:
+    -
+      plugin: get
+      source: status
+  created:
+    -
+      plugin: get
+      source: created
+  changed:
+    -
+      plugin: get
+      source: changed
+  promote:
+    -
+      plugin: get
+      source: promote
+  sticky:
+    -
+      plugin: get
+      source: sticky
+  revision_uid:
+    -
+      plugin: get
+      source: revision_uid
+  revision_log:
+    -
+      plugin: get
+      source: log
+  revision_timestamp:
+    -
+      plugin: get
+      source: timestamp
+  comment_node_nidirect_gp_practice/0/status:
+    -
+      plugin: get
+      source: comment
+  field_contact_address_01:
+    -
+      plugin: get
+      source: field_contact_address_01
+  field_contact_address_02:
+    -
+      plugin: get
+      source: field_contact_address_02
+  field_contact_phone:
+    -
+      plugin: get
+      source: field_contact_phone
+  field_contact_postcode:
+    -
+      plugin: get
+      source: field_contact_postcode
+  field_contact_town_city:
+    -
+      plugin: get
+      source: field_contact_town_city
+  field_gp_appointments:
+    -
+      plugin: field_link
+      source: field_gp_appointments
+  field_gp_lcg:
+    -
+      plugin: get
+      source: field_gp_lcg
+  field_gp_partnership_no:
+    -
+      plugin: get
+      source: field_gp_partnership_no
+  field_gp_practice_lead:
+    -
+      plugin: get
+      source: field_gp_practice_lead
+  field_gp_practice_member:
+    -
+      plugin: get
+      source: field_gp_practice_member
+  field_gp_practice_name:
+    -
+      plugin: get
+      source: field_gp_practice_name
+  field_gp_practice_website:
+    -
+      plugin: field_link
+      source: field_gp_practice_website
+  field_gp_prescriptions:
+    -
+      plugin: field_link
+      source: field_gp_prescriptions
+  field_gp_surgery_name:
+    -
+      plugin: get
+      source: field_gp_surgery_name
+  field_map:
+    -
+      plugin: get
+      source: field_map
+  field_gp_practice_no:
+    -
+      plugin: get
+      source: field_gp_practice_no
+destination:
+  plugin: 'entity:node'
+  default_bundle: nidirect_gp_practice
+migration_dependencies:
+  required:
+    - upgrade_d7_user
+    - upgrade_d7_node_type
+  optional:
+    - upgrade_d7_field_instance
+    - upgrade_d7_comment_field_instance
