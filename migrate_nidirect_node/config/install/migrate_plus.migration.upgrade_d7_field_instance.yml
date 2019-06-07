@@ -1,5 +1,5 @@
 langcode: en
-status: true
+status: false
 dependencies: {  }
 id: upgrade_d7_field_instance
 class: Drupal\migrate_drupal\Plugin\migrate\FieldMigration
