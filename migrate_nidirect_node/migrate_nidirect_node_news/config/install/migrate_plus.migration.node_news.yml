@@ -109,6 +109,5 @@ migration_dependencies:
   required:
     - upgrade_d7_user
     - upgrade_d7_file
-    - upgrade_d7_node_type
   optional:
     - upgrade_d7_comment_field_instance

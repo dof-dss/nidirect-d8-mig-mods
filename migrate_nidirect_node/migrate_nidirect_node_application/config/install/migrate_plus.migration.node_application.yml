@@ -109,7 +109,6 @@ process:
         target_id: tid
 migration_dependencies:
   required:
-    - upgrade_d7_node_type
     - upgrade_d7_user
   optional:
     - upgrade_d7_comment_field_instance
