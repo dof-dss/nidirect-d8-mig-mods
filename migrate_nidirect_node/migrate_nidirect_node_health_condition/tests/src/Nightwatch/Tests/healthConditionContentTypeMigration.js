@@ -122,57 +122,55 @@ module.exports = {
             .expect.element('#field-top-level-theme').to.be.present;
     },
 
-    'Test whether Article nodes exist': browser => {
+    'Test whether Health Condition nodes exist': browser => {
 
         // See if we have any health_condition nodes created.
         browser
             .drupalRelativeURL('/admin/content?type=health_condition')
             .expect.element('#views-form-content-page-1 > table > tbody > tr > td:nth-child(3)')
-            .text.to.contain('Article');
+            .text.to.contain('Health condition');
 
         // Now test a random sample of actual nodes.
 
-        // Extract title from old NIDirect page.
+        // Extract title from old NIDirect page for node 10285.
         browser
-            .url('https://www.nidirect.gov.uk/node/9474')
-            .elements('css selector', '#main-area div #contentTypeArticle div:nth-child(2) h1', function(result) {
+            .url('https://www.nidirect.gov.uk/node/10285')
+            .elements('css selector', '#main-area div #contentTypeArticle div h1', function(result) {
                 result.value.map(function(element, err) {
                     browser.elementIdAttribute(element.ELEMENT, 'innerText', function(res) {
                         // Check that the same title appears in D8 after migration.
                         browser
-                            .drupalRelativeURL('/node/9474/edit')
+                            .drupalRelativeURL('/node/10285/edit')
                             .expect.element('#edit-title-0-value')
                             .to.have.value.which.contains(res.value);
                     })
                 })
             });
 
-
-
-        // Extract title from old NIDirect page.
+        // Extract title from old NIDirect page for node 10364.
         browser
-            .url('https://www.nidirect.gov.uk/node/1210')
+            .url('https://www.nidirect.gov.uk/node/10364')
             .elements('css selector', '#main-area div #contentTypeArticle div h1', function(result) {
                 result.value.map(function(element, err) {
                     browser.elementIdAttribute(element.ELEMENT, 'innerText', function(res) {
                         // Check that the same title appears in D8 after migration.
                         browser
-                            .drupalRelativeURL('/node/1210/edit')
+                            .drupalRelativeURL('/node/10364/edit')
                             .expect.element('#edit-title-0-value')
                             .to.have.value.which.contains(res.value);
                     })
                 })
             });
 
-        // Extract title from old NIDirect page.
+        // Extract title from old NIDirect page for node 10350.
         browser
-            .url('https://www.nidirect.gov.uk/node/2488')
+            .url('https://www.nidirect.gov.uk/node/10350')
             .elements('css selector', '#main-area div #contentTypeArticle div h1', function(result) {
                 result.value.map(function(element, err) {
                     browser.elementIdAttribute(element.ELEMENT, 'innerText', function(res) {
                         // Check that the same title appears in D8 after migration.
                         browser
-                            .drupalRelativeURL('/node/2488/edit')
+                            .drupalRelativeURL('/node/10350/edit')
                             .expect.element('#edit-title-0-value')
                             .to.have.value.which.contains(res.value);
                     })
