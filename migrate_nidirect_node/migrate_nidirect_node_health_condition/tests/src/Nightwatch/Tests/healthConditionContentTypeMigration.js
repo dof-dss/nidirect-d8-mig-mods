@@ -15,15 +15,15 @@ module.exports = {
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_parent_condition').to.be.present;
+            .expect.element('#field-parent-condition').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_alternative_title').to.be.present;
+            .expect.element('#field-alternative-title').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_banner_image').to.be.present;
+            .expect.element('#field-banner-image').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
@@ -31,95 +31,95 @@ module.exports = {
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_hc_body_location').to.be.present;
+            .expect.element('#field-hc-body-location').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_hc_body_system').to.be.present;
+            .expect.element('#field-hc-body-system').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_hc_condition_type').to.be.present;
+            .expect.element('#field-hc-condition-type').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_enable_toc').to.be.present;
+            .expect.element('#field-enable-toc').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_additional_info').to.be.present;
+            .expect.element('#field-additional-info').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_index_letter').to.be.present;
+            .expect.element('#field-index-letter').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_hc_info_source').to.be.present;
+            .expect.element('#field-hc-info-source').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_last_review_date').to.be.present;
+            .expect.element('#field-last-review-date').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_meta_tags').to.be.present;
+            .expect.element('#field-meta-tags').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_next_review_date').to.be.present;
+            .expect.element('#field-next-review-date').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_hc_primary_symptom_1').to.be.present;
+            .expect.element('#field-hc-primary-symptom-1').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_hc_primary_symptom_2').to.be.present;
+            .expect.element('#field-hc-primary-symptom-2').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_hc_primary_symptom_3').to.be.present;
+            .expect.element('#field-hc-primary-symptom-3').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_hc_primary_symptom_4').to.be.present;
+            .expect.element('#field-hc-primary-symptom-4').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_published_date').to.be.present;
+            .expect.element('#field-published-date').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_related_conditions').to.be.present;
+            .expect.element('#field-related-conditions').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_related_info').to.be.present;
+            .expect.element('#field-related-info').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_hc_secondary_symptoms').to.be.present;
+            .expect.element('#field-hc-secondary-symptoms').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_summary').to.be.present;
+            .expect.element('#field-summary').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_site_topics').to.be.present;
+            .expect.element('#field-site-topics').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_teaser').to.be.present;
+            .expect.element('#field-teaser').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_subtheme').to.be.present;
+            .expect.element('#field-subtheme').to.be.present;
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition/fields')
-            .expect.element('#field_top_level_theme').to.be.present;
+            .expect.element('#field-top-level-theme').to.be.present;
     },
 
     'Test whether Article nodes exist': browser => {
