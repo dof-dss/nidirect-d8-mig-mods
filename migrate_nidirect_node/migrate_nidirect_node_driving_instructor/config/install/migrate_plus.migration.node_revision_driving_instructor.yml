@@ -118,22 +118,5 @@ destination:
   default_bundle: driving_instructor
 migration_dependencies:
   required:
-    - node_article
-    - node_cold_weather_payment
-    - node_contact
-    - node_embargoed_publication
-    - node_external_link
-    - node_gallery
-    - node_health_condition
-    - node_homepage
-    - node_landing_page
-    - node_link
-    - node_mas_rss
-    - node_nidirect_contact
-    - node_nidirect_driving_instructor
-    - node_nidirect_gp
-    - node_nidirect_gp_practice
-    - node_nidirect_recipe
-    - node_nidirect_ub
-    - node_webform
+    - node_driving_instructor
   optional: {  }

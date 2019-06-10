@@ -1,5 +1,5 @@
 langcode: en
-status: false
+status: true
 dependencies: {  }
 id: node_revision_landing_page
 class: Drupal\migrate\Plugin\Migration
@@ -8,7 +8,7 @@ cck_plugin_method: null
 migration_tags:
   - 'Drupal 7'
   - Content
-migration_group: migrate_nidirect_landing_page_node
+migration_group: migrate_nidirect_node_landing_page
 label: 'Node revisions (Landing page)'
 source:
   plugin: d7_node_revision
@@ -124,22 +124,5 @@ destination:
   default_bundle: landing_page
 migration_dependencies:
   required:
-    - node_article
-    - node_cold_weather_payment
-    - node_contact
-    - node_embargoed_publication
-    - node_external_link
-    - node_gallery
-    - node_health_condition
-    - node_homepage
     - node_landing_page
-    - node_link
-    - node_mas_rss
-    - node_nidirect_contact
-    - node_nidirect_driving_instructor
-    - node_nidirect_gp
-    - node_nidirect_gp_practice
-    - node_nidirect_recipe
-    - node_nidirect_ub
-    - node_webform
   optional: {  }
