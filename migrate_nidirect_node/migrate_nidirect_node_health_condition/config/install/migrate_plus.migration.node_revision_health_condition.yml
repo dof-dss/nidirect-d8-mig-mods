@@ -1,24 +1,24 @@
-uuid: ef23744b-0889-4598-8464-eca1fb8842cf
+uuid: c92af8e4-b365-48bc-9ee8-d88dc1945401
 langcode: en
 status: true
 dependencies: {  }
-id: upgrade_d7_node_health_condition
+id: node_revision_health_condition
 class: Drupal\migrate\Plugin\Migration
-field_plugin_method: alterFieldInstanceMigration
+field_plugin_method: alterFieldFormatterMigration
 cck_plugin_method: null
 migration_tags:
   - 'Drupal 7'
   - Content
 migration_group: migrate_nidirect_health_condition_node
-label: 'Nodes (Health condition)'
+label: 'Node revisions (Health condition)'
 source:
-  plugin: d7_node
+  plugin: d7_node_revision
   node_type: health_condition
 process:
   nid:
     -
       plugin: get
-      source: tnid
+      source: nid
   vid:
     -
       plugin: get
@@ -198,7 +198,7 @@ process:
         value:
           plugin: format_date
           from_format: 'Y-m-d H:i:s'
-          to_format: 'Y-m-d'
+          to_format: 'Y-m-d\TH:i:s'
           source: value
   field_next_review_date:
     -
@@ -208,7 +208,7 @@ process:
         value:
           plugin: format_date
           from_format: 'Y-m-d H:i:s'
-          to_format: 'Y-m-d'
+          to_format: 'Y-m-d\TH:i:s'
           source: value
   field_hc_info_source:
     -
@@ -224,7 +224,7 @@ process:
         value:
           plugin: format_date
           from_format: 'Y-m-d H:i:s'
-          to_format: 'Y-m-d'
+          to_format: 'Y-m-d\TH:i:s'
           source: value
   field_related_info:
     -
@@ -235,12 +235,30 @@ process:
       plugin: get
       source: field_related_conditions
 destination:
-  plugin: 'entity:node'
+  plugin: 'entity_revision:node'
   default_bundle: health_condition
 migration_dependencies:
   required:
-    - upgrade_d7_user
-    - upgrade_d7_node_type
-  optional:
-    - upgrade_d7_field_instance
-    - upgrade_d7_comment_field_instance
+    - upgrade_d7_node_application
+    - upgrade_d7_node_article
+    - upgrade_d7_node_cold_weather_payment
+    - upgrade_d7_node_contact
+    - upgrade_d7_node_embargoed_publication
+    - upgrade_d7_node_external_link
+    - upgrade_d7_node_gallery
+    - upgrade_d7_node_health_condition
+    - upgrade_d7_node_homepage
+    - upgrade_d7_node_landing_page
+    - upgrade_d7_node_link
+    - upgrade_d7_node_mas_rss
+    - upgrade_d7_node_news
+    - upgrade_d7_node_nidirect_contact
+    - upgrade_d7_node_nidirect_driving_instructor
+    - upgrade_d7_node_nidirect_gp
+    - upgrade_d7_node_nidirect_gp_practice
+    - upgrade_d7_node_nidirect_recipe
+    - upgrade_d7_node_nidirect_ub
+    - upgrade_d7_node_page
+    - upgrade_d7_node_publication
+    - upgrade_d7_node_webform
+  optional: {  }
