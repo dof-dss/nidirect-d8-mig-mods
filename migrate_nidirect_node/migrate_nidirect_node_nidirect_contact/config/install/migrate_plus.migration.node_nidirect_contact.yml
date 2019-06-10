@@ -1,14 +1,11 @@
+id: node_nidirect_contact
 langcode: en
-status: false
+status: true
 dependencies: {  }
-id: upgrade_d7_node_nidirect_contact
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldInstanceMigration
 cck_plugin_method: null
-migration_tags:
-  - 'Drupal 7'
-  - Content
-migration_group: migrate_drupal_7_node
+migration_group: migrate_nidirect_node_nidirect_contact
 label: 'Nodes (Nidirect contact)'
 source:
   plugin: d7_node
@@ -159,7 +156,7 @@ process:
     -
       plugin: get
       source: field_map
-  field_site_topics:
+  field_site_themes:
     -
       plugin: sub_process
       source: field_site_topics
@@ -181,7 +178,5 @@ destination:
   plugin: 'entity:node'
   default_bundle: nidirect_contact
 migration_dependencies:
-  required:
-    - upgrade_d7_user
-  optional:
-    - upgrade_d7_comment_field_instance
+  required: {  }
+  optional: {  }
