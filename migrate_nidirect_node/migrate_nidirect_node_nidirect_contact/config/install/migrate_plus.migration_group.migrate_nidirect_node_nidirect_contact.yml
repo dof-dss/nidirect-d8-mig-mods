@@ -1,0 +1,11 @@
+id: migrate_nidirect_node_nidirect_contact
+langcode: en
+status: true
+dependencies: {  }
+label: 'NIDirect - NIDirect Contact nodes'
+description: 'Drupal 7 NIDirect Contact nodes'
+source_type: 'Drupal 7'
+module: null
+shared_configuration:
+  source:
+    key: drupal7db
