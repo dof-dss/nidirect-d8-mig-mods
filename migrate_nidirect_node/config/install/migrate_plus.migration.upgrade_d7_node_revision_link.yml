@@ -98,8 +98,6 @@ migration_dependencies:
     - upgrade_d7_node_nidirect_driving_instructor
     - upgrade_d7_node_nidirect_gp
     - upgrade_d7_node_nidirect_gp_practice
-    - upgrade_d7_node_nidirect_recipe
     - upgrade_d7_node_nidirect_ub
-    - upgrade_d7_node_publication
     - upgrade_d7_node_webform
   optional: {  }

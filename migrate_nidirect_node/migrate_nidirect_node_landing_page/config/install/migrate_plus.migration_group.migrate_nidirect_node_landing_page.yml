@@ -1,9 +1,9 @@
 langcode: en
 status: true
 dependencies: {  }
-id: migrate_nidirect_article_node
-label: 'NIDirect - Article Nodes'
-description: 'Drupal 7 Article nodes'
+id: migrate_nidirect_node_landing_page
+label: 'NIDirect - Landing Page Nodes'
+description: 'Drupal 7 Landing Page nodes'
 source_type: 'Drupal 7'
 module: null
 shared_configuration:
