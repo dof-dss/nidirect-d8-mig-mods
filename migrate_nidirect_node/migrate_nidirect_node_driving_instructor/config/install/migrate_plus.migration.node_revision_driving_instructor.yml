@@ -8,7 +8,7 @@ cck_plugin_method: null
 migration_tags:
   - 'Drupal 7'
   - Content
-migration_group: migrate_drupal_7_node
+migration_group: migrate_nidirect_node_driving_instructor
 label: 'Node revisions (Nidirect driving instructor)'
 source:
   plugin: d7_node_revision
