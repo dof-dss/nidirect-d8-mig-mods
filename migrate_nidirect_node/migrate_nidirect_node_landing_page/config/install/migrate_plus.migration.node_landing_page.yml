@@ -125,7 +125,4 @@ destination:
 migration_dependencies:
   required:
     - upgrade_d7_user
-    - node_type
     - upgrade_d7_taxonomy_term_site_themes
-  optional:
-    - upgrade_d7_comment_field_instance
