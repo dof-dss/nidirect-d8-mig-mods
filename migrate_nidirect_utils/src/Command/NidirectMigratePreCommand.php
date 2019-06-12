@@ -21,6 +21,13 @@ use Drupal\migrate_nidirect_utils\MigrateCommand;
 class NidirectMigratePreCommand extends MigrateCommand {
 
   /**
+   * Database connection to default (Drupal 8) db.
+   *
+   * @var object
+   */
+  protected $connDefault;
+
+  /**
    * Database connection to migrate db.
    *
    * @var object
@@ -41,6 +48,7 @@ class NidirectMigratePreCommand extends MigrateCommand {
   public function __construct() {
     parent::__construct();
     $this->connMigrate = Database::getConnection('default', 'migrate');
+    $this->connDefault = Database::getConnection('default', 'default');
   }
 
   /**
@@ -129,6 +137,22 @@ class NidirectMigratePreCommand extends MigrateCommand {
   protected function task_null_redirect_zero_state() {
   // phpcs:enable
     $this->drupal7DatabaseQuery("UPDATE redirect SET status_code=301 WHERE status_code=0 OR status_code IS NULL");
+  }
+
+   /**
+   * Import Drupal 7 URL aliases.
+   */
+  // phpcs:disable
+  protected function task_import_url_aliases() {
+    $aliases_query = $this->connMigrate->query('SELECT pid, source, alias FROM url_alias');
+    $aliases = $aliases_query->fetchAllAssoc('pid');
+
+    $insert = $this->connDefault->insert('url_alias')->fields(['pid', 'source', 'alias', 'langcode']);
+    foreach ($aliases as $pid => $alias) {
+        $insert->values([$pid, '/' . $alias->source, '/' . $alias->alias, 'und']);
+    }
+
+    $insert->execute();
   }
 
 }
