@@ -125,5 +125,5 @@ destination:
 migration_dependencies:
   required:
     - upgrade_d7_user
-  optional:
-    - upgrade_d7_comment_field_instance
+    - upgrade_d7_file
+    - upgrade_d7_file_document
