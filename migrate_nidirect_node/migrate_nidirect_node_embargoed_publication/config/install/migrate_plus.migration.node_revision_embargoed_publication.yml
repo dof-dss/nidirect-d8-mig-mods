@@ -124,20 +124,4 @@ destination:
   default_bundle: embargoed_publication
 migration_dependencies:
   required:
-    - upgrade_d7_node_cold_weather_payment
-    - upgrade_d7_node_contact
-    - upgrade_d7_node_embargoed_publication
-    - upgrade_d7_node_external_link
-    - upgrade_d7_node_gallery
-    - upgrade_d7_node_health_condition
-    - upgrade_d7_node_homepage
-    - upgrade_d7_node_landing_page
-    - upgrade_d7_node_link
-    - upgrade_d7_node_mas_rss
-    - upgrade_d7_node_nidirect_contact
-    - upgrade_d7_node_nidirect_driving_instructor
-    - upgrade_d7_node_nidirect_gp
-    - upgrade_d7_node_nidirect_gp_practice
-    - upgrade_d7_node_nidirect_ub
-    - upgrade_d7_node_webform
-  optional: {  }
+    - node_embargoed_publication
