@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: migrate_nidirect_entity_gp
+label: 'NIDirect - GP entity'
+description: 'Drupal 7 GP details nodes to custom content entity'
+source_type: 'Drupal 7'
+module: null
+shared_configuration:
+  source:
+    key: drupal7db
