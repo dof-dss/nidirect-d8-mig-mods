@@ -1,4 +1,4 @@
-id: node_page
+id: node_gp_practice
 label: 'GP Practice content type nodes'
 status: true
 dependencies: {  }
@@ -7,7 +7,7 @@ class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldInstanceMigration
 source:
   plugin: d7_node
-  node_type: gp_practice
+  node_type: nidirect_gp_practice
 process:
   nid:
     -
@@ -66,10 +66,54 @@ process:
     -
       plugin: get
       source: comment
+  field_gp_practice_name:
+    -
+      plugin: get
+      source: field_gp_practice_name
+  field_gp_practice_no:
+    -
+      plugin: get
+      source: field_gp_practice_no
+  field_gp_surgery_name:
+    -
+      plugin: get
+      source: field_gp_surgery_name
+  field_gp_partnership_no:
+    -
+      plugin: get
+      source: field_gp_partnership_no
+  field_gp_lcg:
+    -
+      plugin: get
+      source: field_gp_lcg
+  field_gp_appointments:
+    -
+      plugin: field_link
+      source: field_gp_appointments
+  field_gp_prescriptions:
+    -
+      plugin: field_link
+      source: field_gp_prescriptions
+  field_gp_practice_website:
+    -
+      plugin: field_link
+      source: field_gp_practice_website
+  field_contact_phone:
+    -
+      plugin: get
+      source: field_contact_phone
+  field_gp_practice_lead:
+    -
+      plugin: get
+      source: field_gp_practice_lead
+  field_gp_practice_member:
+    -
+      plugin: get
+      source: field_gp_practice_member
 destination:
   plugin: 'entity:node'
   default_bundle: gp_practice
 migration_dependencies:
   required:
     - upgrade_d7_user
-    - migrate_nidirect_entity_gp
+    - entity_gp
