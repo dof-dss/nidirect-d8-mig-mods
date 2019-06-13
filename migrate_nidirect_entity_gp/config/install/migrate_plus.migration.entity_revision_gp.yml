@@ -15,6 +15,55 @@ process:
     -
       plugin: get
       source: tnid
+  vid:
+    -
+      plugin: get
+      source: vid
+  langcode:
+    -
+      plugin: default_value
+      source: language
+      default_value: und
+  first_name:
+    -
+      plugin: get
+      source: field_gp_forename
+  last_name:
+    -
+      plugin: get
+      source: field_gp_name
+  cypher:
+    -
+      plugin: get
+      source: field_gp_cypher
+  user_id:
+    -
+      plugin: get
+      source: node_uid
+  status:
+    -
+      plugin: get
+      source: status
+  created:
+    -
+      plugin: get
+      source: created
+  changed:
+    -
+      plugin: get
+      source: changed
+  revision_uid:
+    -
+      plugin: get
+      source: revision_uid
+  revision_log:
+    -
+      plugin: get
+      source: log
+  revision_timestamp:
+    -
+      plugin: get
+      source: timestamp
 destination:
   plugin: 'entity_revision:gp'
   default_bundle: gp
