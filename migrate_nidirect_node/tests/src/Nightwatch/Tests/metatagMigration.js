@@ -1,9 +1,9 @@
 module.exports = {
-    '@tags': ['nidirect-migrations'],
+    '@tags': ['nidirect-migrations', 'nidirect-metatag'],
 
     'Test whether Metatag tokens exist on Articles': browser => {
         browser
-            .drupalLogin({name: 'admin', password: 'letmein'})
+            .drupalLogin({ name: 'admin', password: 'letmein' })
             .drupalRelativeURL('/admin/structure/types/manage/article/fields')
             .expect.element('#field-meta-tags').to.be.present;
     },
@@ -19,9 +19,9 @@ module.exports = {
     'Test whether individual custom metatags have been imported (nid 1130)': browser => {
         browser
             .url('https://www.nidirect.gov.uk/node/1130')
-            .elements('xpath', "//meta[@name='keywords']", function(result) {
-                result.value.map(function(element, err) {
-                    browser.elementIdAttribute(element.ELEMENT, 'content', function(res) {
+            .elements('xpath', "//meta[@name='keywords']", function (result) {
+                result.value.map(function (element, err) {
+                    browser.elementIdAttribute(element.ELEMENT, 'content', function (res) {
                         // Check that the same title appears in D8 after migration.
                         console.log(res.value);
                         browser
@@ -39,9 +39,9 @@ module.exports = {
     'Test whether individual custom metatags have been imported (nid 1826)': browser => {
         browser
             .url('https://www.nidirect.gov.uk/node/1826')
-            .elements('xpath', "//meta[@name='keywords']", function(result) {
-                result.value.map(function(element, err) {
-                    browser.elementIdAttribute(element.ELEMENT, 'content', function(res) {
+            .elements('xpath', "//meta[@name='keywords']", function (result) {
+                result.value.map(function (element, err) {
+                    browser.elementIdAttribute(element.ELEMENT, 'content', function (res) {
                         // Check that the same title appears in D8 after migration.
                         console.log(res.value);
                         browser
@@ -59,9 +59,9 @@ module.exports = {
     'Test whether individual custom metatags have been imported (nid 4855)': browser => {
         browser
             .url('https://www.nidirect.gov.uk/node/4855')
-            .elements('xpath', "//meta[@name='abstract']", function(result) {
-                result.value.map(function(element, err) {
-                    browser.elementIdAttribute(element.ELEMENT, 'content', function(res) {
+            .elements('xpath', "//meta[@name='abstract']", function (result) {
+                result.value.map(function (element, err) {
+                    browser.elementIdAttribute(element.ELEMENT, 'content', function (res) {
                         // Check that the same title appears in D8 after migration.
                         console.log(res.value);
                         browser

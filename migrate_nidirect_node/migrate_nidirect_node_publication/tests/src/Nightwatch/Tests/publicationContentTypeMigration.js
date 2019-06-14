@@ -1,5 +1,5 @@
 module.exports = {
-  '@tags': ['nidirect-migrations'],
+  '@tags': ['nidirect-migrations', 'nidirect-node-publication'],
 
   'Test whether Publication content type exists': function (browser) {
     browser

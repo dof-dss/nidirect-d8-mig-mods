@@ -1,5 +1,5 @@
 module.exports = {
-    '@tags': ['nidirect-migrations'],
+    '@tags': ['nidirect-migrations', 'nidirect-node-health-condition'],
 
     'Test whether Health Condition content type exists': browser => {
         browser

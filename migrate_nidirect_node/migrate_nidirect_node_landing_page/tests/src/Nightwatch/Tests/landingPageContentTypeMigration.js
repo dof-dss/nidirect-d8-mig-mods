@@ -1,9 +1,9 @@
 module.exports = {
-    '@tags': ['nidirect-migrations'],
+    '@tags': ['nidirect-migrations', 'nidirect-node-landing-page'],
 
     'Test whether Landing Page content type exists': browser => {
         browser
-            .drupalLogin({name: 'admin', password: 'letmein'});
+            .drupalLogin({ name: 'admin', password: 'letmein' });
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/landing_page')
@@ -77,9 +77,9 @@ module.exports = {
         // Extract title from old NIDirect page.
         browser
             .url('https://www.nidirect.gov.uk/node/12694')
-            .elements('xpath', "//h1[@class='element-invisible']", function(result) {
-                result.value.map(function(element, err) {
-                    browser.elementIdAttribute(element.ELEMENT, 'innerText', function(res) {
+            .elements('xpath', "//h1[@class='element-invisible']", function (result) {
+                result.value.map(function (element, err) {
+                    browser.elementIdAttribute(element.ELEMENT, 'innerText', function (res) {
                         // Check that the same title appears in D8 after migration.
                         browser
                             .drupalRelativeURL('/node/12694/edit')
