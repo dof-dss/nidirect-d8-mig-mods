@@ -123,6 +123,14 @@ process:
           - field_contact_postcode
     -
       plugin: addressfield
+  field_location/lng:
+    -
+      plugin: get
+      source: field_map/0/lon
+  field_location/lat:
+    -
+      plugin: get
+      source: field_map/0/lat
 destination:
   plugin: 'entity:node'
   default_bundle: gp_practice
