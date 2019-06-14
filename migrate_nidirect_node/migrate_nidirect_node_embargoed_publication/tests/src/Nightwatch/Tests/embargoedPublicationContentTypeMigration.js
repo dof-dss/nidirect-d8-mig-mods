@@ -3,7 +3,7 @@ module.exports = {
 
     'Test whether Embargoed Publication content type exists': browser => {
         browser
-            .drupalLogin({name: 'admin', password: 'letmein'});
+            .drupalLogin({ name: 'admin', password: 'letmein' });
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/embargoed_publication')
@@ -30,7 +30,7 @@ module.exports = {
             .expect.element('#field-summary').to.be.present;
 
         browser
-            .expect.element('#field-site-topics').to.be.present;
+            .expect.element('#field-site-themes').to.be.present;
 
         browser
             .expect.element('#field-subtheme').to.be.present;
