@@ -3,7 +3,7 @@ module.exports = {
 
   'Test whether Application content type exists': browser => {
     browser
-      .drupalLogin({ name: 'admin', password: 'letmein' })
+      .drupalLogin({ name: process.env.TEST_USER, password: process.env.TEST_PASS })
       .drupalRelativeURL('/admin/structure/types')
       .expect.element('#block-seven-content > table > tbody > tr:nth-child(1) > td.menu-label')
       .text.to.equal('Application');

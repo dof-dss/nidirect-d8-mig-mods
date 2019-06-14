@@ -3,7 +3,7 @@ module.exports = {
 
     'Test whether Health Condition content type exists': browser => {
         browser
-            .drupalLogin({ name: 'admin', password: 'letmein' })
+            .drupalLogin({ name: process.env.TEST_USER, password: process.env.TEST_PASS })
             .drupalRelativeURL('/admin/structure/types/manage/health_condition')
             .expect.element('form > div > #edit-name')
             .value.to.contain('Health condition');

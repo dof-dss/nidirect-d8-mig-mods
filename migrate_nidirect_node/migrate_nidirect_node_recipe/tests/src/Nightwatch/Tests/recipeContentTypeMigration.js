@@ -3,7 +3,7 @@ module.exports = {
 
   'Test whether Recipe content type exists': function (browser) {
     browser
-      .drupalLogin({ name: 'admin', password: 'letmein' })
+      .drupalLogin({ name: process.env.TEST_USER, password: process.env.TEST_PASS })
       .drupalRelativeURL('/admin/structure/types/manage/recipe')
       // The text match takes a regex, not a literal string.
       .expect.element('h1.page-title').text.to.match(/edit recipe content type/i);

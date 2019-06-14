@@ -3,7 +3,7 @@ module.exports = {
 
     'Test whether Metatag tokens exist on Articles': browser => {
         browser
-            .drupalLogin({ name: 'admin', password: 'letmein' })
+            .drupalLogin({ name: process.env.TEST_USER, password: process.env.TEST_PASS })
             .drupalRelativeURL('/admin/structure/types/manage/article/fields')
             .expect.element('#field-meta-tags').to.be.present;
     },

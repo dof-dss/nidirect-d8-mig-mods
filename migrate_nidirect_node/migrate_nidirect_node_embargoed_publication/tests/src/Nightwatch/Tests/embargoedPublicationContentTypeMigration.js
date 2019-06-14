@@ -3,13 +3,7 @@ module.exports = {
 
     'Test whether Embargoed Publication content type exists': browser => {
         browser
-<<<<<<< HEAD
-            .drupalLogin({ name: 'admin', password: 'letmein' });
-
-        browser
-=======
-            .drupalLogin({ name: 'admin', password: 'letmein' })
->>>>>>> Speed up Nightwatch tests
+            .drupalLogin({ name: process.env.TEST_USER, password: process.env.TEST_PASS })
             .drupalRelativeURL('/admin/structure/types/manage/embargoed_publication')
             .expect.element('form > div > #edit-name')
             .value.to.contain('Embargoed publication');

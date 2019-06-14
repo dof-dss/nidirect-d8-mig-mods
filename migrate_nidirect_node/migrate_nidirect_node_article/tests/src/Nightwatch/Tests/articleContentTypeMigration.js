@@ -3,7 +3,7 @@ module.exports = {
 
     'Test whether Article content type exists': browser => {
         browser
-            .drupalLogin({ name: 'admin', password: 'letmein' });
+            .drupalLogin({ name: process.env.TEST_USER, password: process.env.TEST_PASS });
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/article')
