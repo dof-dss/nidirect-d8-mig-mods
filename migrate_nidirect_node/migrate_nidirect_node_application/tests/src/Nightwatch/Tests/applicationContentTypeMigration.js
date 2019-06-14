@@ -38,11 +38,11 @@ module.exports = {
       .drupalRelativeURL('/admin/structure/types/manage/application/fields')
       .expect.element('#field-summary').to.be.present;
   },
-  'Test whether Application content type field exists (field_site_topics)': browser => {
+  'Test whether Application content type field exists (field_site_themes)': browser => {
     browser
       .drupalLogin({ name: 'admin', password: 'letmein' })
       .drupalRelativeURL('/admin/structure/types/manage/application/fields')
-      .expect.element('#field-site-topics').to.be.present;
+      .expect.element('#field-site-themes').to.be.present;
   },
   'Test whether Application content type field exists (field_teaser)': browser => {
     browser

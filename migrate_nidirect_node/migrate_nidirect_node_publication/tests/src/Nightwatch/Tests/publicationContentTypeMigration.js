@@ -16,8 +16,8 @@ module.exports = {
   'Test whether Publication content type field exists (field_subtheme)': browser => {
     browser.expect.element('#field-subtheme').to.be.present;
   },
-  'Test whether Publication content type field exists (field_site_topics)': browser => {
-    browser.expect.element('#field-site-topics').to.be.present;
+  'Test whether Publication content type field exists (field_site_themes)': browser => {
+    browser.expect.element('#field-site-themes').to.be.present;
   },
   'Test whether Publication content type field exists (field_meta_tags)': browser => {
     browser.expect.element('#field-meta-tags').to.be.present;

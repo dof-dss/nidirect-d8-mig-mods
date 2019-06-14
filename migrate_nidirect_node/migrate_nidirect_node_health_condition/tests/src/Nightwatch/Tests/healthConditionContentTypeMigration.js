@@ -3,7 +3,7 @@ module.exports = {
 
     'Test whether Health Condition content type exists': browser => {
         browser
-            .drupalLogin({name: 'admin', password: 'letmein'});
+            .drupalLogin({ name: 'admin', password: 'letmein' });
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/health_condition')
@@ -84,7 +84,7 @@ module.exports = {
             .expect.element('#field-summary').to.be.present;
 
         browser
-            .expect.element('#field-site-topics').to.be.present;
+            .expect.element('#field-site-themes').to.be.present;
 
         browser
             .expect.element('#field-teaser').to.be.present;
@@ -109,9 +109,9 @@ module.exports = {
         // Extract title from old NIDirect page for node 10285.
         browser
             .url('https://www.nidirect.gov.uk/node/10285')
-            .elements('css selector', '#main-area div #contentTypeArticle div h1', function(result) {
-                result.value.map(function(element, err) {
-                    browser.elementIdAttribute(element.ELEMENT, 'innerText', function(res) {
+            .elements('css selector', '#main-area div #contentTypeArticle div h1', function (result) {
+                result.value.map(function (element, err) {
+                    browser.elementIdAttribute(element.ELEMENT, 'innerText', function (res) {
                         // Check that the same title appears in D8 after migration.
                         browser
                             .drupalRelativeURL('/node/10285/edit')
@@ -124,9 +124,9 @@ module.exports = {
         // Extract title from old NIDirect page for node 10364.
         browser
             .url('https://www.nidirect.gov.uk/node/10364')
-            .elements('css selector', '#main-area div #contentTypeArticle div h1', function(result) {
-                result.value.map(function(element, err) {
-                    browser.elementIdAttribute(element.ELEMENT, 'innerText', function(res) {
+            .elements('css selector', '#main-area div #contentTypeArticle div h1', function (result) {
+                result.value.map(function (element, err) {
+                    browser.elementIdAttribute(element.ELEMENT, 'innerText', function (res) {
                         // Check that the same title appears in D8 after migration.
                         browser
                             .drupalRelativeURL('/node/10364/edit')
@@ -139,9 +139,9 @@ module.exports = {
         // Extract title from old NIDirect page for node 10350.
         browser
             .url('https://www.nidirect.gov.uk/node/10350')
-            .elements('css selector', '#main-area div #contentTypeArticle div h1', function(result) {
-                result.value.map(function(element, err) {
-                    browser.elementIdAttribute(element.ELEMENT, 'innerText', function(res) {
+            .elements('css selector', '#main-area div #contentTypeArticle div h1', function (result) {
+                result.value.map(function (element, err) {
+                    browser.elementIdAttribute(element.ELEMENT, 'innerText', function (res) {
                         // Check that the same title appears in D8 after migration.
                         browser
                             .drupalRelativeURL('/node/10350/edit')
