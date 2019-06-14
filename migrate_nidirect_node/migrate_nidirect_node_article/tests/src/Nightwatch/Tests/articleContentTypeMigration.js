@@ -3,9 +3,7 @@ module.exports = {
 
     'Test whether Article content type exists': browser => {
         browser
-            .drupalLogin({ name: process.env.TEST_USER, password: process.env.TEST_PASS });
-
-        browser
+            .drupalLogin({ name: process.env.TEST_USER, password: process.env.TEST_PASS })
             .drupalRelativeURL('/admin/structure/types/manage/article')
             .expect.element('form > div > #edit-name')
             .value.to.contain('Article');
