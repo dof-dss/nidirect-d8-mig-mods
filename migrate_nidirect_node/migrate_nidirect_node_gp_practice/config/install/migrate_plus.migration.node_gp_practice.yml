@@ -110,6 +110,19 @@ process:
     -
       plugin: get
       source: field_gp_practice_member
+  field_address:
+    -
+      plugin: callback
+      callable:
+        - '\Drupal\migrate_nidirect_global\AddressFieldMerge'
+        - convertToAddressFieldFormat
+      source:
+          - field_contact_address_01
+          - field_contact_address_02
+          - field_contact_town_city
+          - field_contact_postcode
+    -
+      plugin: addressfield
 destination:
   plugin: 'entity:node'
   default_bundle: gp_practice
