@@ -1,5 +1,5 @@
 module.exports = {
-    '@tags': ['nidirect-migrations'],
+    '@tags': ['nidirect-migrations', 'nidirect-embargoed-publication'],
 
     'Test whether Embargoed Publication content type exists': browser => {
         browser

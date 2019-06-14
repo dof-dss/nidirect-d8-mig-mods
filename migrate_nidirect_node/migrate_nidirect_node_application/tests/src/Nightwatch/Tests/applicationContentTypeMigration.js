@@ -1,5 +1,5 @@
 module.exports = {
-  '@tags': ['nidirect-migrations'],
+  '@tags': ['nidirect-migrations', 'nidirect-application'],
 
   'Test whether Application content type exists': browser => {
     browser
