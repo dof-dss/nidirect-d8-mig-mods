@@ -1,9 +1,9 @@
 module.exports = {
-    '@tags': ['nidirect-migrations'],
+    '@tags': ['nidirect-migrations', 'nidirect-media'],
 
     'Test whether Media have been migrated': browser => {
         browser
-            .drupalLogin({name: 'admin', password: 'letmein'});
+            .drupalLogin({ name: process.env.TEST_USER, password: process.env.TEST_PASS });
 
         browser
             .drupalRelativeURL('/admin/content/media')
