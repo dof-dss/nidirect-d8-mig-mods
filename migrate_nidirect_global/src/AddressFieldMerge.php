@@ -18,7 +18,10 @@ class AddressFieldMerge {
    *   Order matters:
    *   - Address line 1.
    *   - Address line 2.
-   *   - Locality.
+   *   - Address line 3.
+   *   - Address line 4.
+   *   - Address line 5.
+   *   - Town/city.
    *   - Postal code.
    *   - Country code.
    * @return array
@@ -26,17 +29,33 @@ class AddressFieldMerge {
    */
   public static function convertToAddressFieldFormat(array $addressFragments) {
 
-    $address_line1 = array_pop($addressFragments[0])['value'];
-    $address_line2 = array_pop($addressFragments[1])['value'];
-    $locality = array_pop($addressFragments[2])['value'];
-    $postal_code = array_pop($addressFragments[3])['value'];
-    $country_code = isset($addressFragments[4]) ? array_pop($addressFragments[4])['value'] : 'GB';
+    $address_line1 = empty($addressFragments[0]) ? '' : array_pop($addressFragments[0])['value'];
+    $address_line2 = empty($addressFragments[1]) ? '' : array_pop($addressFragments[1])['value'];
+    $address_line3 = empty($addressFragments[2]) ? '' : array_pop($addressFragments[2])['value'];
+    $address_line4 = empty($addressFragments[3]) ? '' : array_pop($addressFragments[3])['value'];
+    $address_line5 = empty($addressFragments[4]) ? '' : array_pop($addressFragments[4])['value'];
+    $town_city = empty($addressFragments[5]) ? '' : array_pop($addressFragments[5])['value'];
+    $postal_code = empty($addressFragments[6]) ? '' : array_pop($addressFragments[6])['value'];
+    $country_code = empty($addressFragments[7]) ? 'GB' : array_pop($addressFragments[7])['value'];
+
+    // Flatten exploded/ambiguous address fields:
+    // Always merge together address lines 1 and 2
+    $flattened_addressline1 = $address_line1;
+    if (!empty($address_line2)) {
+      $flattened_addressline1 .=  ', ' . $address_line2;
+    }
+
+    // and 3 and 4
+    $flattened_addressline2 = $address_line3;
+    if (!empty($address_line4)) {
+      $flattened_addressline2 .=  ', ' . $address_line4;
+    }
 
     // Array labels mimic the D7 addressfield values.
     // See Drupal\address\Plugin\migrate\process\AddressField::transform().
     $address_data = [
       'country' => $country_code,
-      'administrative_area' => '',
+      'administrative_area' => $address_line5,
       'locality' => $locality,
       'dependent_locality' => '',
       'postal_code' => $postal_code,
