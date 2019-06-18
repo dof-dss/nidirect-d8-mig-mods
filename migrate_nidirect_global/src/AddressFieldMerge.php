@@ -29,38 +29,64 @@ class AddressFieldMerge {
    */
   public static function convertToAddressFieldFormat(array $addressFragments) {
 
-    $address_line1 = empty($addressFragments[0]) ? '' : array_pop($addressFragments[0])['value'];
-    $address_line2 = empty($addressFragments[1]) ? '' : array_pop($addressFragments[1])['value'];
-    $address_line3 = empty($addressFragments[2]) ? '' : array_pop($addressFragments[2])['value'];
-    $address_line4 = empty($addressFragments[3]) ? '' : array_pop($addressFragments[3])['value'];
-    $address_line5 = empty($addressFragments[4]) ? '' : array_pop($addressFragments[4])['value'];
-    $town_city = empty($addressFragments[5]) ? '' : array_pop($addressFragments[5])['value'];
-    $postal_code = empty($addressFragments[6]) ? '' : array_pop($addressFragments[6])['value'];
-    $country_code = empty($addressFragments[7]) ? 'GB' : array_pop($addressFragments[7])['value'];
+    // Flatten down/extract any contained array values.
+    for ($i = 0; $i < count($addressFragments); $i++) {
+      if (empty($addressFragments[$i])) {
+        $addressFragments[$i] = '';
+      }
 
-    // Flatten exploded/ambiguous address fields:
+      if (is_array($addressFragments[$i])) {
+        $addressFragments[$i] = array_pop($addressFragments[$i])['value'];
+      }
+    }
+
+    $address_line1 = $addressFragments[0];
+    $address_line2 = $addressFragments[1];
+    $address_line3 = $addressFragments[2];
+    $address_line4 = $addressFragments[3];
+    $address_line5 = $addressFragments[4];
+    $town_city = $addressFragments[5];
+    $postal_code = $addressFragments[6];
+    $country_code = empty($addressFragments[7]) ? 'GB' : $addressFragments[7];
+
+    // Flatten ambiguous address fields:
     // Always merge together address lines 1 and 2
+    $flattened_addressline1 = '';
     $flattened_addressline1 = $address_line1;
     if (!empty($address_line2)) {
       $flattened_addressline1 .=  ', ' . $address_line2;
     }
 
-    // and 3 and 4
-    $flattened_addressline2 = $address_line3;
+    if (strlen($flattened_addressline1) >= 255) {
+      $flattened_addressline1 = substr($flattened_addressline1, 0, 255);
+    }
+
+    // and 3, 4 and 5.
+    $flattened_addressline2 = '';
+    if (!empty($address_line3)) {
+      $flattened_addressline2 = $address_line3;
+    }
     if (!empty($address_line4)) {
       $flattened_addressline2 .=  ', ' . $address_line4;
+    }
+    if (!empty($address_line5)) {
+      $flattened_addressline2 .= ', ' . $address_line5;
+    }
+
+    if (strlen($flattened_addressline2) >= 255) {
+      $flattened_addressline2 = substr($flattened_addressline2, 0, 255);
     }
 
     // Array labels mimic the D7 addressfield values.
     // See Drupal\address\Plugin\migrate\process\AddressField::transform().
     $address_data = [
       'country' => $country_code,
-      'administrative_area' => $address_line5,
-      'locality' => $locality,
-      'dependent_locality' => '',
+      'administrative_area' => '', // Not shown in GB format.
+      'locality' => $town_city,
+      'dependent_locality' => '', // Not shown in GB format.
       'postal_code' => $postal_code,
-      'thoroughfare' => $address_line1,
-      'premise' => $address_line2,
+      'thoroughfare' => $flattened_addressline1,
+      'premise' => $flattened_addressline2,
       'organisation_name' => '',
     ];
 
