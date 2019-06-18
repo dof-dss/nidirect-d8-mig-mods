@@ -143,6 +143,26 @@ process:
       source: field_contact_group
   field_address:
     -
+      plugin: default_value
+      source:
+        - field_contact_address_01
+      default_value: ''
+    -
+      plugin: default_value
+      source:
+        - field_contact_address_02
+      default_value: ''
+    -
+      plugin: default_value
+      source:
+        - field_contact_town_city
+      default_value: ''
+    -
+      plugin: default_value
+      source:
+        - field_contact_postcode
+      default_value: ''
+    -
       plugin: callback
       callable:
         - '\Drupal\migrate_nidirect_global\AddressFieldMerge'
@@ -169,5 +189,5 @@ destination:
   plugin: 'entity_revision:node'
   default_bundle: nidirect_contact
 migration_dependencies:
-  required: {  }
-  optional: {  }
+  required:
+    - node_nidirect_contact
