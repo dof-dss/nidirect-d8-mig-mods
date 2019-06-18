@@ -121,6 +121,9 @@ process:
       source:
           - field_contact_address_01
           - field_contact_address_02
+          - ''
+          - ''
+          - ''
           - field_contact_town_city
           - field_contact_postcode
     -

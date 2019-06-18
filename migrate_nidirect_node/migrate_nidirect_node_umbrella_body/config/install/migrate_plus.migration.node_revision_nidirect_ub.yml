@@ -75,46 +75,14 @@ process:
     -
       plugin: get
       source: body
-  field_contact_address_01:
-    -
-      plugin: get
-      source: field_contact_address_01
-  field_contact_address_02:
-    -
-      plugin: get
-      source: field_contact_address_02
-  field_contact_address_03:
-    -
-      plugin: get
-      source: field_contact_address_03
-  field_contact_address_04:
-    -
-      plugin: get
-      source: field_contact_address_04
-  field_contact_address_05:
-    -
-      plugin: get
-      source: field_contact_address_05
   field_contact_phone:
     -
       plugin: get
       source: field_contact_phone
-  field_contact_postcode:
-    -
-      plugin: get
-      source: field_contact_postcode
-  field_contact_town_city:
-    -
-      plugin: get
-      source: field_contact_town_city
   field_contact_website:
     -
       plugin: field_link
       source: field_contact_website
-  field_county:
-    -
-      plugin: get
-      source: field_county
   field_district:
     -
       plugin: sub_process
@@ -181,6 +149,50 @@ process:
       source: field_ub_services
       process:
         target_id: tid
+  field_address:
+    -
+      plugin: default_value
+      source:
+        - field_contact_address_01
+      default_value: ''
+    -
+      plugin: default_value
+      source:
+        - field_contact_address_02
+      default_value: ''
+    -
+      plugin: default_value
+      source:
+        - field_contact_town_city
+      default_value: ''
+    -
+      plugin: default_value
+      source:
+        - field_contact_postcode
+      default_value: ''
+    -
+      plugin: callback
+      callable:
+        - '\Drupal\migrate_nidirect_global\AddressFieldMerge'
+        - convertToAddressFieldFormat
+      source:
+          - field_contact_address_01
+          - field_contact_address_02
+          - field_contact_address_03
+          - field_contact_address_04
+          - field_contact_address_05
+          - field_contact_town_city
+          - field_contact_postcode
+    -
+      plugin: addressfield
+  field_location/lng:
+    -
+      plugin: get
+      source: field_map/0/lon
+  field_location/lat:
+    -
+      plugin: get
+      source: field_map/0/lat
 destination:
   plugin: 'entity_revision:node'
   default_bundle: umbrella_body
