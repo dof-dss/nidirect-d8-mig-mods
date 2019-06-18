@@ -1,7 +1,7 @@
 langcode: en
 status: true
 dependencies: {  }
-id: node_revision_nidirect_driving_instructor
+id: node_revision_driving_instructor
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldFormatterMigration
 cck_plugin_method: null
