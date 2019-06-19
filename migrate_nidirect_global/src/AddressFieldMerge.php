@@ -50,24 +50,24 @@ class AddressFieldMerge {
     $country_code = empty($addressFragments[7]) ? 'GB' : $addressFragments[7];
 
     // Flatten ambiguous address fields:
-    // Always merge together address lines 1 and 2
+    // Always merge together address lines 1 and 2.
     $flattened_addressline1 = '';
     $flattened_addressline1 = $address_line1;
     if (!empty($address_line2)) {
-      $flattened_addressline1 .=  ', ' . $address_line2;
+      $flattened_addressline1 .= ', ' . $address_line2;
     }
 
     if (strlen($flattened_addressline1) >= 255) {
       $flattened_addressline1 = substr($flattened_addressline1, 0, 255);
     }
 
-    // and 3, 4 and 5.
+    // ... and 3, 4 and 5.
     $flattened_addressline2 = '';
     if (!empty($address_line3)) {
       $flattened_addressline2 = $address_line3;
     }
     if (!empty($address_line4)) {
-      $flattened_addressline2 .=  ', ' . $address_line4;
+      $flattened_addressline2 .= ', ' . $address_line4;
     }
     if (!empty($address_line5)) {
       $flattened_addressline2 .= ', ' . $address_line5;
@@ -81,9 +81,9 @@ class AddressFieldMerge {
     // See Drupal\address\Plugin\migrate\process\AddressField::transform().
     $address_data = [
       'country' => $country_code,
-      'administrative_area' => '', // Not shown in GB format.
+      'administrative_area' => '',
       'locality' => $town_city,
-      'dependent_locality' => '', // Not shown in GB format.
+      'dependent_locality' => '',
       'postal_code' => $postal_code,
       'thoroughfare' => $flattened_addressline1,
       'premise' => $flattened_addressline2,

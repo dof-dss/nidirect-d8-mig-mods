@@ -139,17 +139,24 @@ class NidirectMigratePreCommand extends MigrateCommand {
     $this->drupal7DatabaseQuery("UPDATE redirect SET status_code=301 WHERE status_code=0 OR status_code IS NULL");
   }
 
-   /**
+  /**
    * Import Drupal 7 URL aliases.
    */
   // phpcs:disable
   protected function task_import_url_aliases() {
+  // phpcs:enable
     $aliases_query = $this->connMigrate->query('SELECT pid, source, alias FROM url_alias');
     $aliases = $aliases_query->fetchAllAssoc('pid');
 
-    $insert = $this->connDefault->insert('url_alias')->fields(['pid', 'source', 'alias', 'langcode']);
+    $insert = $this->connDefault->insert('url_alias')->fields([
+      'pid',
+      'source',
+      'alias',
+      'langcode',
+    ]);
+
     foreach ($aliases as $pid => $alias) {
-        $insert->values([$pid, '/' . $alias->source, '/' . $alias->alias, 'und']);
+      $insert->values([$pid, '/' . $alias->source, '/' . $alias->alias, 'und']);
     }
 
     $insert->execute();
