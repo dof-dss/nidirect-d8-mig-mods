@@ -128,6 +128,26 @@ module.exports = {
                     });
                 }
             });
-    }
 
+        browser
+            .elements('xpath', "//div[@id='edit_field_di_categories_chosen']/*/li[@class='search-choice']/span", function (elements) {
+                if (elements.value.length > 0) {
+                    let categories = node.categories.split(',');
+
+                    elements.value.map(function (item) {
+                        browser.elementIdText(item.ELEMENT, function (result) {
+                            if (result.value.length > 0) {
+                                // Check the D8 form value exists in the D7 data.
+                                if (categories.includes(result.value)) {
+                                    // It stinks but it's a simple way to show this assertion passes, else fail below. 
+                                    browser.assert.equal(result.value, result.value);
+                                } else {
+                                    browser.assert.fail('field_di_categories: data mismatch on : ' + result.value);
+                                }
+                            }
+                        });
+                    });
+                }
+            });
+    }
 };
