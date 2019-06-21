@@ -7,7 +7,7 @@ module.exports = {
     '@tags': ['nidirect-migrations'],
 
     before: function (browser) {
-        http.get('http://nidirect.lndo.site/migrate/drivinginst', (response) => {
+        http.get(process.env.TEST_D7_URL + '/migrate/drivinginst', (response) => {
             let data = '';
             response.on('data', (chunk) => { data += chunk });
 
@@ -24,7 +24,7 @@ module.exports = {
 
     'Test whether Driving Instructor content type exists': browser => {
         browser
-            .drupalLogin({ name: 'admin', password: 'letmein' });
+            .drupalLogin({ name: process.env.TEST_USER, password: process.env.TEST_PASS })
 
         browser
             .drupalRelativeURL('/admin/structure/types/manage/driving_instructor')
