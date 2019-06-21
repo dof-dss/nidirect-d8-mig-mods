@@ -7,7 +7,7 @@ module.exports = {
     '@tags': ['nidirect-migrations'],
 
     before: function (browser) {
-        http.get('http://nidirect.lndo.site/migrate/di', (response) => {
+        http.get('http://nidirect.lndo.site/migrate/drivinginst', (response) => {
             let data = '';
             response.on('data', (chunk) => { data += chunk });
 
