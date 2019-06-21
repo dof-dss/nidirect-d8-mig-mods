@@ -65,6 +65,9 @@ module.exports = {
             .waitForElementVisible('body', 1000)
             .expect.element('#views-form-content-page-1 > table > tbody > tr > td:nth-child(3)')
             .text.to.contain('Driving instructor');
+    },
+
+    'Test whether Driving Instructor content matches original': browser => {
 
         browser
             .drupalRelativeURL('/node/' + nid + '/edit')
