@@ -81,7 +81,7 @@ process:
     -
       plugin: field_link
       source: field_link
-  field_site_topics:
+  field_site_themes:
     -
       plugin: sub_process
       source: field_site_topics
@@ -110,5 +110,6 @@ process:
 migration_dependencies:
   required:
     - upgrade_d7_user
+    - upgrade_d7_taxonomy_term_site_themes
   optional:
     - upgrade_d7_comment_field_instance
