@@ -14,3 +14,8 @@ services:
     arguments: []
     tags:
       - { name: drupal.command }
+  migrate_nidirect_utils.nidirect_migrate_post_flag:
+    class: Drupal\migrate_nidirect_utils\Command\NidirectMigratePostFlagCommand
+    arguments: []
+    tags:
+      - { name: drupal.command }

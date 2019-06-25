@@ -1,0 +1,6 @@
+description: 'Fixes post migration flag data'
+options: {}
+arguments: {}
+messages:
+    success: '🎉 Fixed flag migration data.'
+    failure: '😭 Unable to fix flag issues, please review the logs.'
