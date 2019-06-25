@@ -38,12 +38,20 @@ class NidirectMigratePostFlagCommand extends ContainerAwareCommand {
     // Flag counts.
     $query = $conn_migrate->query("
       SELECT
-        CONCAT('FLAG_ID__', fid) as flag_id,
+        CASE fid
+          WHEN 1 THEN 'content_audit'
+          WHEN 2 THEN 'featured_content'
+          WHEN 4 THEN 'hide_content'
+          WHEN 5 THEN 'hide_theme'
+          WHEN 6 THEN 'show_listing'
+          WHEN 7 THEN 'promote_to_all_pages'
+        END as flag_id,
         entity_type,
         entity_id,
         count,
         last_updated
       FROM {flag_counts}
+      WHERE fid <> 3
     ");
     $flag_count_results = $query->fetchAll();
 
@@ -51,13 +59,21 @@ class NidirectMigratePostFlagCommand extends ContainerAwareCommand {
     $query = $conn_migrate->query("
       SELECT
         flagging_id as id,
-        'FLAG_MACHINE_NAME' as flag_id,
+        CASE fid
+          WHEN 1 THEN 'content_audit'
+          WHEN 2 THEN 'featured_content'
+          WHEN 4 THEN 'hide_content'
+          WHEN 5 THEN 'hide_theme'
+          WHEN 6 THEN 'show_listing'
+          WHEN 7 THEN 'promote_to_all_pages'
+        END as flag_id,
         entity_type,
         entity_id,
         uid,
         sid as session_id,
         timestamp as created
       FROM {flagging}
+      WHERE fid <> 3
     ");
     $flagging_results = $query->fetchAll();
 
