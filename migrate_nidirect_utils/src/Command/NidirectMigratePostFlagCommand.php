@@ -34,6 +34,11 @@ class NidirectMigratePostFlagCommand extends ContainerAwareCommand {
 
     $conn_migrate = Database::getConnection('default', 'migrate');
     $conn_drupal8 = Database::getConnection('default', 'default');
+    $this->getIo()->info('Truncated flag_counts and flagging tables.');
+
+    // Clean out the flag_counts and flagging tables before we begin.
+    $query = $conn_drupal8->delete('flag_counts')->execute();
+    $query = $conn_drupal8->delete('flagging')->execute();
 
     // Flag counts.
     $query = $conn_migrate->query("
@@ -107,6 +112,8 @@ class NidirectMigratePostFlagCommand extends ContainerAwareCommand {
     }
     $query->execute();
 
+    $this->getIo()->info('Inserted ' . count($flag_count_data) . ' records into flag_counts table.');
+
     // Populate the flagging table.
     $query = $conn_drupal8->insert('flagging')->fields([
       'id',
@@ -124,6 +131,7 @@ class NidirectMigratePostFlagCommand extends ContainerAwareCommand {
     }
     $query->execute();
 
+    $this->getIo()->info('Inserted ' . count($flagging_data) . ' records into flagging table.');
   }
 
 }
