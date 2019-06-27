@@ -98,11 +98,11 @@ module.exports = {
         .to.have.value.which.contains(node.summary);
     }
 
-    // if (Object.keys(node.body).length !== 0) {
-    //   browser
-    //     .expect.element('#edit-body-0-value')
-    //     .to.have.value.which.contains(node.body);
-    // }
+    if (Object.keys(node.body).length !== 0) {
+       browser
+         .expect.element('#edit-body-0-value')
+         .to.have.value.which.contains(node.body);
+    }
 
     if (Object.keys(node.email).length !== 0) {
       browser
@@ -167,12 +167,12 @@ module.exports = {
         .to.have.value.which.contains(node.opening_hours);
     }
 
-    // if (Object.keys(node.additional).length !== 0) {
-    //   browser
-    //     .useCss()
-    //     .expect.element('#edit-field-contact-additional-info-0-value')
-    //     .to.have.value.which.contains(node.additional);
-    // }
+    if (Object.keys(node.additional).length !== 0) {
+       browser
+         .useCss()
+         .expect.element('#edit-field-contact-additional-info-0-value')
+         .to.have.value.which.contains(node.additional);
+    }
 
     if (Object.keys(node.supplementary).length !== 0) {
       browser
