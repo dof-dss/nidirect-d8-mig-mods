@@ -1,5 +1,25 @@
+var parser = require('xml2json');
+var http = require('http');
+var node, nid;
+const regx_strip_taxoheir = /^-*/gm;
+
 module.exports = {
     '@tags': ['nidirect-migrations', 'nidirect-node-landing-page'],
+
+    before: function (browser) {
+        http.get(process.env.TEST_D7_URL + '/migrate/landingpage', (response) => {
+            let data = '';
+            response.on('data', (chunk) => { data += chunk });
+
+            response.on('end', () => {
+                data = JSON.parse(parser.toJson(data));
+                node = data.nodes.node;
+                nid = node.nid;
+            })
+        }).on("error", (err) => {
+            console.log("Error: " + err.message);
+        });
+    },
 
     'Test whether Landing Page content type exists': browser => {
         browser
@@ -31,40 +51,41 @@ module.exports = {
             .text.to.contain('Landing page');
     },
 
-    // Now test a random sample of actual nodes.
+    'Test whether Landing Page content matches original': browser => {
 
-    'Check title of Landing Page node (Careers)': browser => {
-        // Extract title from old NIDirect page.
         browser
-            .url('https://www.nidirect.gov.uk/node/4005')
-            .elements('xpath', "//h1[@class='element-invisible']", function (result) {
-                result.value.map(function (element, err) {
-                    browser.elementIdAttribute(element.ELEMENT, 'innerText', function (res) {
-                        // Check that the same title appears in D8 after migration.
-                        browser
-                            .drupalRelativeURL('/node/4005/edit')
-                            .expect.element('#edit-title-0-value')
-                            .to.have.value.which.contains(res.value);
-                    })
-                })
-            });
-    },
+            .drupalRelativeURL('/node/' + nid + '/edit')
+            .waitForElementVisible('body', 1000)
+            .expect.element('#edit-title-0-value')
+            .to.have.value.which.contains(node.title);
 
-    'Check title of Landing Page node (Brexit)': browser => {
-        // Extract title from old NIDirect page.
+        if (node.title_visible == 1) {
+            browser.expect.element('#edit-field-enable-title-value').to.be.selected;
+        } else {
+            browser.expect.element('#edit-field-enable-title-value').to.not.be.selected;
+        }
+
         browser
-            .url('https://www.nidirect.gov.uk/node/12694')
-            .elements('xpath', "//h1[@class='element-invisible']", function (result) {
-                result.value.map(function (element, err) {
-                    browser.elementIdAttribute(element.ELEMENT, 'innerText', function (res) {
-                        // Check that the same title appears in D8 after migration.
-                        browser
-                            .drupalRelativeURL('/node/12694/edit')
-                            .expect.element('#edit-title-0-value')
-                            .to.have.value.which.contains(res.value);
-                    })
+            .element("xpath", "//select[@id='edit-field-subtheme']/option[@selected='selected']", function (element) {
+                browser.elementIdAttribute(element.value.ELEMENT, 'innerText', function (text) {
+                    browser.assert.equal(text.value.replace(regx_strip_taxoheir, ''), node.subtheme);
                 })
             });
 
+        browser
+            .expect.element('#edit-field-teaser-0-value')
+            .to.have.value.which.contains(node.teaser);
+
+        if (Object.keys(node.summary).length !== 0) {
+            browser
+                .expect.element('#edit-field-summary-0-value')
+                .to.have.value.which.contains(node.summary);
+        }
+
+        if (Object.keys(node.body).length !== 0) {
+            browser
+                .expect.element('#edit-body-0-value')
+                .to.have.value.which.contains(node.body);
+        }
     }
 };
