@@ -194,7 +194,7 @@ module.exports = {
               })
             });
 
-            browser.assert.equal(elements.value.length, supp_themes.length, 'field-site-themes item count missmatch');
+            browser.assert.equal(elements.value.length, supp_themes.length, 'field-site-themes item count match');
           }
         });
     }
