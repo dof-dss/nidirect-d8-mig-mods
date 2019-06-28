@@ -1,4 +1,4 @@
-name: 'Migrate NIDirect - NIDirect Contact content type'
+name: 'Migrate NIDirect - Node:NIDirect Contact'
 type: module
 description: 'NIDirect migration NIDirect Contact content type'
 core: 8.x
