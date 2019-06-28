@@ -75,6 +75,21 @@ process:
     -
       plugin: get
       source: body
+    -
+      plugin: media_wysiwyg_filter
+  body/0/format:
+    -
+      plugin: static_map
+      bypass: true
+      source: body/0/format
+      map:
+        filtered_html: basic_html
+        filtered_html_with_no_images: basic_html
+        filtered_html_with_templates: basic_html
+        filtered_html_with_tokens: basic_html
+        html_for_admins: full_html
+        paste_format: plain_text
+        plain_text: plain_text
   field_contact_phone:
     -
       plugin: get
@@ -123,7 +138,7 @@ process:
         value:
           plugin: format_date
           from_format: 'Y-m-d H:i:s'
-          to_format: 'Y-m-d\TH:i:s'
+          to_format: 'Y-m-d'
           source: value
   field_ub_price:
     -
@@ -133,6 +148,21 @@ process:
     -
       plugin: get
       source: field_ub_price_addinfo
+    -
+      plugin: media_wysiwyg_filter
+  field_ub_price_addinfo/0/format:
+    -
+      plugin: static_map
+      bypass: true
+      source: field_ub_price_addinfo/0/format
+      map:
+        filtered_html: basic_html
+        filtered_html_with_no_images: basic_html
+        filtered_html_with_templates: basic_html
+        filtered_html_with_tokens: basic_html
+        html_for_admins: full_html
+        paste_format: plain_text
+        plain_text: plain_text
   field_ub_price_volunteer:
     -
       plugin: get

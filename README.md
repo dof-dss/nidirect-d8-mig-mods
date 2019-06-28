@@ -41,3 +41,11 @@ Some tests use [environmental variables](https://en.wikipedia.org/wiki/Environme
 `/config/drupal.env`
 
 If you need to change this file, you will also need to rebuild your local appserver service: `lando rebuild -s appserver`
+
+## NightWatchJS tests ##
+
+Import the included 'D7_Migrate_View' View into existing Drupal 7 NI Direct site and update the TEST_D7_URL env var to the URL of the site. 
+This view contains XML data export displays for most of the migrated entities with paths specified as /migrate/<entity> (see 'before' hook in each test for full path).
+Each display will return a random entity but this can be overridden in the test to return a specific node by appending an ID to the end of the URL e.g. /migrate/recipe/5012
+
+
