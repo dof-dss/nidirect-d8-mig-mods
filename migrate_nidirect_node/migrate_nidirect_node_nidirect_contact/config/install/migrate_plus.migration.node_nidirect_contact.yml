@@ -72,10 +72,40 @@ process:
     -
       plugin: get
       source: body
+    -
+      plugin: media_wysiwyg_filter
+  body/0/format:
+    -
+      plugin: static_map
+      bypass: true
+      source: body/0/format
+      map:
+        filtered_html: basic_html
+        filtered_html_with_no_images: basic_html
+        filtered_html_with_templates: basic_html
+        filtered_html_with_tokens: basic_html
+        html_for_admins: full_html
+        paste_format: plain_text
+        plain_text: plain_text
   field_contact_additional_info:
     -
       plugin: get
       source: field_contact_additional_info
+    -
+      plugin: media_wysiwyg_filter
+  field_contact_additional_info/0/format:
+    -
+      plugin: static_map
+      bypass: true
+      source: field_contact_additional_info/0/format
+      map:
+        filtered_html: basic_html
+        filtered_html_with_no_images: basic_html
+        filtered_html_with_templates: basic_html
+        filtered_html_with_tokens: basic_html
+        html_for_admins: full_html
+        paste_format: plain_text
+        plain_text: plain_text
   field_contact_benefits_no:
     -
       plugin: get
@@ -98,6 +128,21 @@ process:
     -
       plugin: get
       source: field_contact_hours
+    -
+      plugin: media_wysiwyg_filter
+  field_contact_hours/0/format:
+    -
+      plugin: static_map
+      bypass: true
+      source: field_contact_hours/0/format
+      map:
+        filtered_html: basic_html
+        filtered_html_with_no_images: basic_html
+        filtered_html_with_templates: basic_html
+        filtered_html_with_tokens: basic_html
+        html_for_admins: full_html
+        paste_format: plain_text
+        plain_text: plain_text
   field_contact_phone:
     -
       plugin: get
@@ -138,6 +183,21 @@ process:
     -
       plugin: get
       source: field_summary
+    -
+      plugin: media_wysiwyg_filter
+  field_summary/0/format:
+    -
+      plugin: static_map
+      bypass: true
+      source: field_summary/0/format
+      map:
+        filtered_html: basic_html
+        filtered_html_with_no_images: basic_html
+        filtered_html_with_templates: basic_html
+        filtered_html_with_tokens: basic_html
+        html_for_admins: full_html
+        paste_format: plain_text
+        plain_text: plain_text
   field_contact_group:
     -
       plugin: get
