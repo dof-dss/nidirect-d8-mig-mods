@@ -1,4 +1,4 @@
-name: 'Migrate NIDirect - Article Nodes'
+name: 'Migrate NIDirect - Node:Article'
 type: module
 description: 'Migrate NIDirect - Article content type'
 core: 8.x

@@ -1,4 +1,4 @@
-name: 'Migrate NIDirect - External link content type'
+name: 'Migrate NIDirect - Node:External link'
 type: module
 description: 'NIDirect migration External link content type'
 core: 8.x

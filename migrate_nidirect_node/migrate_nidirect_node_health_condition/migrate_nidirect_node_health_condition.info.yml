@@ -1,4 +1,4 @@
-name: 'Migrate NIDirect - Health Condition Nodes'
+name: 'Migrate NIDirect - Node:Health Condition'
 type: module
 description: 'Migrate NIDirect - Health Condition content type'
 core: 8.x

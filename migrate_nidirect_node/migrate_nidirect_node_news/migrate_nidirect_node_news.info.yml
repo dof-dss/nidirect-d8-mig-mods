@@ -1,4 +1,4 @@
-name: 'Migrate NIDirect - News content type'
+name: 'Migrate NIDirect - Node:News'
 type: module
 description: 'NIDirect migration News content type'
 core: 8.x

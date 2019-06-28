@@ -1,6 +1,6 @@
-name: 'Migrate NIDirect - GP Practice content type'
+name: 'Migrate NIDirect - Node:GP'
 type: module
-description: 'NIDirect migration GP Practice content type'
+description: 'NIDirect migration GP and GP Practice content types'
 core: 8.x
 package: 'Migrate NIDirect'
 migration_dependencies:
@@ -10,4 +10,3 @@ dependencies:
   - drupal:migrate_plus
   - drupal:migrate_tools
   - migrate_nidirect_global
-  - migrate_nidirect_entity_gp

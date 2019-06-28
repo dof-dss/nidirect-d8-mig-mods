@@ -1,4 +1,4 @@
-name: 'Migrate NIDirect - Page content type'
+name: 'Migrate NIDirect - Node:Page'
 type: module
 description: 'NIDirect migration Page content type'
 core: 8.x

@@ -1,4 +1,4 @@
-name: 'Migrate NIDirect - Umbrella Body Nodes'
+name: 'Migrate NIDirect - Node:Umbrella Body'
 type: module
 description: 'Migrate NIDirect - Umbrella Body content type'
 core: 8.x
