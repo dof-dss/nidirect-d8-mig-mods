@@ -1,4 +1,4 @@
-name: 'Migrate NIDirect - Driving instructor content type'
+name: 'Migrate NIDirect - Node:Driving instructor'
 type: module
 description: 'NIDirect migration Driving instructor content type'
 core: 8.x

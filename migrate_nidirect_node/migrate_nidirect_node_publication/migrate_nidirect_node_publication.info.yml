@@ -1,6 +1,6 @@
-name: 'Migrate NIDirect - Publication content type'
+name: 'Migrate NIDirect - Node:Publication'
 type: module
-description: 'NIDirect migration Publication content type'
+description: 'NIDirect migration Publication and Embargoed Publication content types'
 core: 8.x
 package: 'Migrate NIDirect'
 migration_dependencies:

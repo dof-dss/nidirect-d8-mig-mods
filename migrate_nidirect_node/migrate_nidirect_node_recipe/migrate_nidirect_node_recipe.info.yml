@@ -1,4 +1,4 @@
-name: 'Migrate NIDirect - Recipe content type'
+name: 'Migrate NIDirect - Node:Recipe'
 type: module
 description: 'NIDirect migration Recipe content type'
 core: 8.x
