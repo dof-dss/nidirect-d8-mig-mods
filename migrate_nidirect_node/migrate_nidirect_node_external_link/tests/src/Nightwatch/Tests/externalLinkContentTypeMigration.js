@@ -15,7 +15,6 @@ module.exports = {
         data = JSON.parse(parser.toJson(data));
         node = data.nodes.node;
         nid = node.nid;
-        console.log(node);
       })
     }).on("error", (err) => {
       console.log("Error: " + err.message);

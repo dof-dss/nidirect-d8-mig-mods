@@ -15,7 +15,6 @@ module.exports = {
         data = JSON.parse(parser.toJson(data));
         node = data.nodes.node;
         nid = node.nid;
-        console.log(node);
       })
     }).on("error", (err) => {
       console.log("Error: " + err.message);
@@ -99,9 +98,9 @@ module.exports = {
     }
 
     if (Object.keys(node.body).length !== 0) {
-       browser
-         .expect.element('#edit-body-0-value')
-         .to.have.value.which.contains(node.body);
+      browser
+        .expect.element('#edit-body-0-value')
+        .to.have.value.which.contains(node.body);
     }
 
     if (Object.keys(node.email).length !== 0) {
@@ -119,10 +118,12 @@ module.exports = {
     }
 
     if (Object.keys(node.website_title).length !== 0) {
-      browser
-        .useCss()
-        .expect.element('#edit-field-contact-website-0-title')
-        .to.have.value.which.contains(node.website_title);
+      if (node.website_title != node.website_url) {
+        browser
+          .useCss()
+          .expect.element('#edit-field-contact-website-0-title')
+          .to.have.value.which.contains(node.website_title);
+      }
     }
 
     if (Object.keys(node.phone).length !== 0) {
@@ -168,10 +169,10 @@ module.exports = {
     }
 
     if (Object.keys(node.additional).length !== 0) {
-       browser
-         .useCss()
-         .expect.element('#edit-field-contact-additional-info-0-value')
-         .to.have.value.which.contains(node.additional);
+      browser
+        .useCss()
+        .expect.element('#edit-field-contact-additional-info-0-value')
+        .to.have.value.which.contains(node.additional);
     }
 
     if (Object.keys(node.supplementary).length !== 0) {

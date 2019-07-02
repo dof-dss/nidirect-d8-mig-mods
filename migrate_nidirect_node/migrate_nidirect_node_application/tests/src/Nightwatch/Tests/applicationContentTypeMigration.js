@@ -1,7 +1,7 @@
 var parser = require('xml2json');
 var http = require('http');
-var nid;
-var node;
+var nid, node;
+const regx_strip_taxoheir = /^-*/gm;
 
 module.exports = {
   '@tags': ['nidirect-migrations', 'nidirect-application'],
@@ -60,7 +60,7 @@ module.exports = {
     browser
       .element("xpath", "//select[@id='edit-field-subtheme']/option[@selected='selected']", function (element) {
         browser.elementIdAttribute(element.value.ELEMENT, 'innerText', function (text) {
-          browser.assert.equal(text.value.replace(/^-*/gm, ''), node.subtheme);
+          browser.assert.equal(text.value.replace(regx_strip_taxoheir, ''), node.subtheme);
         })
       });
 
@@ -74,7 +74,7 @@ module.exports = {
               browser.elementIdAttribute(item.ELEMENT, 'innerText', function (result) {
                 if (result.value.length > 0) {
                   // Strip depth hyphens from the beginning of each term.
-                  let text = result.value.replace(/^-*/gm, '');
+                  let text = result.value.replace(regx_strip_taxoheir, '');
                   // Check the D8 form value exists in the D7 data.
                   if (supp_themes.includes(text)) {
                     // It stinks but it's a simple way to show this assertion passes, else fail below. 
@@ -114,12 +114,15 @@ module.exports = {
     }
 
     if (Object.keys(node.link_title).length !== 0) {
-      browser
-        .expect.element('#edit-field-link-0-title')
-        .to.have.value.which.contains(node.link_title);
+      // Data export renders blank titles with the url.
+      if (node.link_url != node.link_title) {
+        browser
+          .expect.element('#edit-field-link-0-title')
+          .to.have.value.which.contains(node.link_title);
+      }
     }
 
-     if (Object.keys(node.additional).length !== 0) {
+    if (Object.keys(node.additional).length !== 0) {
       browser
         .expect.element('#edit-field-additional-info-0-value')
         .to.have.value.which.contains(node.additional);

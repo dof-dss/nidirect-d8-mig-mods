@@ -1,7 +1,6 @@
 var parser = require('xml2json');
 var http = require('http');
-var nid;
-var node;
+var nid, node;
 
 module.exports = {
     '@tags': ['nidirect-migrations'],

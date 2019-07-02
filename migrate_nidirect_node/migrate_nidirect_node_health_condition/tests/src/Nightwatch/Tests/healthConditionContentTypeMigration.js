@@ -1,7 +1,6 @@
 var parser = require('xml2json');
 var http = require('http');
-var nid;
-var node;
+var nid, node;
 const regx_strip_entref = /\s\(\d+\)/gm;
 const regx_strip_html = /<([^>]+)>/ig;
 
@@ -14,11 +13,9 @@ module.exports = {
             response.on('data', (chunk) => { data += chunk });
 
             response.on('end', () => {
-                // console.log(data);
                 data = JSON.parse(parser.toJson(data));
                 node = data.nodes.node;
                 nid = node.nid;
-                console.log(node);
             })
         }).on("error", (err) => {
             console.log("Error: " + err.message);
