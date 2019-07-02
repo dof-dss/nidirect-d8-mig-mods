@@ -23,7 +23,6 @@ module.exports = {
                 result.value.map(function (element, err) {
                     browser.elementIdAttribute(element.ELEMENT, 'content', function (res) {
                         // Check that the same title appears in D8 after migration.
-                        console.log(res.value);
                         browser
                             .drupalRelativeURL('/node/1130')
                             .useXpath()
@@ -43,7 +42,6 @@ module.exports = {
                 result.value.map(function (element, err) {
                     browser.elementIdAttribute(element.ELEMENT, 'content', function (res) {
                         // Check that the same title appears in D8 after migration.
-                        console.log(res.value);
                         browser
                             .drupalRelativeURL('/node/1826')
                             .useXpath()
@@ -63,7 +61,6 @@ module.exports = {
                 result.value.map(function (element, err) {
                     browser.elementIdAttribute(element.ELEMENT, 'content', function (res) {
                         // Check that the same title appears in D8 after migration.
-                        console.log(res.value);
                         browser
                             .drupalRelativeURL('/node/4855')
                             .useXpath()
