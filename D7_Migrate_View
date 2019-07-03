@@ -237,13 +237,12 @@ $handler->display->display_options['fields']['field_di_adi_no']['type'] = 'text_
 $handler->display->display_options['fields']['field_di_areas']['id'] = 'field_di_areas';
 $handler->display->display_options['fields']['field_di_areas']['table'] = 'field_data_field_di_areas';
 $handler->display->display_options['fields']['field_di_areas']['field'] = 'field_di_areas';
-$handler->display->display_options['fields']['field_di_areas']['label'] = '';
-$handler->display->display_options['fields']['field_di_areas']['element_type'] = '0';
+$handler->display->display_options['fields']['field_di_areas']['label'] = 'areas';
 $handler->display->display_options['fields']['field_di_areas']['element_label_colon'] = FALSE;
-$handler->display->display_options['fields']['field_di_areas']['element_wrapper_type'] = '0';
 $handler->display->display_options['fields']['field_di_areas']['element_default_classes'] = FALSE;
+$handler->display->display_options['fields']['field_di_areas']['type'] = 'taxonomy_term_reference_plain';
 $handler->display->display_options['fields']['field_di_areas']['delta_offset'] = '0';
-$handler->display->display_options['fields']['field_di_areas']['field_api_classes'] = TRUE;
+$handler->display->display_options['fields']['field_di_areas']['separator'] = '|';
 /* Field: Content: Categories */
 $handler->display->display_options['fields']['field_di_categories']['id'] = 'field_di_categories';
 $handler->display->display_options['fields']['field_di_categories']['table'] = 'field_data_field_di_categories';
@@ -1641,3 +1640,58 @@ $handler->display->display_options['filters']['type']['value'] = array(
   'article' => 'article',
 );
 $handler->display->display_options['path'] = 'migrate/article';
+
+/* Display: Page */
+$handler = $view->new_display('views_data_export', 'Page', 'views_data_export_14');
+$handler->display->display_options['pager']['type'] = 'some';
+$handler->display->display_options['pager']['options']['items_per_page'] = '1';
+$handler->display->display_options['pager']['options']['offset'] = '0';
+$handler->display->display_options['style_plugin'] = 'views_data_export_xml';
+$handler->display->display_options['style_options']['provide_file'] = 0;
+$handler->display->display_options['style_options']['parent_sort'] = 0;
+$handler->display->display_options['style_options']['transform'] = 1;
+$handler->display->display_options['style_options']['root_node'] = 'nodes';
+$handler->display->display_options['style_options']['item_node'] = 'node';
+$handler->display->display_options['defaults']['fields'] = FALSE;
+/* Field: Content: Nid */
+$handler->display->display_options['fields']['nid']['id'] = 'nid';
+$handler->display->display_options['fields']['nid']['table'] = 'node';
+$handler->display->display_options['fields']['nid']['field'] = 'nid';
+$handler->display->display_options['fields']['nid']['label'] = 'nid';
+$handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
+$handler->display->display_options['fields']['nid']['element_default_classes'] = FALSE;
+/* Field: Content: Title */
+$handler->display->display_options['fields']['title']['id'] = 'title';
+$handler->display->display_options['fields']['title']['table'] = 'node';
+$handler->display->display_options['fields']['title']['field'] = 'title';
+$handler->display->display_options['fields']['title']['label'] = 'title';
+$handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+$handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+$handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+$handler->display->display_options['fields']['title']['element_default_classes'] = FALSE;
+$handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
+/* Field: Content: Body */
+$handler->display->display_options['fields']['body']['id'] = 'body';
+$handler->display->display_options['fields']['body']['table'] = 'field_data_body';
+$handler->display->display_options['fields']['body']['field'] = 'body';
+$handler->display->display_options['fields']['body']['label'] = 'body';
+$handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
+$handler->display->display_options['fields']['body']['element_default_classes'] = FALSE;
+/* Field: Field: Enable Table of Contents */
+$handler->display->display_options['fields']['field_enable_toc']['id'] = 'field_enable_toc';
+$handler->display->display_options['fields']['field_enable_toc']['table'] = 'field_data_field_enable_toc';
+$handler->display->display_options['fields']['field_enable_toc']['field'] = 'field_enable_toc';
+$handler->display->display_options['fields']['field_enable_toc']['label'] = 'enable_toc';
+$handler->display->display_options['fields']['field_enable_toc']['element_label_colon'] = FALSE;
+$handler->display->display_options['fields']['field_enable_toc']['element_default_classes'] = FALSE;
+$handler->display->display_options['fields']['field_enable_toc']['type'] = 'list_key';
+$handler->display->display_options['defaults']['filter_groups'] = FALSE;
+$handler->display->display_options['defaults']['filters'] = FALSE;
+/* Filter criterion: Content: Type */
+$handler->display->display_options['filters']['type']['id'] = 'type';
+$handler->display->display_options['filters']['type']['table'] = 'node';
+$handler->display->display_options['filters']['type']['field'] = 'type';
+$handler->display->display_options['filters']['type']['value'] = array(
+  'page' => 'page',
+);
+$handler->display->display_options['path'] = 'migrate/page';
