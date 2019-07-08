@@ -9,13 +9,12 @@ are enabled.
 4. Add the NIDirect Drupal 7 files to `/imports/files/sites/default/files/`
 5. Use `lando mist` to display the migration status
 6. Use `lando miip --group=<group name>` or `lando miip <individual migration>`
-7. 
 
 
 ## Migration order
 
-1. Run 'Drupal nidirect:migrate:pre' to preform pre-migration tasks on the D7 database.
-2. Run 'drush mim for the following migrations
+1. Run `Drupal nidirect:migrate:pre` to preform pre-migration tasks on the D7 database.
+2. Run `drush mim` for the following migrations
 * group=migrate_drupal_7_user
 * upgrade_d7_file
 * upgrade_d7_file_document
