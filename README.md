@@ -7,8 +7,9 @@ are enabled.
 2. Enable the require NIDirect migration modules.
 3. Import the NIDirect Drupal 7 database into the Lando `drupal7db` container database.
 4. Add the NIDirect Drupal 7 files to `/imports/files/sites/default/files/`
-5. Use `lando mist` to display the migration status
-6. Use `lando miip --group=<group name>` or `lando miip <individual migration>`
+5. Import the site configuration using 'drush cim'.
+6. Use `lando mist` to display the migration status
+7. Use `lando miip --group=<group name>` or `lando miip <individual migration>`
 
 
 ## Migration order
