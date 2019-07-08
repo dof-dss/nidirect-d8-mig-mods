@@ -16,26 +16,26 @@ are enabled.
 
 1. Run 'Drupal nidirect:migrate:pre' to preform pre-migration tasks on the D7 database.
 2. Run 'drush mim for the following migrations
--- group=migrate_drupal_7_user
--- upgrade_d7_file
--- upgrade_d7_file_document
--- upgrade_d7_file_image
--- upgrade_d7_file_video
--- upgrade_d7_file_audio
--- group=migrate_drupal_7_taxo
--- group=migrate_nidirect_node_driving_instructor
--- group=migrate_nidirect_entity_gp
--- group=migrate_nidirect_node_application
--- group=migrate_nidirect_node_article
--- group=migrate_nidirect_node_external_link
--- group=migrate_nidirect_node_gp_practice
--- group=migrate_nidirect_health_condition_node
--- group=migrate_nidirect_node_landing_page
--- group=migrate_nidirect_node_news
--- group=migrate_nidirect_node_nidirect_contact
--- group=migrate_nidirect_node_page
--- group=migrate_nidirect_node_publication
--- group=migrate_nidirect_node_recipe
+* group=migrate_drupal_7_user
+* upgrade_d7_file
+* upgrade_d7_file_document
+* upgrade_d7_file_image
+* upgrade_d7_file_video
+* upgrade_d7_file_audio
+* group=migrate_drupal_7_taxo
+* group=migrate_nidirect_node_driving_instructor
+* group=migrate_nidirect_entity_gp
+* group=migrate_nidirect_node_application
+* group=migrate_nidirect_node_article
+* group=migrate_nidirect_node_external_link
+* group=migrate_nidirect_node_gp_practice
+* group=migrate_nidirect_health_condition_node
+* group=migrate_nidirect_node_landing_page
+* group=migrate_nidirect_node_news
+* group=migrate_nidirect_node_nidirect_contact
+* group=migrate_nidirect_node_page
+* group=migrate_nidirect_node_publication
+* group=migrate_nidirect_node_recipe
 3. Run all 'Drupal nidirect:migrate:post<name>' tasks.
 
 ## Running tests
