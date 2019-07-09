@@ -84,7 +84,7 @@ class NidirectMigratePostMetatagCommand extends ContainerAwareCommand {
     $this->getIo()->info('Updated ' . $updated . ' of ' . count($results) . ' custom metatags.');
 
     if (count($results) == $updated) {
-      $this->getIo()->info($this->trans('commands.nidirect.migrate.post.taxonomy.messages.success'));
+      $this->getIo()->info($this->trans('commands.nidirect.migrate.post.metatag.messages.success'));
     }
     else {
       $this->getIo()->info('Failed to update metatag entities: ' . implode(',', $failed_updates));
