@@ -17,11 +17,7 @@ are enabled.
 1. Run `Drupal nidirect:migrate:pre` to preform pre-migration tasks on the D7 database.
 2. Run `drush mim` for the following migrations
 * group=migrate_drupal_7_user
-* upgrade_d7_file
-* upgrade_d7_file_document
-* upgrade_d7_file_image
-* upgrade_d7_file_video
-* upgrade_d7_file_audio
+* group=migrate_drupal_7_file
 * group=migrate_drupal_7_taxo
 * group=migrate_nidirect_node_driving_instructor
 * group=migrate_nidirect_entity_gp
