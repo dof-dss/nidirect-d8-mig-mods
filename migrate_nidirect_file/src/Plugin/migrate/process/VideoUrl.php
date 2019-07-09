@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\migrate_nidirect_global\Plugin\migrate\process;
+namespace Drupal\migrate_nidirect_file\Plugin\migrate\process;
 
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutableInterface;

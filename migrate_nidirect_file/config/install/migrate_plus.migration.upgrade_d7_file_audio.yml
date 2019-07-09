@@ -1,20 +1,20 @@
-uuid: a38a94e1-fe59-4196-938e-54dc863bb262
+uuid: a38a90e1-fe53-4196-938e-54dc863bb262
 langcode: en
 status: true
 dependencies: {  }
-id: upgrade_d7_file_document
+id: upgrade_d7_file_audio
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldInstanceMigration
 cck_plugin_method: null
 migration_tags:
   - Custom
-migration_group: migrate_drupal_7_global
+migration_group: migrate_drupal_7_file
 label: 'Public files'
 source:
   plugin: file_entity
-  type: document
+  type: audio
   constants:
-    bundle: 'document'
+    bundle: 'audio'
 process:
   mid: fid
   bundle: 'constants/bundle'
@@ -39,14 +39,15 @@ process:
   created: timestamp
   changed: timestamp
 
-  field_media_file_1/target_id: fid
-
-  field_media_doc_file_language: field_file_language
-  field_media_doc_file_title: field_file_title
+  # File field see media_entity.bundle.audio.yml.
+  field_media_audio/target_id: fid
+  # Title field.
+  field_title: field_title
+  # Transcript field.
+  field_transcript: field_transcript
 
 destination:
   plugin: entity:media
 migration_dependencies:
-  required:
-    - upgrade_d7_file
+  required: {  }
   optional: {  }
