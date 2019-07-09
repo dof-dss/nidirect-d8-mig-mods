@@ -36,6 +36,22 @@ class NidirectMigratePostFlagCommand extends ContainerAwareCommand {
     $conn_drupal8 = Database::getConnection('default', 'default');
     $this->getIo()->info('Truncated flag_counts and flagging tables.');
 
+    // Verify that the flag module is enabled.
+    $moduleHandler = \Drupal::service('module_handler');
+    if (!$moduleHandler->moduleExists('flag')) {
+      return 1;
+    }
+
+    // Verify Drupal 8 flag tables exists.
+    if (!$conn_drupal8->schema()->tableExists('flag_counts') || !$conn_drupal8->schema()->tableExists('flagging')) {
+      return 2;
+    }
+
+    // Verify Drupal 7 flag tables exists.
+    if (!$conn_migrate->schema()->tableExists('flag_counts') || !$conn_migrate->schema()->tableExists('flagging')) {
+      return 3;
+    }
+
     // Clean out the flag_counts and flagging tables before we begin.
     $query = $conn_drupal8->delete('flag_counts')->execute();
     $query = $conn_drupal8->delete('flagging')->execute();
