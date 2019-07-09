@@ -19,6 +19,17 @@ use Symfony\Component\Console\Input\ArrayInput;
 class NiDirectMigratePostCommand extends ContainerAwareCommand {
 
   /**
+   * Array of post migration commands to run.
+   *
+   * @var array
+   */
+  protected $commands = [
+    'nidirect:migrate:post:flag',
+    'nidirect:migrate:post:metatag',
+    'nidirect:migrate:post:taxonomy',
+  ];
+
+  /**
    * {@inheritdoc}
    */
   protected function configure() {
@@ -32,13 +43,9 @@ class NiDirectMigratePostCommand extends ContainerAwareCommand {
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
     $issues = [];
-    $commands = [
-      'nidirect:migrate:post:flag',
-      'nidirect:migrate:post:metatag',
-      'nidirect:migrate:post:taxonomy'
-    ];
+    $this->getIo()->info('Attempting to execute ' . count($this->commands) . ' post migration commands.');
 
-    foreach ($commands as $command) {
+    foreach ($this->commands as $command) {
       $cmd = $this->getApplication()->find($command);
       $args = ['command' => $command];
       $result = $cmd->run(new ArrayInput($args), $output);
