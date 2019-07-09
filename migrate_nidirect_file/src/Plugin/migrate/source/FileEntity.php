@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\migrate_nidirect_global\Plugin\migrate\source;
+namespace Drupal\migrate_nidirect_file\Plugin\migrate\source;
 
 use Drupal\Core\Database\Query\Condition;
 use Drupal\migrate\Row;
