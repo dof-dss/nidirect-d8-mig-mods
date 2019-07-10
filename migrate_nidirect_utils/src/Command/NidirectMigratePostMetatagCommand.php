@@ -36,6 +36,17 @@ class NidirectMigratePostMetatagCommand extends ContainerAwareCommand {
     $conn_drupal8 = Database::getConnection('default', 'default');
     $conn_migrate = Database::getConnection('default', 'migrate');
 
+    // Verify that the metatag module is enabled.
+    $moduleHandler = \Drupal::service('module_handler');
+    if (!$moduleHandler->moduleExists('metatag')) {
+      return 1;
+    }
+
+    // Verify Drupal 7 metatag table exists.
+    if (!$conn_migrate->schema()->tableExists('metatag')) {
+      return 2;
+    }
+
     $this->getIo()->info('Attempting to fix metatag issues.');
 
     // Get a list of custom metatags from NIDirect (D7)
@@ -89,6 +100,7 @@ class NidirectMigratePostMetatagCommand extends ContainerAwareCommand {
     else {
       $this->getIo()->info('Failed to update metatag entities: ' . implode(',', $failed_updates));
       $this->getIo()->info($this->trans('commands.nidirect.migrate.post.metatag.messages.failure'));
+      return -1;
     }
 
   }

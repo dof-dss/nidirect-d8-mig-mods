@@ -37,6 +37,22 @@ class NidirectMigratePostTaxonomyCommand extends ContainerAwareCommand {
 
     $this->getIo()->info('Attempting to fix taxonomy issues.');
 
+    // Verify that the taxonomy module is enabled.
+    $moduleHandler = \Drupal::service('module_handler');
+    if (!$moduleHandler->moduleExists('taxonomy')) {
+      return 1;
+    }
+
+    // Verify Drupal 8 taxonomy table exists.
+    if (!$conn_drupal8->schema()->tableExists('taxonomy_term__parent')) {
+      return 2;
+    }
+
+    // Verify Drupal 7 taxonomy table exists.
+    if (!$conn_migrate->schema()->tableExists('taxonomy_term_hierarchy')) {
+      return 3;
+    }
+
     $query = $conn_migrate->query("SELECT tid, parent FROM {taxonomy_term_hierarchy} WHERE parent > 0");
     $results = $query->fetchAllKeyed();
 
@@ -62,6 +78,7 @@ class NidirectMigratePostTaxonomyCommand extends ContainerAwareCommand {
     else {
       $this->getIo()->info('Failed to update for term entities: ' . implode(',', $failed_updates));
       $this->getIo()->info($this->trans('commands.nidirect.migrate.post.taxonomy.messages.failure'));
+      return -1;
     }
 
   }
