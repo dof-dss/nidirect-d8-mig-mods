@@ -248,7 +248,7 @@ process:
       source: field_map/0/lat
 destination:
   plugin: 'entity:node'
-  default_bundle: nidirect_contact
+  default_bundle: contact
 migration_dependencies:
   required:
     - upgrade_d7_user

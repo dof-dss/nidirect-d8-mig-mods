@@ -1,16 +1,16 @@
 module.exports = {
   '@tags': ['nidirect-migrations', 'nidirect-node-nidirect-contact'],
 
-  'Test whether NIDirect Contact content type exists': browser => {
+  'Test whether Contact content type exists': browser => {
     browser
       .drupalLogin({ name: process.env.TEST_USER, password: process.env.TEST_PASS })
-      .drupalRelativeURL('/admin/structure/types/manage/nidirect_contact')
+      .drupalRelativeURL('/admin/structure/types/manage/contact')
       // The text match takes a regex, not a literal string.
-      .expect.element('h1.page-title').text.to.match(/edit nidirect contact content type/i);
+      .expect.element('h1.page-title').text.to.match(/edit contact content type/i);
   },
 
-  'Test whether NIDirect Contact content type fields exist': browser => {
-    browser.drupalRelativeURL('/admin/structure/types/manage/nidirect_contact/fields');
+  'Test whether Contact content type fields exist': browser => {
+    browser.drupalRelativeURL('/admin/structure/types/manage/contact/fields');
     browser.expect.element('#field-contact-additional-info').to.be.present;
     browser.expect.element('#field-address').to.be.present;
     browser.expect.element('#field-contact-benefits-no').to.be.present;
@@ -33,9 +33,9 @@ module.exports = {
     browser.expect.element('#field-contact-website').to.be.present;
   },
 
-  'Test whether we have any migrated content for NIDirect Contact nodes': browser => {
+  'Test whether we have any migrated content for Contact nodes': browser => {
     browser
-      .drupalRelativeURL('/admin/content?type=nidirect_contact')
+      .drupalRelativeURL('/admin/content?type=contact')
       .expect.element('#views-form-content-page-1 > table > tbody > tr')
       .text.to.not.contain('No content available');
   }

@@ -1,0 +1,12 @@
+name: 'Migrate NIDirect - Node:Contact'
+type: module
+description: 'NIDirect migration Contact content type'
+core: 8.x
+package: 'Migrate NIDirect'
+migration_dependencies:
+ required: { }
+dependencies:
+  - drupal:migrate
+  - drupal:migrate_plus
+  - drupal:migrate_tools
+  - migrate_nidirect_global
