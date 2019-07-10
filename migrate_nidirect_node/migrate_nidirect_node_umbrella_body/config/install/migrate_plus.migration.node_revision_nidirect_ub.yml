@@ -110,10 +110,6 @@ process:
       source: field_email_address
       process:
         value: email
-  field_livelink_url:
-    -
-      plugin: field_link
-      source: field_livelink_url
   field_map:
     -
       plugin: get

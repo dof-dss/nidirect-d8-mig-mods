@@ -20,7 +20,6 @@ module.exports = {
     browser.expect.element('#field-ub-date-issued').to.be.present;
     browser.expect.element('#field-district').to.be.present;
     browser.expect.element('#field-email-address').to.be.present;
-    browser.expect.element('#field-livelink-url').to.be.present;
     browser.expect.element('#field-location').to.be.present;
     browser.expect.element('#field-meta-tags').to.be.present;
     browser.expect.element('#field-contact-phone').to.be.present;

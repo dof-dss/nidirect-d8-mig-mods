@@ -30,8 +30,6 @@ module.exports = {
     browser.expect.element('#field-recipe-nutrition-info').to.be.present;
     browser.expect.element('#field-recipe-allergy-advice').to.be.present;
     browser.expect.element('#field-recipe-food-safety').to.be.present;
-    browser.expect.element('#field-livelink-url').to.be.present;
-    browser.expect.element('#field-livelink-id').to.be.present;
   },
   'Test whether we have any migrated content for recipe nodes': browser => {
     browser
