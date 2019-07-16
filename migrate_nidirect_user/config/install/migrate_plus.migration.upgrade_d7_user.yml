@@ -71,8 +71,7 @@ process:
       source: init
   roles:
     -
-      plugin: migration_lookup
-      migration: upgrade_d7_user_role
+      plugin: user_role
       source: roles
   user_picture:
     -
@@ -85,8 +84,7 @@ process:
 destination:
   plugin: 'entity:user'
 migration_dependencies:
-  required:
-    - upgrade_d7_user_role
+  required: {  }
   optional:
     - upgrade_d7_field_instance
     - upgrade_d7_file
@@ -94,4 +92,3 @@ migration_dependencies:
     - upgrade_user_picture_field_instance
     - upgrade_user_picture_entity_display
     - upgrade_user_picture_entity_form_display
-    - upgrade_d7_user_role
