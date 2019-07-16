@@ -71,9 +71,22 @@ process:
       source: init
   roles:
     -
-      plugin: migration_lookup
-      migration: upgrade_d7_user_role
+      plugin: static_map
       source: roles
+      map:
+        3: admin_user
+        6: editor_user
+        8: apps_user
+        2: authenticated
+        13: health_condition_supervisor_user
+        14: driving_instructor_supervisor_user
+        1: anonymous
+        4: author_user
+        10: gp_supervisor_user
+        9: gp_author_user
+        12: health_condition_author_user
+        11: news_supervisor
+        7: supervisor_user
   user_picture:
     -
       plugin: default_value
@@ -85,8 +98,7 @@ process:
 destination:
   plugin: 'entity:user'
 migration_dependencies:
-  required:
-    - upgrade_d7_user_role
+  required: {  }
   optional:
     - upgrade_d7_field_instance
     - upgrade_d7_file
@@ -94,4 +106,3 @@ migration_dependencies:
     - upgrade_user_picture_field_instance
     - upgrade_user_picture_entity_display
     - upgrade_user_picture_entity_form_display
-    - upgrade_d7_user_role
