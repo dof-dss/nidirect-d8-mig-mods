@@ -71,8 +71,22 @@ process:
       source: init
   roles:
     -
-      plugin: user_role
+      plugin: static_map
       source: roles
+      map:
+        3: admin_user
+        6: editor_user
+        8: apps_user
+        2: authenticated
+        13: health_condition_supervisor_user
+        14: driving_instructor_supervisor_user
+        1: anonymous
+        4: author_user
+        10: gp_supervisor_user
+        9: gp_author_user
+        12: health_condition_author_user
+        11: news_supervisor
+        7: supervisor_user
   user_picture:
     -
       plugin: default_value
