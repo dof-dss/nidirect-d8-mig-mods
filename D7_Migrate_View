@@ -129,6 +129,15 @@ $handler->display->display_options['fields']['field_subtheme']['element_default_
 $handler->display->display_options['fields']['field_subtheme']['type'] = 'taxonomy_term_reference_plain';
 $handler->display->display_options['fields']['field_subtheme']['delta_offset'] = '0';
 $handler->display->display_options['fields']['field_subtheme']['separator'] = '|';
+/* Field: Content: Theme/subtheme */
+$handler->display->display_options['fields']['field_subtheme_1']['id'] = 'field_subtheme_1';
+$handler->display->display_options['fields']['field_subtheme_1']['table'] = 'field_data_field_subtheme';
+$handler->display->display_options['fields']['field_subtheme_1']['field'] = 'field_subtheme';
+$handler->display->display_options['fields']['field_subtheme_1']['label'] = 'subtheme_hierarchy';
+$handler->display->display_options['fields']['field_subtheme_1']['alter']['trim_whitespace'] = TRUE;
+$handler->display->display_options['fields']['field_subtheme_1']['alter']['strip_tags'] = TRUE;
+$handler->display->display_options['fields']['field_subtheme_1']['type'] = 'hs_taxonomy_term_reference_hierarchical_text';
+$handler->display->display_options['fields']['field_subtheme_1']['delta_offset'] = '0';
 /* Field: Content: Supplementary subthemes */
 $handler->display->display_options['fields']['field_site_topics']['id'] = 'field_site_topics';
 $handler->display->display_options['fields']['field_site_topics']['table'] = 'field_data_field_site_topics';
