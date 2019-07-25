@@ -1,5 +1,5 @@
 {
-    "name": "nics/nidirect-migrations",
+    "name": "dof-dss/nidirect-migrations",
     "description": "Drupal Migrate API modules for NI Direct",
     "type": "drupal-module",
     "authors": [
