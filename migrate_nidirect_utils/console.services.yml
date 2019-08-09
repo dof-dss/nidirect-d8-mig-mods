@@ -24,3 +24,8 @@ services:
     arguments: []
     tags:
       - { name: drupal.command }
+  migrate_nidirect_utils.nidirect_migrate_post_node_article:
+    class: Drupal\migrate_nidirect_utils\Command\NidirectMigratePostNodeArticleCommand
+    arguments: []
+    tags:
+      - { name: drupal.command }

@@ -1,0 +1,6 @@
+description: 'Fixes post node article migration issues'
+options: {}
+arguments: {}
+messages:
+    success: '🎉 Successfully removed migrated money advice service articles.'
+    failure: '😭 Something went wrong removing the money advice service articles, please review the logs.'
