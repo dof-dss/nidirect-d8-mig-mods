@@ -57,6 +57,8 @@ class NidirectMigratePostFlagCommand extends ContainerAwareCommand {
     $query = $conn_drupal8->delete('flagging')->execute();
 
     // Flag counts.
+    // (Exclude 'content_audit' flag as auditing has been implemented
+    // without a flag in Drupal 8)
     $query = $conn_migrate->query("
       SELECT
         CASE fid
@@ -72,11 +74,13 @@ class NidirectMigratePostFlagCommand extends ContainerAwareCommand {
         count,
         last_updated
       FROM {flag_counts}
-      WHERE fid <> 3
+      WHERE fid in (2,4,5,6,7)
     ");
     $flag_count_results = $query->fetchAll();
 
     // Flagging.
+    // (Exclude 'content_audit' flag as auditing has been implemented
+    // without a flag in Drupal 8)
     $query = $conn_migrate->query("
       SELECT
         flagging_id as id,
@@ -94,7 +98,7 @@ class NidirectMigratePostFlagCommand extends ContainerAwareCommand {
         sid as session_id,
         timestamp as created
       FROM {flagging}
-      WHERE fid <> 3
+      WHERE fid in (2,4,5,6,7)
     ");
     $flagging_results = $query->fetchAll();
 
