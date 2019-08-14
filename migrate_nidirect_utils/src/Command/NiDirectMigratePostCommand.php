@@ -28,6 +28,7 @@ class NiDirectMigratePostCommand extends ContainerAwareCommand {
     'nidirect:migrate:post:metatag',
     'nidirect:migrate:post:taxonomy',
     'nidirect:migrate:post:article',
+    'nidirect:migrate:post:publish_status',
   ];
 
   /**
