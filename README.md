@@ -7,7 +7,7 @@ are enabled.
 2. Enable the required NIDirect migration modules. 
 3. Import the NIDirect Drupal 7 database into the Lando `drupal7db` container database.
 4. Add the NIDirect Drupal 7 files to `/imports/files/sites/default/files/`
-5. Ensure 'Migrate NIDirect Utils' is enabled and run `Lando Drupal nidirect:migrate:pre` to preform site-uuid sync and pre-migration tasks on the D7 database.
+5. Ensure 'Migrate NIDirect Utils' is enabled and run `lando Drupal nidirect:migrate:pre` to preform site-uuid sync and pre-migration tasks on the D7 database.
 6. Import the site configuration using 'drush cim'.
 7. Use `lando mist` to display the migration status
 8. Use `lando miip --group=<group name>` or `lando miip <individual migration>`
@@ -15,7 +15,7 @@ are enabled.
 
 ## Migration order
 
-2. Run `drush mim` for the following migrations
+2. Run `lando drush mim` for the following migrations
 * group=migrate_drupal_7_user
 * group=migrate_drupal_7_file
 * group=migrate_drupal_7_taxo
@@ -32,7 +32,7 @@ are enabled.
 * group=migrate_nidirect_node_page
 * group=migrate_nidirect_node_publication
 * group=migrate_nidirect_node_recipe
-3. Run all 'Drupal nidirect:migrate:post<name>' tasks.
+3. After all migrations have completed run `lando Drupal nidirect:migrate:post' tasks.
 
 ## Running tests
 
