@@ -6,6 +6,7 @@ use Drupal\node\Entity\Node;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Drupal\Console\Core\Command\ContainerAwareCommand;
+use Drupal\Console\Annotations\DrupalCommand;
 use Drupal\Core\Database\Database;
 
 /**
@@ -54,14 +55,14 @@ class NidirectMigratePostAuditCommand extends ContainerAwareCommand {
     $flag_results = $query->fetchAll();
 
     // Update the 'next audit due' node in D8.
+    $today = date('Y-m-d', \Drupal::time()->getCurrentTime());
     foreach ($flag_results as $i => $row) {
       $row = (array) $row;
       $node = Node::load($row['entity_id']);
       // Just set next audit date to today as will show in 'needs audit' report
       // if next audit date is today or earlier.
-      $node->set('field_next_audit_due', date('Y-m-d', \Drupal::time()->getCurrentTime()));
+      $node->set('field_next_audit_due', $today);
       $node->save();
-      $x++;
     }
 
     $this->getIo()->info('Updated next audit date on ' . count($flag_results) . ' nodes.');
