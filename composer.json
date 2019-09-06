@@ -2,12 +2,6 @@
     "name": "dof-dss/nidirect-migrations",
     "description": "Drupal Migrate API modules for NI Direct",
     "type": "drupal-module",
-    "authors": [
-        {
-            "name": "Stephen Cousins",
-            "email": "hello@onemanandhismouse.com"
-        }
-    ],
     "require": {
         "composer/installers": "^1.6"
     }
