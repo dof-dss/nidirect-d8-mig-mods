@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/dof-dss/nidirect-d8-mig-mods.svg?style=svg)](https://circleci.com/gh/dof-dss/nidirect-d8-mig-mods)
+
 # Migrations
 
 ## Running migrations
