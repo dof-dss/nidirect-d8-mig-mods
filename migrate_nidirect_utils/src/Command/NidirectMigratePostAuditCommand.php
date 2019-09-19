@@ -31,17 +31,13 @@ class NidirectMigratePostAuditCommand extends ContainerAwareCommand {
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-
     $conn_migrate = Database::getConnection('default', 'migrate');
     $conn_drupal8 = Database::getConnection('default', 'default');
-
     $this->getIo()->info('Started post migration audit processing.');
-
     // Verify Drupal 7 flag table exists.
     if (!$conn_migrate->schema()->tableExists('flagging')) {
       return 3;
     }
-
     // Select content flagged with 'content_audit' from D7.
     $query = $conn_migrate->query("
       SELECT 
@@ -53,12 +49,19 @@ class NidirectMigratePostAuditCommand extends ContainerAwareCommand {
       AND f.fid = 1
     ");
     $flag_results = $query->fetchAll();
-
+    // Select nids already set for audit.
+    $query = $conn_drupal8->query("select entity_id from node__field_next_audit_due where field_next_audit_due_value is not null");
+    $already_set_results = $query->fetchAll();
+    $already_set = [];
+    foreach ($already_set_results as $thisresult) {
+      $already_set[] = $thisresult->entity_id;
+    }
     // Update the 'next audit due' node in D8.
     $today = date('Y-m-d', \Drupal::time()->getCurrentTime());
     $nids = [];
     $n = 0;
     foreach ($flag_results as $i => $row) {
+<<<<<<< Updated upstream
       $nids[] = $row->entity_id;
       $n++;
       if ($n > 49) {
@@ -69,6 +72,18 @@ class NidirectMigratePostAuditCommand extends ContainerAwareCommand {
       }
     }
 
+=======
+      if (!in_array($row->entity_id, $already_set)) {
+        $nids[] = $row->entity_id;
+        $n++;
+        if ($n > 199) {
+          $this->updateNodeAudit($nids);
+          $n = 0;
+          $nids = [];
+        }
+      }
+    }
+>>>>>>> Stashed changes
     $this->getIo()->info('Updated next audit date on ' . count($flag_results) . ' nodes.');
   }
 
