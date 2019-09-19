@@ -57,15 +57,21 @@ class NidirectMigratePostAuditCommand extends ContainerAwareCommand {
     // Update the 'next audit due' node in D8.
     $today = date('Y-m-d', \Drupal::time()->getCurrentTime());
     foreach ($flag_results as $i => $row) {
-      $row = (array) $row;
-      $node = Node::load($row['entity_id']);
+      $this->updateNodeAudit($row->entity_id);
+    }
+
+    $this->getIo()->info('Updated next audit date on ' . count($flag_results) . ' nodes.');
+  }
+
+  protected function updateNodeAudit($nids) {
+    $today = date('Y-m-d', \Drupal::time()->getCurrentTime());
+    foreach ($nids as $nid) {
+      $node = Node::load($nid);
       // Just set next audit date to today as will show in 'needs audit' report
       // if next audit date is today or earlier.
       $node->set('field_next_audit_due', $today);
       $node->save();
     }
-
-    $this->getIo()->info('Updated next audit date on ' . count($flag_results) . ' nodes.');
   }
 
 }
