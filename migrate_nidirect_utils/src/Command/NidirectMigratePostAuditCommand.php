@@ -61,18 +61,6 @@ class NidirectMigratePostAuditCommand extends ContainerAwareCommand {
     $nids = [];
     $n = 0;
     foreach ($flag_results as $i => $row) {
-<<<<<<< Updated upstream
-      $nids[] = $row->entity_id;
-      $n++;
-      if ($n > 49) {
-        $this->updateNodeAudit($nids);
-        $n = 0;
-        $nids = [];
-        break;
-      }
-    }
-
-=======
       if (!in_array($row->entity_id, $already_set)) {
         $nids[] = $row->entity_id;
         $n++;
@@ -83,7 +71,6 @@ class NidirectMigratePostAuditCommand extends ContainerAwareCommand {
         }
       }
     }
->>>>>>> Stashed changes
     $this->getIo()->info('Updated next audit date on ' . count($flag_results) . ' nodes.');
   }
 
