@@ -56,6 +56,14 @@ class NidirectMigratePostAuditCommand extends ContainerAwareCommand {
     foreach ($already_set_results as $thisresult) {
       $already_set[] = $thisresult->entity_id;
     }
+    // Create/access the queue.
+    /*$queue_factory = \Drupal::service('queue');
+    $queue_factory->get('audit_date_processor')->createQueue();
+    $queue = $queue_factory->get('audit_date_processor');*/
+
+    $queue = \Drupal::queue('audit_date_updates');
+    $queue->createQueue();
+    $this->getIo()->info('After creation, items in queue ' . $queue->numberOfItems() . ' items.');
     // Update the 'next audit due' node in D8.
     $today = date('Y-m-d', \Drupal::time()->getCurrentTime());
     $nids = [];
@@ -65,25 +73,31 @@ class NidirectMigratePostAuditCommand extends ContainerAwareCommand {
         $nids[] = $row->entity_id;
         $n++;
         if ($n > 199) {
-          $this->updateNodeAudit($nids);
+          $this->updateNodeAudit($nids, $queue);
           $n = 0;
           $nids = [];
         }
       }
     }
+    $this->getIo()->info('Items in queue ' . $queue->numberOfItems() . ' items.');
     $this->getIo()->info('Updated next audit date on ' . count($flag_results) . ' nodes.');
   }
 
-  protected function updateNodeAudit($nids) {
-    $today = date('Y-m-d', \Drupal::time()->getCurrentTime());
-    $nodes = Node::loadMultiple($nids);
+  protected function updateNodeAudit($nids, $queue) {
+    //$today = date('Y-m-d', \Drupal::time()->getCurrentTime());
+
+    $item = new \stdClass();
+    $item->nids = implode(',',$nids);
+    $queue->createItem($item);
+
+    /*$nodes = Node::loadMultiple($nids);
     foreach ($nodes as $node) {
       // Just set next audit date to today as will show in 'needs audit' report
       // if next audit date is today or earlier.
       $node->set('field_next_audit_due', $today);
       $node->save();
-    }
-    $this->getIo()->info('Batch updated next audit date on ' . count($nids) . ' nodes.');
+    }*/
+    $this->getIo()->info('Queued updates to next audit date on ' . count($nids) . ' nodes.');
   }
 
 }
