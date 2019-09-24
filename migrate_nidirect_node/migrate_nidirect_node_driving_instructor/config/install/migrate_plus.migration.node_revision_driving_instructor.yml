@@ -75,7 +75,7 @@ process:
     -
       plugin: get
       source: field_contact_phone
-  field_contact_sms:
+  field_contact_mobile:
     -
       plugin: get
       source: field_contact_sms
