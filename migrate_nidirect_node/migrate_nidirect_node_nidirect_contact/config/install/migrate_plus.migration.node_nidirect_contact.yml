@@ -106,20 +106,12 @@ process:
         html_for_admins: full_html
         paste_format: plain_text
         plain_text: plain_text
-  field_contact_benefits_no:
-    -
-      plugin: get
-      source: field_contact_benefits_no
   field_contact_category:
     -
       plugin: sub_process
       source: field_contact_category
       process:
         target_id: tid
-  field_contact_emp_svcs_no:
-    -
-      plugin: get
-      source: field_contact_emp_svcs_no
   field_contact_fax:
     -
       plugin: get
@@ -147,7 +139,7 @@ process:
     -
       plugin: get
       source: field_contact_phone
-  field_contact_sms:
+  field_contact_mobile:
     -
       plugin: get
       source: field_contact_sms
