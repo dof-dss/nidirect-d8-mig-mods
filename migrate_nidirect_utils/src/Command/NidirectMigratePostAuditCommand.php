@@ -3,6 +3,7 @@
 namespace Drupal\migrate_nidirect_utils\Command;
 
 use Drupal\Core\Logger\LoggerChannelInterface;
+use Drupal\Core\Queue\QueueFactory;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface;
 use Drupal\node\Entity\Node;
@@ -23,21 +24,23 @@ use Drupal\Core\Database\Database;
 class NidirectMigratePostAuditCommand extends ContainerAwareCommand {
 
   /**
-   * The logger channel service.
+   * The queue service.
    *
-   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   * @var \Drupal\Core\Queue\QueueFactory
    */
-  protected $logger;
+  protected $queueFactory;
 
   /**
    * Constructs a FieldDiscovery object.
    *
    * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
    *   The logger channel service.
+   * @param \Drupal\Core\Queue\QueueFactory $queue_factory
+   *   The queue service.
    */
-  public function __construct(LoggerChannelInterface $logger) {
+  public function __construct(QueueFactory $queue_factory) {
     parent::__construct();
-    $this->logger = $logger;
+    $this->queueFactory = $queue_factory;
   }
 
   /**
