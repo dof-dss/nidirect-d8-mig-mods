@@ -98,6 +98,7 @@ class NidirectMigratePostAuditCommand extends ContainerAwareCommand
 
         // Update the 'next audit due' node in D8.
         $n = $this->updateNodeAudit($flag_results, $already_set, $queue);
+
         $this->getIo()->info(
             'Queued audit date updates on ' . $n . ' nodes.'
         );
@@ -114,6 +115,7 @@ class NidirectMigratePostAuditCommand extends ContainerAwareCommand
       $nids = [];
       $n = 0;
       foreach ($flag_results as $i => $row) {
+        // Don't bother to update nodes that have already been updated.
         if (!in_array($row->entity_id, $already_set)) {
           $nids[] = $row->entity_id;
           $n++;
