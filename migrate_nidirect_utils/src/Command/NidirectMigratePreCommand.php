@@ -37,7 +37,8 @@ class NidirectMigratePreCommand extends MigrateCommand {
   /**
    * {@inheritdoc}
    */
-  protected function configure() {
+  protected function configure()
+  {
     $this->setName('nidirect:migrate:pre')
       ->setDescription("Pre migration setup");
   }
@@ -45,7 +46,8 @@ class NidirectMigratePreCommand extends MigrateCommand {
   /**
    * {@inheritdoc}
    */
-  public function __construct() {
+  public function __construct()
+  {
     parent::__construct();
     $this->connMigrate = Database::getConnection('default', 'migrate');
     $this->connDefault = Database::getConnection('default', 'default');
@@ -57,7 +59,8 @@ class NidirectMigratePreCommand extends MigrateCommand {
    * @param string $query
    *   SQL query to execute.
    */
-  private function drupal7DatabaseQuery($query) {
+  private function drupal7DatabaseQuery($query)
+  {
     $conn_query = $this->connMigrate->query($query);
     return $conn_query->execute();
   }
@@ -68,7 +71,7 @@ class NidirectMigratePreCommand extends MigrateCommand {
    */
   // phpcs:disable
   public function task_remove_default_shortcuts() {
-  // phpcs:enable
+    // phpcs:enable
     // Remove the installed default admin shortcuts which trip up config sync import.
     $query = \Drupal::entityTypeManager()->getStorage('shortcut')->getQuery();
     $nids = $query->condition('shortcut_set', 'default')->execute();
@@ -86,8 +89,9 @@ class NidirectMigratePreCommand extends MigrateCommand {
    * be able to import configuration.
    */
   // phpcs:disable
-  protected function task_update_site_uuid() {
-  // phpcs:enable
+  protected function task_update_site_uuid()
+  {
+    // phpcs:enable
     global $config_directories;
     $site_config = Yaml::parse(file_get_contents($config_directories['sync'] . '/system.site.yml'));
 
@@ -160,6 +164,62 @@ class NidirectMigratePreCommand extends MigrateCommand {
     }
 
     $insert->execute();
+  }
+
+  /**
+   * Prepare telephone numbers for new multiple value telephone plus field.
+   */
+  protected function task_prepare_phone_field_data() {
+    $phone_numbers = $this->connMigrate->query('SELECT revision_id, field_contact_phone_value FROM field_data_field_contact_phone WHERE bundle = \'nidirect_contact\'');
+
+    $counter = 0;
+    $updates = [];
+
+    foreach ($phone_numbers as $phone_number) {
+      /* Pattern for:
+       *
+       * 028 6634 3165 / 028 6634 3144
+       * 01234 269110 / 01234 269609
+       * 028 3751 8569 or 0751 168 6433
+       */
+      $regex = '/^((\d+\s){2,3})(or|\/)((\s\d+){2,3})$/m';
+      preg_match_all($regex, $phone_number->field_contact_phone_value, $matches, PREG_SET_ORDER, 0);
+      if (count($matches) > 0) {
+        $value = '[' . trim($matches[0][1]) . '][' . trim($matches[0][4]) . ']';
+        $updates[$phone_number->revision_id] = $value;
+        $counter++;
+        continue;
+      }
+
+      /* Pattern for
+       *
+       * 028 9023 8152 (Monday to Friday 8.45 am to 5.00 pm)
+       */
+      $regex = '/^((\d+\s){2,3})\(([^\/)]*)\)/m';
+      preg_match_all($regex, $phone_number->field_contact_phone_value, $matches, PREG_SET_ORDER, 0);
+      if (count($matches) > 0) {
+        $value = '[' . trim($matches[0][1]) . '|' . $matches[0][3] . ']';
+        $updates[$phone_number->revision_id] = $value;
+        $counter++;
+        continue;
+      }
+
+      /* Pattern for:
+       *
+       * 020 7089 5050 / Parents Helpline - 0808 802 5544
+       * 01476 581111 / Northern Ireland Office - 028 9127 5787
+       */
+      $regex = '/^((\d+\s){2,3})\/\s(.+)[:-]\s((\d+\s?){2,3})$/m';
+      preg_match_all($regex, $phone_number->field_contact_phone_value, $matches, PREG_SET_ORDER, 0);
+      if (count($matches) > 0) {
+        $value = '[' . trim($matches[0][1]) . '][' . $matches[0][4] . '|' . trim($matches[0][3]) . ']';
+        $updates[$phone_number->revision_id] = $value;
+        $counter++;
+        continue;
+      }
+    }
+
+    $this->getIo()->info('Processed ' . $counter . ' phone fields.');
   }
 
 }
