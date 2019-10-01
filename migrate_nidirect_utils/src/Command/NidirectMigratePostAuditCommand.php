@@ -80,13 +80,11 @@ class NidirectMigratePostAuditCommand extends ContainerAwareCommand {
     foreach ($already_set_results as $thisresult) {
       $already_set[] = $thisresult->entity_id;
     }
-    // Create/access the queue.
-    /*$queue_factory = \Drupal::service('queue');
-    $queue_factory->get('audit_date_processor')->createQueue();
-    $queue = $queue_factory->get('audit_date_processor');*/
 
-    $queue = \Drupal::queue('audit_date_updates');
-    $queue->createQueue();
+    // Make sure audit updatequeue exists. There is no harm in
+    // trying to recreate an existing queue.
+    $this->queueFactory->get('audit_date_updates')->createQueue();
+    $queue = $this->queueFactory->get('audit_date_updates');
     $this->getIo()->info('After creation, items in queue ' . $queue->numberOfItems() . ' items.');
     // Update the 'next audit due' node in D8.
     $today = date('Y-m-d', \Drupal::time()->getCurrentTime());
