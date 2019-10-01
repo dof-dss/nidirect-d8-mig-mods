@@ -21,49 +21,53 @@ use Drupal\Core\Database\Database;
  *     extensionType="module"
  * )
  */
-class NidirectMigratePostAuditCommand extends ContainerAwareCommand {
+class NidirectMigratePostAuditCommand extends ContainerAwareCommand
+{
 
-  /**
-   * The queue service.
-   *
-   * @var \Drupal\Core\Queue\QueueFactory
-   */
-  protected $queueFactory;
+    /**
+     * The queue service.
+     *
+     * @var \Drupal\Core\Queue\QueueFactory
+     */
+    protected $queueFactory;
 
-  /**
-   * Constructs a FieldDiscovery object.
-   *
-   * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
-   *   The logger channel service.
-   * @param \Drupal\Core\Queue\QueueFactory $queue_factory
-   *   The queue service.
-   */
-  public function __construct(QueueFactory $queue_factory) {
-    parent::__construct();
-    $this->queueFactory = $queue_factory;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function configure() {
-    $this->setName('nidirect:migrate:post:audit')
-      ->setDescription($this->trans('commands.nidirect.migrate.post.audit.description'));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function execute(InputInterface $input, OutputInterface $output) {
-    $conn_migrate = Database::getConnection('default', 'migrate');
-    $conn_drupal8 = Database::getConnection('default', 'default');
-    $this->getIo()->info('Started post migration audit processing.');
-    // Verify Drupal 7 flag table exists.
-    if (!$conn_migrate->schema()->tableExists('flagging')) {
-      return 3;
+    /**
+     * Constructs a NidirectMigratePostAuditCommand object.
+     *
+     * @param \Drupal\Core\Queue\QueueFactory $queue_factory
+     *   The queue service.
+     */
+    public function __construct(QueueFactory $queue_factory)
+    {
+        parent::__construct();
+        $this->queueFactory = $queue_factory;
     }
-    // Select content flagged with 'content_audit' from D7.
-    $query = $conn_migrate->query("
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configure()
+    {
+        $this->setName('nidirect:migrate:post:audit')->setDescription(
+            $this->trans('commands.nidirect.migrate.post.audit.description')
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $conn_migrate = Database::getConnection('default', 'migrate');
+        $conn_drupal8 = Database::getConnection('default', 'default');
+        $this->getIo()->info('Started post migration audit processing.');
+        // Verify Drupal 7 flag table exists.
+        if (!$conn_migrate->schema()->tableExists('flagging')) {
+            return 3;
+        }
+        // Select content flagged with 'content_audit' from D7.
+        $query = $conn_migrate->query(
+            "
       SELECT 
         f.entity_id 
       FROM flagging f
@@ -71,55 +75,66 @@ class NidirectMigratePostAuditCommand extends ContainerAwareCommand {
       ON f.entity_id = n.nid
       WHERE n.type in ('article', 'contact', 'page')
       AND f.fid = 1
-    ");
-    $flag_results = $query->fetchAll();
-    // Select nids already set for audit.
-    $query = $conn_drupal8->query("select entity_id from node__field_next_audit_due where field_next_audit_due_value is not null");
-    $already_set_results = $query->fetchAll();
-    $already_set = [];
-    foreach ($already_set_results as $thisresult) {
-      $already_set[] = $thisresult->entity_id;
-    }
-
-    // Make sure audit updatequeue exists. There is no harm in
-    // trying to recreate an existing queue.
-    $this->queueFactory->get('audit_date_updates')->createQueue();
-    $queue = $this->queueFactory->get('audit_date_updates');
-    $this->getIo()->info('After creation, items in queue ' . $queue->numberOfItems() . ' items.');
-    // Update the 'next audit due' node in D8.
-    $today = date('Y-m-d', \Drupal::time()->getCurrentTime());
-    $nids = [];
-    $n = 0;
-    foreach ($flag_results as $i => $row) {
-      if (!in_array($row->entity_id, $already_set)) {
-        $nids[] = $row->entity_id;
-        $n++;
-        if ($n > 199) {
-          $this->updateNodeAudit($nids, $queue);
-          $n = 0;
-          $nids = [];
+    "
+        );
+        $flag_results = $query->fetchAll();
+        // Select nids already set for audit.
+        $query = $conn_drupal8->query(
+            "select entity_id 
+            from node__field_next_audit_due 
+            where field_next_audit_due_value is not null"
+        );
+        $already_set_results = $query->fetchAll();
+        $already_set = [];
+        foreach ($already_set_results as $thisresult) {
+            $already_set[] = $thisresult->entity_id;
         }
-      }
+
+        // Make sure audit update queue exists. There is no harm in
+        // trying to recreate an existing queue.
+        $this->queueFactory->get('audit_date_updates')->createQueue();
+        $queue = $this->queueFactory->get('audit_date_updates');
+        $this->getIo()->info(
+            'After creation, ' .
+            $queue->numberOfItems() . ' items in queue.'
+        );
+
+        // Update the 'next audit due' node in D8.
+        $today = date('Y-m-d', \Drupal::time()->getCurrentTime());
+        $nids = [];
+        $n = 0;
+        foreach ($flag_results as $i => $row) {
+            if (!in_array($row->entity_id, $already_set)) {
+                $nids[] = $row->entity_id;
+                $n++;
+                if ($n > 199) {
+                    $this->updateNodeAudit($nids, $queue);
+                    $n = 0;
+                    $nids = [];
+                }
+            }
+        }
+        if ($n > 0) {
+            $this->updateNodeAudit($nids, $queue);
+        }
+        $this->getIo()->info(
+            'Items in queue ' .
+            $queue->numberOfItems() . ' items.'
+        );
+        $this->getIo()->info(
+            'Updated next audit date on ' .
+            count($flag_results) . ' nodes.'
+        );
     }
-    $this->getIo()->info('Items in queue ' . $queue->numberOfItems() . ' items.');
-    $this->getIo()->info('Updated next audit date on ' . count($flag_results) . ' nodes.');
-  }
 
-  protected function updateNodeAudit($nids, $queue) {
-    //$today = date('Y-m-d', \Drupal::time()->getCurrentTime());
-
-    $item = new \stdClass();
-    $item->nids = implode(',',$nids);
-    $queue->createItem($item);
-
-    /*$nodes = Node::loadMultiple($nids);
-    foreach ($nodes as $node) {
-      // Just set next audit date to today as will show in 'needs audit' report
-      // if next audit date is today or earlier.
-      $node->set('field_next_audit_due', $today);
-      $node->save();
-    }*/
-    $this->getIo()->info('Queued updates to next audit date on ' . count($nids) . ' nodes.');
-  }
+    /**
+     * {@inheritdoc}
+     */
+    protected function updateNodeAudit($nids, $queue)
+    {
+        $item = new \stdClass();
+        $item->nids = implode(',', $nids);
+        $queue->createItem($item);
+    }
 
 }
