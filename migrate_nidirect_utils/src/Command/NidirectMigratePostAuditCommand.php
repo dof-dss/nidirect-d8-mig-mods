@@ -95,10 +95,6 @@ class NidirectMigratePostAuditCommand extends ContainerAwareCommand
         // trying to recreate an existing queue).
         $this->queueFactory->get('audit_date_updates')->createQueue();
         $queue = $this->queueFactory->get('audit_date_updates');
-        $this->getIo()->info(
-            'Initially, found ' .
-            $queue->numberOfItems() . ' items in queue.'
-        );
 
         // Update the 'next audit due' node in D8.
         $n = $this->updateNodeAudit($flag_results, $already_set, $queue);
@@ -123,18 +119,27 @@ class NidirectMigratePostAuditCommand extends ContainerAwareCommand
           $n++;
           if ($n > 199) {
             // Add the nids to the queue in batches of 200.
-            $item = new \stdClass();
-            $item->nids = implode(',', $nids);
-            $queue->createItem($item);
+            $this->addToQueue($nids, $queue);
             $n = 0;
             $nids = [];
           }
         }
       }
       if ($n > 0) {
-        $this->updateNodeAudit($nids, $queue);
+        $this->addToQueue($nids, $queue);
       }
       return $n;
     }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function addToQueue($nids, $queue)
+  {
+      // Add the nids to the queue in batches of 200.
+      $item = new \stdClass();
+      $item->nids = implode(',', $nids);
+      $queue->createItem($item);
+  }
 
 }
