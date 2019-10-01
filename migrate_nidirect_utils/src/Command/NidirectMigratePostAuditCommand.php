@@ -61,28 +61,29 @@ class NidirectMigratePostAuditCommand extends ContainerAwareCommand
         $conn_migrate = Database::getConnection('default', 'migrate');
         $conn_drupal8 = Database::getConnection('default', 'default');
         $this->getIo()->info('Started post migration audit processing.');
+
         // Verify Drupal 7 flag table exists.
         if (!$conn_migrate->schema()->tableExists('flagging')) {
             return 3;
         }
+
         // Select content flagged with 'content_audit' from D7.
         $query = $conn_migrate->query(
-            "
-      SELECT 
-        f.entity_id 
-      FROM flagging f
-      JOIN node n
-      ON f.entity_id = n.nid
-      WHERE n.type in ('article', 'contact', 'page')
-      AND f.fid = 1
-    "
+            "SELECT 
+              f.entity_id 
+            FROM flagging f
+            JOIN node n
+            ON f.entity_id = n.nid
+            WHERE n.type in ('article', 'contact', 'page')
+            AND f.fid = 1"
         );
         $flag_results = $query->fetchAll();
+
         // Select nids already set for audit.
         $query = $conn_drupal8->query(
-            "select entity_id 
-            from node__field_next_audit_due 
-            where field_next_audit_due_value is not null"
+            "SELECT entity_id 
+            FROM node__field_next_audit_due 
+            WHERE field_next_audit_due_value is not null"
         );
         $already_set_results = $query->fetchAll();
         $already_set = [];
@@ -90,51 +91,50 @@ class NidirectMigratePostAuditCommand extends ContainerAwareCommand
             $already_set[] = $thisresult->entity_id;
         }
 
-        // Make sure audit update queue exists. There is no harm in
-        // trying to recreate an existing queue.
+        // Make sure audit update queue exists (there is no harm in
+        // trying to recreate an existing queue).
         $this->queueFactory->get('audit_date_updates')->createQueue();
         $queue = $this->queueFactory->get('audit_date_updates');
         $this->getIo()->info(
-            'After creation, ' .
+            'Initially, found ' .
             $queue->numberOfItems() . ' items in queue.'
         );
 
         // Update the 'next audit due' node in D8.
-        $today = date('Y-m-d', \Drupal::time()->getCurrentTime());
-        $nids = [];
-        $n = 0;
-        foreach ($flag_results as $i => $row) {
-            if (!in_array($row->entity_id, $already_set)) {
-                $nids[] = $row->entity_id;
-                $n++;
-                if ($n > 199) {
-                    $this->updateNodeAudit($nids, $queue);
-                    $n = 0;
-                    $nids = [];
-                }
-            }
-        }
-        if ($n > 0) {
-            $this->updateNodeAudit($nids, $queue);
-        }
+        $n = $this->updateNodeAudit($flag_results, $already_set, $queue);
         $this->getIo()->info(
-            'Items in queue ' .
-            $queue->numberOfItems() . ' items.'
-        );
-        $this->getIo()->info(
-            'Updated next audit date on ' .
-            count($flag_results) . ' nodes.'
+            'Queued audit date updates on ' . $n . ' nodes.'
         );
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function updateNodeAudit($nids, $queue)
+    protected function updateNodeAudit($flag_results, $already_set, $queue)
     {
-        $item = new \stdClass();
-        $item->nids = implode(',', $nids);
-        $queue->createItem($item);
+      // Add these nids to the queue so that the 'audit due' date will
+      // be set later by the cron task 'nidirect_common_cron'.
+      $today = date('Y-m-d', \Drupal::time()->getCurrentTime());
+      $nids = [];
+      $n = 0;
+      foreach ($flag_results as $i => $row) {
+        if (!in_array($row->entity_id, $already_set)) {
+          $nids[] = $row->entity_id;
+          $n++;
+          if ($n > 199) {
+            // Add the nids to the queue in batches of 200.
+            $item = new \stdClass();
+            $item->nids = implode(',', $nids);
+            $queue->createItem($item);
+            $n = 0;
+            $nids = [];
+          }
+        }
+      }
+      if ($n > 0) {
+        $this->updateNodeAudit($nids, $queue);
+      }
+      return $n;
     }
 
 }
