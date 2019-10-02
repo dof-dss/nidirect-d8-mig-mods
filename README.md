@@ -1,5 +1,8 @@
 [![CircleCI](https://circleci.com/gh/dof-dss/nidirect-d8-mig-mods.svg?style=svg)](https://circleci.com/gh/dof-dss/nidirect-d8-mig-mods)
 
+***IF YOU UPDATE A MIGRATION CONFIGURATION PLEASE ENSURE YOU EXPORT THE CONFIG TO THE DRUPAL/CONFIG/SYNC DIRECTORY AND COMMIT IT***
+
+
 # Migrations
 
 ## Running migrations
