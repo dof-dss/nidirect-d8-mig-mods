@@ -1,5 +1,5 @@
 module.exports = {
-    '@tags': ['nidirect-migrations', 'nidirect-node-landing-page'],
+    '@tags': ['nidirect-migrations-config'],
 
     'Test whether Landing Page content type exists': browser => {
         browser
@@ -21,13 +21,6 @@ module.exports = {
         browser.expect.element('#field-subtheme').to.be.present;
         browser.expect.element('#field-top-level-theme').to.be.present;
         browser.expect.element('#field-summary').to.be.present;
-    },
-
-    'Test whether Landing Page nodes exist': browser => {
-        // See if we have any landing_page nodes created.
-        browser
-            .drupalRelativeURL('/admin/content?type=landing_page')
-            .expect.element('#views-form-content-page-1 > table > tbody > tr > td:nth-child(3)')
-            .text.to.contain('Landing page');
     }
+
 };

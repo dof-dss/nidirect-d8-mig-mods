@@ -1,5 +1,5 @@
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-node-external-link'],
+  '@tags': ['nidirect-migrations-config'],
 
   'Test whether External links content type exists': function (browser) {
     browser
@@ -15,12 +15,6 @@ module.exports = {
     browser.expect.element('#field-site-themes').to.be.present;
     browser.expect.element('#field-subtheme').to.be.present;
     browser.expect.element('#field-top-level-theme').to.be.present;
-  },
-
-  'Test whether we have any migrated content for External link nodes': browser => {
-    browser
-      .drupalRelativeURL('/admin/content?type=external_link')
-      .expect.element('#views-form-content-page-1 > table > tbody > tr')
-      .text.to.not.contain('No content available');
   }
+
 };

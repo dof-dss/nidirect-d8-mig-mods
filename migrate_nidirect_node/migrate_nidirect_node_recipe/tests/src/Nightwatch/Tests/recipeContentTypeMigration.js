@@ -1,5 +1,5 @@
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-node-recipe'],
+  '@tags': ['nidirect-migrations-config'],
 
   'Test whether Recipe content type exists': function (browser) {
     browser
@@ -30,11 +30,5 @@ module.exports = {
     browser.expect.element('#field-recipe-nutrition-info').to.be.present;
     browser.expect.element('#field-recipe-allergy-advice').to.be.present;
     browser.expect.element('#field-recipe-food-safety').to.be.present;
-  },
-  'Test whether we have any migrated content for recipe nodes': browser => {
-    browser
-      .drupalRelativeURL('/admin/content?type=recipe')
-      .expect.element('#views-form-content-page-1 > table > tbody > tr')
-      .text.to.not.contain('No content available');
   }
 };

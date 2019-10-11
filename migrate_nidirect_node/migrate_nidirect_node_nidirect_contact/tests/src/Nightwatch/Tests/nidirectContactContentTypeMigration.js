@@ -1,5 +1,5 @@
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-node-nidirect-contact'],
+  '@tags': ['nidirect-migrations-config'],
 
   'Test whether Contact content type exists': browser => {
     browser
@@ -13,11 +13,9 @@ module.exports = {
     browser.drupalRelativeURL('/admin/structure/types/manage/contact/fields');
     browser.expect.element('#field-contact-additional-info').to.be.present;
     browser.expect.element('#field-address').to.be.present;
-    browser.expect.element('#field-contact-benefits-no').to.be.present;
     browser.expect.element('#body').to.be.present;
     browser.expect.element('#field-contact-category').to.be.present;
     browser.expect.element('#field-email-address').to.be.present;
-    browser.expect.element('#field-contact-emp-svcs-no').to.be.present;
     browser.expect.element('#field-contact-fax	').to.be.present;
     browser.expect.element('#field-location').to.be.present;
     browser.expect.element('#field-meta-tags').to.be.present;
@@ -27,14 +25,8 @@ module.exports = {
     browser.expect.element('#field-site-themes').to.be.present;
     browser.expect.element('#field-summary').to.be.present;
     browser.expect.element('#field-supplementary-contact').to.be.present;
-    browser.expect.element('#field-contact-sms').to.be.present;
+    browser.expect.element('#field-contact-mobile').to.be.present;
     browser.expect.element('#field-contact-website').to.be.present;
-  },
-
-  'Test whether we have any migrated content for Contact nodes': browser => {
-    browser
-      .drupalRelativeURL('/admin/content?type=contact')
-      .expect.element('#views-form-content-page-1 > table > tbody > tr')
-      .text.to.not.contain('No content available');
   }
+
 };

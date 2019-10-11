@@ -1,5 +1,5 @@
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-node-publication'],
+  '@tags': ['nidirect-migrations-config'],
 
   'Test whether Publication content type exists': function (browser) {
     browser
@@ -20,12 +20,6 @@ module.exports = {
     browser.expect.element('#field-summary').to.be.present;
     browser.expect.element('#body').to.be.present;
     browser.expect.element('#field-attachment').to.be.present;
-  },
-
-  'Test whether we have any migrated content for publication nodes': browser => {
-    browser
-      .drupalRelativeURL('/admin/content?type=publication')
-      .expect.element('#views-form-content-page-1 > table > tbody > tr')
-      .text.to.not.contain('No content available');
   }
+
 };

@@ -1,5 +1,5 @@
 module.exports = {
-    '@tags': ['nidirect-migrations', 'nidirect-node-health-condition'],
+    '@tags': ['nidirect-migrations-config'],
 
     'Test whether Health Condition content type exists': browser => {
         browser
@@ -38,14 +38,6 @@ module.exports = {
         browser.expect.element('#field-teaser').to.be.present;
         browser.expect.element('#field-subtheme').to.be.present;
         browser.expect.element('#field-top-level-theme').to.be.present;
-    },
-
-    'Test whether Health Condition nodes exist': browser => {
-
-        // See if we have any health_condition nodes created.
-        browser
-            .drupalRelativeURL('/admin/content?type=health_condition')
-            .expect.element('#views-form-content-page-1 > table > tbody > tr > td:nth-child(3)')
-            .text.to.contain('Health condition');
     }
+
 };

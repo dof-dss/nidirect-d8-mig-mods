@@ -1,5 +1,5 @@
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-entity-gp'],
+  '@tags': ['nidirect-migrations-config'],
 
   'Test whether GP entity exists': function (browser) {
     browser
@@ -14,12 +14,6 @@ module.exports = {
     browser.expect.element('#first-name').to.be.present;
     browser.expect.element('#last-name').to.be.present;
     browser.expect.element('#cypher').to.be.present;
-  },
-
-  'Test whether we have any migrated content for GP details': browser => {
-    browser
-      .drupalRelativeURL('/admin/content/gp')
-      .expect.element('table > tbody > tr')
-      .text.to.not.contain('No content available');
   }
+
 };

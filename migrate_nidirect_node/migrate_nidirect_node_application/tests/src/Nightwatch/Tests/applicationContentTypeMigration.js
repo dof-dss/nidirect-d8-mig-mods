@@ -1,12 +1,11 @@
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-application'],
+  '@tags': ['nidirect-migrations-config'],
 
   'Test whether Application content type exists': browser => {
     browser
       .drupalLogin({ name: process.env.TEST_USER, password: process.env.TEST_PASS })
-      .drupalRelativeURL('/admin/structure/types')
-      .expect.element('#block-seven-content > table > tbody > tr:nth-child(1) > td.menu-label')
-      .text.to.equal('Application');
+      .drupalRelativeURL('/admin/structure/types/manage/application')
+      .expect.element('h1.page-title').text.to.match(/edit application content type/i);
   },
 
   'Test whether Application content type fields exist': browser => {
@@ -20,12 +19,6 @@ module.exports = {
     browser.expect.element('#field-teaser').to.be.present;
     browser.expect.element('#field-subtheme').to.be.present;
     browser.expect.element('#field-top-level-theme').to.be.present;
-  },
-
-  'Test whether we have any migrated content for Application nodes': browser => {
-    browser
-      .drupalRelativeURL('/admin/content?type=application')
-      .expect.element('#views-form-content-page-1 > table > tbody > tr')
-      .text.to.not.contain('No content available');
   }
+
 };

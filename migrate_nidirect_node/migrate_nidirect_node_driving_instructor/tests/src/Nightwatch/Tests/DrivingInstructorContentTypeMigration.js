@@ -1,5 +1,5 @@
 module.exports = {
-    '@tags': ['nidirect-migrations'],
+    '@tags': ['nidirect-migrations-config'],
 
     'Test whether Driving Instructor content type exists': browser => {
         browser
@@ -31,18 +31,9 @@ module.exports = {
         browser
             .expect.element('#field-meta-tags').to.be.present;
         browser
-            .expect.element('#field-contact-sms').to.be.present;
+            .expect.element('#field-contact-mobile').to.be.present;
         browser
             .expect.element('#field-link-url').to.be.present;
-    },
-
-    'Test whether Driving Instructor nodes exist': browser => {
-
-        // See if we have any article nodes created.
-        browser
-            .drupalRelativeURL('/admin/content?type=driving_instructor')
-            .waitForElementVisible('body', 1000)
-            .expect.element('#views-form-content-page-1 > table > tbody > tr > td:nth-child(3)')
-            .text.to.contain('Driving instructor');
     }
+
 };
