@@ -22,7 +22,13 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
    */
   protected $logger;
 
+  /**
+   * NodeMigrationProcessors definition.
+   *
+   * @var \Drupal\migrate_nidirect_node\NodeMigrationProcessors
+   */
   protected $nodeMigrationProcessors;
+
   /**
    * PostMigrationSubscriber constructor.
    *
