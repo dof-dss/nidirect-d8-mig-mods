@@ -70,7 +70,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       4804 => "Why it pays to save regularly",
       4805 => "How to open, switch or close your bank account",
     ];
-}
+  }
 
   /**
    * Get subscribed events.
