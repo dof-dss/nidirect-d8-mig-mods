@@ -66,7 +66,7 @@ class NidirectMigratePostTaxonomyCommand extends ContainerAwareCommand {
 
       // If we didn't get an update log the entity associated with that failure.
       if ($result < 1) {
-        $failed_updates[] = entity_id;
+        $failed_updates[] = $entity_id;
       }
     }
 
