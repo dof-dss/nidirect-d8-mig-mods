@@ -11,3 +11,4 @@ dependencies:
   - drupal:migrate_tools
   - drupal:migrate_drupal
   - migrate_nidirect_global
+  - pathauto
