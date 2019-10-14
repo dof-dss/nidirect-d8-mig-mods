@@ -95,13 +95,13 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
           ->execute();
         $updated += $result;
 
-        // If we didn't get an update log the entity associated with that failure.
+        // If we didn't get an update, log the failed entity ID.
         if ($result < 1) {
           $failed_updates[] = $tid;
         }
       }
 
-      $this->logger->notice('Updated @updated of @parents parent term targets.', ['@updated' => $updated, '@parents' =>  count($results)]);
+      $this->logger->notice('Updated @updated of @parents parent term targets.', ['@updated' => $updated, '@parents' => count($results)]);
 
       if (count($results) != $updated) {
         $this->logger->notice('Failed to update for term entities: @failures', ['@failures' => implode(',', $failed_updates)]);
