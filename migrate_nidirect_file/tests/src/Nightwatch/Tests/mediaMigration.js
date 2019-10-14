@@ -1,5 +1,5 @@
 module.exports = {
-    '@tags': ['nidirect-migrations', 'nidirect-media'],
+    '@tags': ['nidirect-migrations-content', 'nidirect-media'],
 
     'Test whether Media have been migrated': browser => {
         browser

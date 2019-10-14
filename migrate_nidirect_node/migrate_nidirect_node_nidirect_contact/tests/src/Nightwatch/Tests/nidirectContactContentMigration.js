@@ -4,7 +4,7 @@ var nid, node;
 const regx_strip_taxoheir = /^-*/gm;
 
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-node-nidirect-contact'],
+  '@tags': ['nidirect-migrations-content'],
 
   before: function (browser) {
     http.get(process.env.TEST_D7_URL + '/migrate/nidcontact', (response) => {

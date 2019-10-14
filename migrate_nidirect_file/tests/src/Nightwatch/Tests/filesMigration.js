@@ -1,5 +1,6 @@
 module.exports = {
-    '@tags': ['nidirect-migrations', 'nidirect-files'],
+    '@tags': ['nidirect-migrations-content', 'nidirect-files'],
+
 
     'Test whether files have been migrated': browser => {
         browser

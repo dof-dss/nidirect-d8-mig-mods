@@ -5,7 +5,7 @@ const regx_strip_html = /<([^>]+)>/ig;
 const regx_traffic_vals = />(Low|Med|High)<\/.+nutrient-value">([0-9.]+)g<\//gm;
 
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-node-recipe'],
+  '@tags': ['nidirect-migrations-content'],
 
   before: function (browser) {
     http.get(process.env.TEST_D7_URL + '/migrate/recipe', (response) => {

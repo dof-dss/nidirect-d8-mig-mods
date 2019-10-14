@@ -4,7 +4,7 @@ var nid, node;
 const regx_strip_taxoheir = /^-*/gm;
 
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-application'],
+  '@tags': ['nidirect-migrations-content'],
 
   before: function (browser) {
     http.get(process.env.TEST_D7_URL + '/migrate/application', (response) => {
@@ -52,7 +52,7 @@ module.exports = {
                       let text = result.value.replace(regx_strip_taxoheir, '');
                       // Check the D8 form value exists in the D7 data.
                       if (supp_themes.includes(text)) {
-                        // It stinks but it's a simple way to show this assertion passes, else fail below. 
+                        // It stinks but it's a simple way to show this assertion passes, else fail below.
                         browser.assert.equal(text, text);
                       } else {
                         browser.assert.fail('field-site-themes: data mismatch on : ' + text);

@@ -4,7 +4,7 @@ var nid, node;
 const regx_strip_taxoheir = /^-*/gm;
 
 module.exports = {
-  '@tags': ['nidirect-migrations'],
+  '@tags': ['nidirect-migrations-content'],
 
   before: function (browser) {
 
@@ -85,7 +85,7 @@ module.exports = {
                   if (result.value.length > 0) {
                     // Check the D8 form value exists in the D7 data.
                     if (areas.includes(result.value)) {
-                      // It stinks but it's a simple way to show this assertion passes, else fail below. 
+                      // It stinks but it's a simple way to show this assertion passes, else fail below.
                       browser.assert.equal(result.value, result.value);
                     } else {
                       browser.assert.fail('field-di-areas: data mismatch on : ' + result.value);
@@ -107,7 +107,7 @@ module.exports = {
                     let area = result.value.replace(regx_strip_taxoheir, '');
                     // Check the D8 form value exists in the D7 data.
                     if (categories.includes(area)) {
-                      // It stinks but it's a simple way to show this assertion passes, else fail below. 
+                      // It stinks but it's a simple way to show this assertion passes, else fail below.
                       browser.assert.equal(area, area);
                     } else {
                       browser.assert.fail('field_di_categories: data mismatch on : ' + result.value);
