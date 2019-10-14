@@ -28,6 +28,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
    * @var \Drupal\Core\Database\Connection
    */
   protected $dbConnMigrate;
+
   /**
    * Drupal 8 database connection.
    *
@@ -36,15 +37,35 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
   protected $dbConnDrupal8;
 
   /**
+   * Drupal\Core\Entity\Query\QueryFactory definition.
+   *
+   * @var \Drupal\Core\Entity\Query\QueryFactory
+   */
+  protected $entityQuery;
+
+  /**
+   * Drupal\Core\Entity\EntityTypeManager definition.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManager
+   */
+  protected $entityTypeManager;
+
+  /**
    * PostMigrationSubscriber constructor.
    *
    * @param \Drupal\Core\Logger\LoggerChannelFactory $logger
    *   Drupal logger.
+   * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query
+   *   Entity query.
+   * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
+   *   Entity Type Manager.
    */
   public function __construct(LoggerChannelFactory $logger) {
     $this->logger = $logger->get('migrate_nidirect_taxo');
     $this->dbConnMigrate = Database::getConnection('default', 'migrate');
     $this->dbConnDrupal8 = Database::getConnection('default', 'default');
+    $this->entityQuery = $entity_query;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -65,7 +86,6 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
    */
   public function onMigratePostImport(MigrateImportEvent $event) {
     $event_id = $event->getMigration()->getBaseId();
-
     // Only process taxonomy terms, nothing else.
     if (substr($event_id, 0, 25) == 'upgrade_d7_taxonomy_term_') {
       $content_type = substr($event_id, 25);
@@ -105,6 +125,20 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
 
       if (count($results) != $updated) {
         $this->logger->notice('Failed to update for term entities: @failures', ['@failures' => implode(',', $failed_updates)]);
+      }
+
+      // Fetch all the taxonomy pathauto patterns.
+      $query = $this->entityQuery->get('pathauto_pattern');
+      $query->condition('id', 'term', 'STARTS_WITH');
+      $query->condition('status', 1);
+      $ids = $query->execute();
+
+      $patterns = $this->entityTypeManager->getStorage('pathauto_pattern')->loadMultiple($ids);
+
+      // Enable each pathauto pattern.
+      foreach ($patterns as $pattern) {
+        $pattern->enable();
+        $pattern->save();
       }
 
     }

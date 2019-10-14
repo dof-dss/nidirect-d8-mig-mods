@@ -6,6 +6,6 @@ services:
         - { name: 'event_subscriber' }
   migrate_nidirect_taxo.eventsubscriber.post:
     class: 'Drupal\migrate_nidirect_taxo\EventSubscriber\PostMigrationSubscriber'
-    arguments: ['@logger.factory', '@database']
+    arguments: ['@logger.factory', '@database', '@entity.query', '@entity_type.manager']
     tags:
         - { name: 'event_subscriber' }
