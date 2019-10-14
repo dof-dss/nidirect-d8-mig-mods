@@ -1,6 +1,6 @@
 services:
   migrate_nidirect_taxo.eventsubscriber.post:
-    class: '\Drupal\migrate_nidirect_taxo\EventSubscriber\PostMigrationSubscriber'
+    class: 'Drupal\migrate_nidirect_taxo\EventSubscriber\PostMigrationSubscriber'
     arguments: ['@logger.factory', '@database']
     tags:
-      - { name: 'event_subscriber' }
+        - { name: 'event_subscriber' }
