@@ -7,6 +7,9 @@ use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateImportEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\Core\Logger\LoggerChannelFactory;
+use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\pathauto\PathautoGenerator;
 
 /**
  * Class PostMigrationSubscriber.
@@ -16,7 +19,7 @@ use Drupal\Core\Logger\LoggerChannelFactory;
 class PostMigrationSubscriber implements EventSubscriberInterface {
 
   /**
-   * Drupal\Core\Logger\LoggerChannelFactory definition.
+   * Drupal logger.
    *
    * @var \Drupal\Core\Logger\LoggerChannelFactory
    */
@@ -51,6 +54,13 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
   protected $entityTypeManager;
 
   /**
+   * Drupal\pathauto\PathautoGenerator definition.
+   *
+   * @var \Drupal\pathauto\PathautoGenerator
+   */
+  protected $pathautoGenerator;
+
+  /**
    * PostMigrationSubscriber constructor.
    *
    * @param \Drupal\Core\Logger\LoggerChannelFactory $logger
@@ -59,13 +69,17 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
    *   Entity query.
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    *   Entity Type Manager.
+   * @param \Drupal\pathauto\PathautoGenerator $pathauto_generator
+   *   Pathauto Generator.
    */
-  public function __construct(LoggerChannelFactory $logger) {
+  public function __construct(LoggerChannelFactory $logger, QueryFactory $entity_query, EntityTypeManager $entity_type_manager, PathautoGenerator $pathauto_generator) {
     $this->logger = $logger->get('migrate_nidirect_taxo');
-    $this->dbConnMigrate = Database::getConnection('default', 'migrate');
-    $this->dbConnDrupal8 = Database::getConnection('default', 'default');
     $this->entityQuery = $entity_query;
     $this->entityTypeManager = $entity_type_manager;
+    $this->pathautoGenerator = $pathauto_generator;
+
+    $this->dbConnMigrate = Database::getConnection('default', 'migrate');
+    $this->dbConnDrupal8 = Database::getConnection('default', 'default');
   }
 
   /**
@@ -88,8 +102,8 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     $event_id = $event->getMigration()->getBaseId();
     // Only process taxonomy terms, nothing else.
     if (substr($event_id, 0, 25) == 'upgrade_d7_taxonomy_term_') {
-      $content_type = substr($event_id, 25);
-      $this->logger->notice('Processing parent terms for taxonomy vocabulary: @type', ['@type' => $content_type]);
+      $vocabulary_id = substr($event_id, 25);
+      $this->logger->notice('Processing parent terms for taxonomy vocabulary: @type', ['@type' => $vocabulary_id]);
 
       $updated = 0;
       $failed_updates = [];
@@ -124,13 +138,13 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       $this->logger->notice('Updated @updated of @parents parent term targets.', ['@updated' => $updated, '@parents' => count($results)]);
 
       if (count($results) != $updated) {
-        $this->logger->notice('Failed to update for term entities: @failures', ['@failures' => implode(',', $failed_updates)]);
+        $this->logger->warning('Failed to update for term entities: @failures', ['@failures' => implode(',', $failed_updates)]);
       }
 
       // Fetch all the taxonomy pathauto patterns.
       $query = $this->entityQuery->get('pathauto_pattern');
       $query->condition('id', 'term', 'STARTS_WITH');
-      $query->condition('status', 1);
+      $query->condition('status', '1', '<>');
       $ids = $query->execute();
 
       $patterns = $this->entityTypeManager->getStorage('pathauto_pattern')->loadMultiple($ids);
@@ -139,6 +153,16 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       foreach ($patterns as $pattern) {
         $pattern->enable();
         $pattern->save();
+      }
+
+      // Fetch the top level terms for this vocabulary.
+      $terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree($vocabulary_id, 0, 1, TRUE);
+
+      foreach ($terms as $term) {
+        $result = $this->pathautoGenerator->updateEntityAlias($term, 'update', ['force']);
+        if (!empty($result)) {
+          $this->logger->notice('Aliases created for top level (and child) terms: @term => @alias', ['@term' => $result['source'], '@alias' => $result['alias']]);
+        }
       }
 
     }
