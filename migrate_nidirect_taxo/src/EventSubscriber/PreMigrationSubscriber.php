@@ -84,13 +84,12 @@ class PreMigrationSubscriber implements EventSubscriberInterface {
        */
 
       // Fetch all the taxonomy pathauto patterns.
-      $query = \Drupal::entityQuery('pathauto_pattern');
+      $query = $this->entityQuery->get('pathauto_pattern');
       $query->condition('id', 'term', 'STARTS_WITH');
       $query->condition('status', 1);
       $ids = $query->execute();
 
-      $etm = \Drupal::service('entity_type.manager');
-      $patterns = $etm->getStorage('pathauto_pattern')->loadMultiple($ids);
+      $patterns = $this->entityTypeManager->getStorage('pathauto_pattern')->loadMultiple($ids);
 
       // Disable each pathauto pattern.
       foreach ($patterns as $pattern) {
