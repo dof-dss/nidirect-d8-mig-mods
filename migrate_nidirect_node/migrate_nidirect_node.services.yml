@@ -1,0 +1,6 @@
+services:
+  migrate_nidirect_node.eventsubscriber.post:
+    class: 'Drupal\migrate_nidirect_node\EventSubscriber\PostMigrationSubscriber'
+    arguments: ['@logger.factory', '@database']
+    tags:
+        - { name: 'event_subscriber' }
