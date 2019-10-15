@@ -4,6 +4,7 @@ namespace Drupal\migrate_nidirect_node;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\ModuleHandler;
+use Drupal\node\Entity\Node;
 
 /**
  * Class NodeMigrationProcessors.
@@ -47,6 +48,9 @@ class NodeMigrationProcessors {
    *
    * @param string $node_type
    *   The node type to process.
+   *
+   * @return string
+   *   Information/results of on the process.
    */
   public function publishingStatus($node_type) {
     // Find all out current node ids in the D8 site so we know what to look for.
@@ -55,7 +59,7 @@ class NodeMigrationProcessors {
     $d8_nids = $query->fetchAllAssoc('nid');
 
     if (count($d8_nids) < 1) {
-      return;
+      return 'No entities found for processing.';
     }
     // Load source node publish status fields.
     $query = $this->dbConnMigrate->query("SELECT nid, status FROM {node} WHERE nid IN (:nids[]) ORDER BY nid ASC", [':nids[]' => array_keys($d8_nids)]);
@@ -90,8 +94,8 @@ class NodeMigrationProcessors {
         ->condition('content_entity_revision_id', $vid)
         ->execute();
     }
-    drupal_flush_all_caches();
 
+    return 'Updated ' . count($migrate_nid_status) . ' records in node_field_data table.';
   }
 
   /**
@@ -107,13 +111,13 @@ class NodeMigrationProcessors {
     $failed_updates = [];
 
     // Verify that the metatag module is enabled.
-    if ($this->moduleHandler->moduleExists('metatag')) {
-      return;
+    if (!$this->moduleHandler->moduleExists('metatag')) {
+      return 'Skipping metatag processing as module is not enabled.';
     }
 
     // Verify Drupal 7 metatag table exists.
     if (!$this->dbConnMigrate->schema()->tableExists('metatag')) {
-      return;
+      return 'Skipping metatag processing as metatag table missing from migration database.';
     }
 
     // Get a list of custom metatags from NIDirect (D7)
@@ -157,6 +161,13 @@ class NodeMigrationProcessors {
         // If it isn't 'abstract' or 'keyword' then fail it.
         $failed_updates[] = $entity_id;
       }
+    }
+
+    if (count($results) == $updated) {
+      return 'Imported ' . count($results) . ' custom metatag definitions.';
+    }
+    else {
+      return 'Failed to update metatags for entities: ' . implode(',', $failed_updates);
     }
   }
 
