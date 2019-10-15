@@ -3,7 +3,6 @@
 namespace Drupal\migrate_nidirect_node;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Extension\ModuleHandler;
 
 /**
@@ -12,13 +11,6 @@ use Drupal\Core\Extension\ModuleHandler;
  * @package Drupal\migrate_nidirect_node
  */
 class NodeMigrationProcessors {
-
-  /**
-   * Drupal\Core\Logger\LoggerChannelFactory definition.
-   *
-   * @var \Drupal\Core\Logger\LoggerChannelFactory
-   */
-  protected $logger;
 
   /**
    * Drupal\Core\Extension\ModuleHandler definition.
@@ -35,17 +27,16 @@ class NodeMigrationProcessors {
   protected $dbConnMigrate;
 
   /**
- * Drupal 8 database connection.
- *
- * @var \Drupal\Core\Database\Connection
- */
+   * Drupal 8 database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
   protected $dbConnDrupal8;
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(LoggerChannelFactory $logger, ModuleHandler $module_handler) {
-    $this->logger = $logger;
+  public function __construct(ModuleHandler $module_handler) {
     $this->moduleHandler = $module_handler;
     $this->dbConnMigrate = Database::getConnection('default', 'migrate');
     $this->dbConnDrupal8 = Database::getConnection('default', 'default');

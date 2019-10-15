@@ -6,4 +6,4 @@ services:
         - { name: 'event_subscriber' }
   migrate_nidirect_node.nodemigrationprocessors:
     class: 'Drupal\migrate_nidirect_node\NodeMigrationProcessors'
-    arguments: ['@logger.factory', '@module_handler']
+    arguments: ['@module_handler']
