@@ -107,6 +107,7 @@ class NodeMigrationProcessors {
    * the very low number of custom tags.
    */
   public function metatags() {
+    $output = '';
     $updated = 0;
     $failed_updates = [];
 
@@ -145,13 +146,18 @@ class NodeMigrationProcessors {
         $node = Node::load($entity_id);
         if ($node) {
           // Retrieve the existing metatags.
-          $meta = unserialize(($node->field_meta_tags->value));
+          $metatags = unserialize(($node->field_meta_tags->value));
           // Set the keyword/abstract.
-          $meta[$key] = $value;
-          // Save the node.
-          $node->field_meta_tags->value = serialize($meta);
-          $node->save();
-          $updated++;
+          $metatags[$key] = $value;
+
+          $field_meta_tags_value = serialize($metatags);
+
+          // Save to the node of the value doesn't exist.
+          if ($field_meta_tags_value != $node->field_meta_tags->value) {
+            $node->field_meta_tags->value = $field_meta_tags_value;
+            $node->save();
+            $updated++;
+          }
         }
         else {
           $failed_updates[] = $entity_id;
@@ -163,12 +169,18 @@ class NodeMigrationProcessors {
       }
     }
 
-    if (count($results) == $updated) {
-      return 'Imported ' . count($results) . ' custom metatag definitions.';
+    if ($updated > 0) {
+      $output .= 'Imported ' . $updated . ' custom metatag definition(s).';
     }
     else {
-      return 'Failed to update metatags for entities: ' . implode(',', $failed_updates);
+      $output .= 'No custom metatag definitions imported.';
     }
+
+    if (count($failed_updates) > 0) {
+      $output .= 'Failed to update metatag entities: ' . implode(',', $failed_updates);
+    }
+
+    return $output;
   }
 
 }
