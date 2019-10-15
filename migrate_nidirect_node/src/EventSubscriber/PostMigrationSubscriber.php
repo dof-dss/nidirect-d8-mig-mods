@@ -35,9 +35,9 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
    * @param \Drupal\Core\Logger\LoggerChannelFactory $logger
    *   Drupal logger.
    */
-  public function __construct(LoggerChannelFactory $logger) {
+  public function __construct(LoggerChannelFactory $logger, NodeMigrationProcessors $node_migration_processors) {
     $this->logger = $logger->get('migrate_nidirect_node');
-    $this->nodeMigrationProcessors = new nodeMigrationProcessors();
+    $this->nodeMigrationProcessors = $node_migration_processors;
   }
 
   /**
@@ -64,6 +64,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       $content_type = substr($event_id, 5);
       $this->logger->notice('Processing Published status for content type: @type', ['@type' => $content_type]);
       $this->nodeMigrationProcessors->PublishingStatus($content_type);
+      $this->nodeMigrationProcessors->metatags();
     }
   }
 

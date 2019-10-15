@@ -3,6 +3,8 @@
 namespace Drupal\migrate_nidirect_node;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Logger\LoggerChannelFactory;
+use Drupal\Core\Extension\ModuleHandler;
 
 /**
  * Class NodeMigrationProcessors.
@@ -12,6 +14,20 @@ use Drupal\Core\Database\Database;
 class NodeMigrationProcessors {
 
   /**
+   * Drupal\Core\Logger\LoggerChannelFactory definition.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactory
+   */
+  protected $logger;
+
+  /**
+   * Drupal\Core\Extension\ModuleHandler definition.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandler
+   */
+  protected $moduleHandler;
+
+  /**
    * Migration database connection (Drupal 7).
    *
    * @var \Drupal\Core\Database\Connection
@@ -19,16 +35,18 @@ class NodeMigrationProcessors {
   protected $dbConnMigrate;
 
   /**
-   * Drupal 8 database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
+ * Drupal 8 database connection.
+ *
+ * @var \Drupal\Core\Database\Connection
+ */
   protected $dbConnDrupal8;
 
   /**
    * {@inheritdoc}
    */
-  public function __construct() {
+  public function __construct(LoggerChannelFactory $logger, ModuleHandler $module_handler) {
+    $this->logger = $logger;
+    $this->moduleHandler = $module_handler;
     $this->dbConnMigrate = Database::getConnection('default', 'migrate');
     $this->dbConnDrupal8 = Database::getConnection('default', 'default');
   }
@@ -98,8 +116,7 @@ class NodeMigrationProcessors {
     $failed_updates = [];
 
     // Verify that the metatag module is enabled.
-    $moduleHandler = \Drupal::service('module_handler');
-    if (!$moduleHandler->moduleExists('metatag')) {
+    if ($this->moduleHandler->moduleExists('metatag')) {
       return;
     }
 
