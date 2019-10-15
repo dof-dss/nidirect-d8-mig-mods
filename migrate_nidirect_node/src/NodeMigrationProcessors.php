@@ -85,6 +85,14 @@ class NodeMigrationProcessors {
 
   }
 
+  /**
+   * Import custom metatags.
+   *
+   * Inserts latest custom metatag revision into the
+   * matching migrated node entity.
+   * Note: No requirement to migrate by entity type due to
+   * the very low number of custom tags.
+   */
   public function metatags() {
     $updated = 0;
     $failed_updates = [];
@@ -143,4 +151,5 @@ class NodeMigrationProcessors {
       }
     }
   }
+
 }
