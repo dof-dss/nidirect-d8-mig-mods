@@ -3,6 +3,8 @@
 namespace Drupal\migrate_nidirect_node;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Extension\ModuleHandler;
+use Drupal\node\Entity\Node;
 
 /**
  * Class NodeMigrationProcessors.
@@ -10,6 +12,13 @@ use Drupal\Core\Database\Database;
  * @package Drupal\migrate_nidirect_node
  */
 class NodeMigrationProcessors {
+
+  /**
+   * Drupal\Core\Extension\ModuleHandler definition.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandler
+   */
+  protected $moduleHandler;
 
   /**
    * Migration database connection (Drupal 7).
@@ -28,7 +37,8 @@ class NodeMigrationProcessors {
   /**
    * {@inheritdoc}
    */
-  public function __construct() {
+  public function __construct(ModuleHandler $module_handler) {
+    $this->moduleHandler = $module_handler;
     $this->dbConnMigrate = Database::getConnection('default', 'migrate');
     $this->dbConnDrupal8 = Database::getConnection('default', 'default');
   }
@@ -38,6 +48,9 @@ class NodeMigrationProcessors {
    *
    * @param string $node_type
    *   The node type to process.
+   *
+   * @return string
+   *   Information/results of on the process.
    */
   public function publishingStatus($node_type) {
     // Find all out current node ids in the D8 site so we know what to look for.
@@ -46,7 +59,7 @@ class NodeMigrationProcessors {
     $d8_nids = $query->fetchAllAssoc('nid');
 
     if (count($d8_nids) < 1) {
-      return;
+      return 'No entities found for processing.';
     }
     // Load source node publish status fields.
     $query = $this->dbConnMigrate->query("SELECT nid, status FROM {node} WHERE nid IN (:nids[]) ORDER BY nid ASC", [':nids[]' => array_keys($d8_nids)]);
@@ -81,8 +94,93 @@ class NodeMigrationProcessors {
         ->condition('content_entity_revision_id', $vid)
         ->execute();
     }
-    drupal_flush_all_caches();
 
+    return 'Updated ' . count($migrate_nid_status) . ' records in node_field_data table.';
+  }
+
+  /**
+   * Import custom metatags.
+   *
+   * Inserts latest custom metatag revision into the
+   * matching migrated node entity.
+   * Note: No requirement to migrate by entity type due to
+   * the very low number of custom tags.
+   */
+  public function metatags() {
+    $output = '';
+    $updated = 0;
+    $failed_updates = [];
+
+    // Verify that the metatag module is enabled.
+    if (!$this->moduleHandler->moduleExists('metatag')) {
+      return 'Skipping metatag processing as module is not enabled.';
+    }
+
+    // Verify Drupal 7 metatag table exists.
+    if (!$this->dbConnMigrate->schema()->tableExists('metatag')) {
+      return 'Skipping metatag processing as metatag table missing from migration database.';
+    }
+
+    // Get a list of custom metatags from NIDirect (D7)
+    // (only take the latest revision).
+    $query = $this->dbConnMigrate->query("select m1.entity_id, m1.data 
+        from {metatag} m1
+        join (select max(revision_id) as revision_id, entity_id
+              from {metatag}
+              where data like 'a:1:_s:8:%'
+              and entity_type = 'node' group by entity_id) m2
+        on m1.entity_id = m2.entity_id
+        and m1.revision_id = m2.revision_id");
+    $results = $query->fetchAllKeyed();
+
+    // Loop through and update nodes in NIDirect (D8).
+    foreach ($results as $entity_id => $data) {
+      $new_data = unserialize($data);
+      if (isset($new_data['keywords']) || isset($new_data['abstract'])) {
+        $key = 'keywords';
+        if (isset($new_data['abstract'])) {
+          $key = 'abstract';
+        }
+        $value = $new_data[$key]['value'];
+        // Load the node in D8.
+        $node = Node::load($entity_id);
+        if ($node) {
+          // Retrieve the existing metatags.
+          $metatags = unserialize(($node->field_meta_tags->value));
+          // Set the keyword/abstract.
+          $metatags[$key] = $value;
+
+          $field_meta_tags_value = serialize($metatags);
+
+          // Save to the node of the value doesn't exist.
+          if ($field_meta_tags_value != $node->field_meta_tags->value) {
+            $node->field_meta_tags->value = $field_meta_tags_value;
+            $node->save();
+            $updated++;
+          }
+        }
+        else {
+          $failed_updates[] = $entity_id;
+        }
+      }
+      else {
+        // If it isn't 'abstract' or 'keyword' then fail it.
+        $failed_updates[] = $entity_id;
+      }
+    }
+
+    if ($updated > 0) {
+      $output .= 'Imported ' . $updated . ' custom metatag definition(s).';
+    }
+    else {
+      $output .= 'No custom metatag definitions imported.';
+    }
+
+    if (count($failed_updates) > 0) {
+      $output .= 'Failed to update metatag entities: ' . implode(',', $failed_updates);
+    }
+
+    return $output;
   }
 
 }
