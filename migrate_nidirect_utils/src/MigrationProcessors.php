@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\migrate_nidirect_node;
+namespace Drupal\migrate_nidirect_utils;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\ModuleHandler;
 use Drupal\node\Entity\Node;
 
 /**
- * Class NodeMigrationProcessors.
+ * Class MigrationProcessors.
  *
- * @package Drupal\migrate_nidirect_node
+ * @package Drupal\migrate_nidirect_utils
  */
-class NodeMigrationProcessors {
+class MigrationProcessors {
 
   /**
    * Drupal\Core\Extension\ModuleHandler definition.
