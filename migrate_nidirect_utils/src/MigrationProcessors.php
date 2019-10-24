@@ -192,7 +192,7 @@ class MigrationProcessors {
    * @return string
    *   Information/results of on the process.
    */
-  public function flags($entity_type) {
+  public function nodeFlags($entity_type) {
 
     // Verify that the flag module is enabled.
     $moduleHandler = \Drupal::service('module_handler');
@@ -210,119 +210,124 @@ class MigrationProcessors {
       return 'Missing flag_counts table in Drupal 7.';
     }
 
-    // Fetch existing flags.
-    $existing_flagging = $this->dbConnDrupal8->query("
-      SELECT entity_id 
-      FROM {flagging} AS f 
-      INNER JOIN {node} AS n 
-      ON f.entity_id = n.nid 
-      WHERE n.type = '$entity_type'")->fetchAllAssoc('entity_id');;
+    $output = '';
+    $entity_type = 'landing_page';
 
-    // Flag counts.
-    // (Exclude 'content_audit' flag as auditing has been implemented
-    // without a flag in Drupal 8)
-    $flag_count_results = $this->dbConnMigrate->query("
-      SELECT
-        CASE fid
+    $flags = [
+      '2' => 'featured_content',
+      '4' => 'hide_content',
+      '5' => 'hide_theme',
+      '6' => 'show_listing',
+      '7' => 'promote_to_all_pages',
+    ];
+
+    // Process each flag type individually.
+    foreach ($flags as $flag_id => $flag_name) {
+      $existing_flagging = $this->dbConnDrupal8->query("
+        SELECT f.entity_id, f.flag_id
+        FROM {flagging} AS f 
+        INNER JOIN {node} AS n 
+        ON f.entity_id = n.nid 
+        WHERE n.type = '$entity_type'
+        AND f.flag_id = '$flag_name'")->fetchAllAssoc('entity_id');
+
+      $flag_count_results = $this->dbConnMigrate->query("
+        SELECT
+        CASE f.fid
+            WHEN 2 THEN 'featured_content'
+            WHEN 4 THEN 'hide_content'
+            WHEN 5 THEN 'hide_theme'
+            WHEN 6 THEN 'show_listing'
+            WHEN 7 THEN 'promote_to_all_pages'
+        END as flag_id,
+        f.entity_type, f.entity_id, f.count, f.last_updated
+        FROM {flag_counts} AS f
+        INNER JOIN {node} AS n
+        ON f.entity_id = n.nid
+        WHERE f.fid = $flag_id
+        AND n.type = '$entity_type'")->fetchAllAssoc('entity_id');
+
+      $flagging_results = $this->dbConnMigrate->query("
+        SELECT
+        f.flagging_id as id,
+        CASE f.fid
           WHEN 2 THEN 'featured_content'
           WHEN 4 THEN 'hide_content'
           WHEN 5 THEN 'hide_theme'
           WHEN 6 THEN 'show_listing'
           WHEN 7 THEN 'promote_to_all_pages'
         END as flag_id,
-        entity_type,
-        entity_id,
-        count,
-        last_updated
-      FROM {flag_counts}
-      INNER JOIN {node}
-      ON entity_id = node.nid
-      WHERE fid in (2,4,5,6,7)
-      AND node.type = '$entity_type'
-    ")->fetchAllAssoc('entity_id');
+        f.entity_type, f.entity_id, f.uid, f.sid as session_id, f.timestamp as created
+        FROM {flagging} AS f
+        INNER JOIN {node} AS n
+        ON f.entity_id = n.nid
+        WHERE f.fid = $flag_id
+        AND n.type = '$entity_type'")->fetchAllAssoc('entity_id');
 
-    // Flagging.
-    // (Exclude 'content_audit' flag as auditing has been implemented
-    // without a flag in Drupal 8)
-    $flagging_results = $this->dbConnMigrate->query("
-      SELECT
-        flagging_id as id,
-        CASE fid
-          WHEN 2 THEN 'featured_content'
-          WHEN 4 THEN 'hide_content'
-          WHEN 5 THEN 'hide_theme'
-          WHEN 6 THEN 'show_listing'
-          WHEN 7 THEN 'promote_to_all_pages'
-        END as flag_id,
-        entity_type,
-        entity_id,
-        uid,
-        sid as session_id,
-        timestamp as created
-      FROM {flagging}
-      INNER JOIN {node}
-      ON entity_id = node.nid
-      WHERE fid in (2,4,5,6,7)
-      AND node.type = '$entity_type'
-    ")->fetchAllAssoc('entity_id');
-
-    // If the flag count result entity id already exists in the D8 db,
-    // remove it from the arrays to prevent re-processing.
-    foreach ($flag_count_results as $id => $flag_count_result) {
-      if (array_key_exists($id, $existing_flagging)) {
-        unset($flag_count_results[$id]);
-        unset($flagging_results[$id]);
+      // Remove any existing D8 flags from the arrays to be processed.
+      foreach ($flag_count_results as $id => $flag_count_result) {
+        if (array_key_exists($id, $existing_flagging)) {
+          unset($flag_count_results[$id]);
+          unset($flagging_results[$id]);
+        }
       }
+
+      // Begin processing result set arrays before inserting into D8 db.
+      $flag_count_data = [];
+      $flagging_data = [];
+
+      // Process Flag Counts data.
+      if (count($flag_count_results) > 0) {
+        foreach ($flag_count_results as $i => $row) {
+          $flag_count_data[] = (array) $row;
+        }
+
+        // Populate the flag_counts table.
+        $query = $this->dbConnDrupal8->insert('flag_counts')->fields([
+          'flag_id',
+          'entity_type',
+          'entity_id',
+          'count',
+          'last_updated',
+        ]);
+        foreach ($flag_count_data as $row) {
+          $query->values($row);
+        }
+        $query->execute();
+      }
+
+      // Process Flagging data.
+      if (count($flagging_results) > 0) {
+        foreach ($flagging_results as $i => $row) {
+          $row = (array) $row;
+          // Create UUID and global signifier to store in the D8 schema.
+          $row['uuid'] = \Drupal::service('uuid')->generate();
+          $row['global'] = TRUE;
+          $flagging_data[] = $row;
+        }
+
+        // Populate the flagging table.
+        $query = $this->dbConnDrupal8->insert('flagging')->fields([
+          'id',
+          'flag_id',
+          'uuid',
+          'entity_type',
+          'entity_id',
+          'global',
+          'uid',
+          'session_id',
+          'created',
+        ]);
+        foreach ($flagging_data as $row) {
+          $query->values($row);
+        }
+        $query->execute();
+      }
+
+      $output .= "Processed " . count($flagging_results) . " $flag_name flags for $entity_type \r\n";
     }
 
-    // Begin processing result set arrays before inserting into D8 db.
-    $flag_count_data = [];
-    $flagging_data = [];
-
-    foreach ($flag_count_results as $i => $row) {
-      $flag_count_data[] = (array) $row;
-    }
-
-    // Glue in a generated UUID + global signifier to store in the D8 schema.
-    foreach ($flagging_results as $i => $row) {
-      $row = (array) $row;
-      $row['uuid'] = \Drupal::service('uuid')->generate();
-      $row['global'] = TRUE;
-
-      $flagging_data[] = $row;
-    }
-
-    // Populate the flag_counts table.
-    $query = $this->dbConnDrupal8->insert('flag_counts')->fields([
-      'flag_id',
-      'entity_type',
-      'entity_id',
-      'count',
-      'last_updated',
-    ]);
-    foreach ($flag_count_data as $row) {
-      $query->values($row);
-    }
-    $query->execute();
-
-    // Populate the flagging table.
-    $query = $this->dbConnDrupal8->insert('flagging')->fields([
-      'id',
-      'flag_id',
-      'uuid',
-      'entity_type',
-      'entity_id',
-      'global',
-      'uid',
-      'session_id',
-      'created',
-    ]);
-    foreach ($flagging_data as $row) {
-      $query->values($row);
-    }
-    $query->execute();
-
-    return 'Processed ' . count($flagging_data) . ' flag(s) for ' . $entity_type;
+    return $output;
   }
 
 }
