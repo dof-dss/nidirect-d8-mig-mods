@@ -1,3 +1,4 @@
-migrate_nidirect_utils.migrationprocessors:
-  class: 'Drupal\migrate_nidirect_utils\MigrationProcessors'
-  arguments: ['@module_handler']
+services:
+  migrate_nidirect_utils.migrationprocessors:
+    class: 'Drupal\migrate_nidirect_utils\MigrationProcessors'
+    arguments: ['@module_handler']
