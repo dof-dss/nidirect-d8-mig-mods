@@ -183,7 +183,16 @@ class NodeMigrationProcessors {
     return $output;
   }
 
-  public function flag($content_type) {
+  /**
+   * Import Flag module data.
+   *
+   * @param string $entity_type
+   *   The entity type to process.
+   *
+   * @return string
+   *   Information/results of on the process.
+   */
+  public function flags($entity_type) {
 
     // Verify that the flag module is enabled.
     $moduleHandler = \Drupal::service('module_handler');
@@ -201,17 +210,13 @@ class NodeMigrationProcessors {
       return 'Missing flag_counts table in Drupal 7.';
     }
 
-    //** Select entities from flag that match the $content_type
-    // foreach entity id, if exists in the D8 db, remove from the process list
-    // proceed to process the flags.
-
     // Fetch existing flags.
     $existing_flagging = $this->dbConnDrupal8->query("
       SELECT entity_id 
       FROM {flagging} AS f 
       INNER JOIN {node} AS n 
       ON f.entity_id = n.nid 
-      WHERE n.type = '$content_type'")->fetchAllAssoc('entity_id');;
+      WHERE n.type = '$entity_type'")->fetchAllAssoc('entity_id');;
 
     // Flag counts.
     // (Exclude 'content_audit' flag as auditing has been implemented
@@ -233,7 +238,7 @@ class NodeMigrationProcessors {
       INNER JOIN {node}
       ON entity_id = node.nid
       WHERE fid in (2,4,5,6,7)
-      AND node.type = '$content_type'
+      AND node.type = '$entity_type'
     ")->fetchAllAssoc('entity_id');
 
     // Flagging.
@@ -258,7 +263,7 @@ class NodeMigrationProcessors {
       INNER JOIN {node}
       ON entity_id = node.nid
       WHERE fid in (2,4,5,6,7)
-      AND node.type = '$content_type'
+      AND node.type = '$entity_type'
     ")->fetchAllAssoc('entity_id');
 
     // If the flag count result entity id already exists in the D8 db,
@@ -270,7 +275,7 @@ class NodeMigrationProcessors {
       }
     }
 
-    // Begin converting/altering result set arrays to then upsert into destination db.
+    // Begin processing result set arrays before inserting into D8 db.
     $flag_count_data = [];
     $flagging_data = [];
 
@@ -293,7 +298,7 @@ class NodeMigrationProcessors {
       'entity_type',
       'entity_id',
       'count',
-      'last_updated'
+      'last_updated',
     ]);
     foreach ($flag_count_data as $row) {
       $query->values($row);
@@ -310,12 +315,14 @@ class NodeMigrationProcessors {
       'global',
       'uid',
       'session_id',
-      'created'
+      'created',
     ]);
     foreach ($flagging_data as $row) {
       $query->values($row);
     }
     $query->execute();
+
+    return 'Processed ' . count($flagging_data) . ' flag(s) for ' . $entity_type;
   }
 
 }
