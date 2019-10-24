@@ -1,9 +1,6 @@
 services:
   migrate_nidirect_node.eventsubscriber.post:
     class: 'Drupal\migrate_nidirect_node\EventSubscriber\PostMigrationSubscriber'
-    arguments: ['@logger.factory', '@migrate_nidirect_node.nodemigrationprocessors']
+    arguments: ['@logger.factory', '@migrate_nidirect_utils.migrationprocessors']
     tags:
         - { name: 'event_subscriber' }
-  migrate_nidirect_node.nodemigrationprocessors:
-    class: 'Drupal\migrate_nidirect_node\NodeMigrationProcessors'
-    arguments: ['@module_handler']
