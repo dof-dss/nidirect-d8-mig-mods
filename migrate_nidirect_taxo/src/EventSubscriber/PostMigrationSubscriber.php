@@ -79,7 +79,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
    *   Entity Type Manager.
    * @param \Drupal\pathauto\PathautoGenerator $pathauto_generator
    *   Pathauto Generator.
-    * @param \Drupal\migrate_nidirect_utils\MigrationProcessors $migration_processors
+   * @param \Drupal\migrate_nidirect_utils\MigrationProcessors $migration_processors
    *   Migration processors.
    */
   public function __construct(

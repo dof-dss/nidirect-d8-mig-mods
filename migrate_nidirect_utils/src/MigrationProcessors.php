@@ -262,7 +262,8 @@ class MigrationProcessors {
         $query->join('taxonomy_term_data', 't', 'f.entity_id = t.tid');
         $query->fields('f', ['entity_id', 'flag_id']);
         $query->condition('t.vid', $entity_type);
-      } else {
+      }
+      else {
         $query->join('node', 'n', 'f.entity_id = n.nid');
         $query->fields('f', ['entity_id', 'flag_id']);
         $query->condition('n.type', $entity_type);
@@ -276,7 +277,8 @@ class MigrationProcessors {
       if ($entity_base == 'taxonomy') {
         $query->join('taxonomy_term_data', 't', 'f.entity_id = t.tid');
         $query->join('taxonomy_vocabulary', 'v', 't.vid = v.vid');
-      } else {
+      }
+      else {
         $query->join('node', 'n', 'f.entity_id = n.nid');
       }
       $query->addExpression($flag_id_expression, 'flag_id');
@@ -284,7 +286,8 @@ class MigrationProcessors {
       $query->condition('f.fid', $flag_id);
       if ($entity_base == 'taxonomy') {
         $query->condition('v.machine_name', $entity_type);
-      } else {
+      }
+      else {
         $query->condition('n.type', $entity_type);
       }
       $flag_count_results = $query->execute()->fetchAllAssoc('entity_id');
@@ -294,7 +297,8 @@ class MigrationProcessors {
       if ($entity_base == 'taxonomy') {
         $query->join('taxonomy_term_data', 't', 'f.entity_id = t.tid');
         $query->join('taxonomy_vocabulary', 'v', 't.vid = v.vid');
-      } else {
+      }
+      else {
         $query->join('node', 'n', 'f.entity_id = n.nid');
       }
       $query->addExpression($flag_id_expression, 'flag_id');
@@ -305,7 +309,8 @@ class MigrationProcessors {
       $query->condition('f.fid', $flag_id);
       if ($entity_base == 'taxonomy') {
         $query->condition('v.machine_name', $entity_type);
-      } else {
+      }
+      else {
         $query->condition('n.type', $entity_type);
       }
       $flagging_results = $query->execute()->fetchAllAssoc('entity_id');
