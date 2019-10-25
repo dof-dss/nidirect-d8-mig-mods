@@ -60,7 +60,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
    */
   public function onMigratePostImport(MigrateImportEvent $event) {
     $event_id = $event->getMigration()->getBaseId();
-    var_dump($event_id);
+
     // Only process nodes, nothing else.
     if (substr($event_id, 0, 5) == 'node_') {
       $content_type = substr($event_id, 5);

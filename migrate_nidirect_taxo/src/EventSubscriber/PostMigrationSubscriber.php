@@ -122,11 +122,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       $vocabulary_id = substr($event_id, 25);
 
       $this->logger->notice('Processing Flags for taxonomy vocabulary: @type', ['@type' => $vocabulary_id]);
-      $result = $this->migrationProcessors->flags($vocabulary_id);
-
-      if (!empty($result)) {
-        $this->logger->notice($result);
-      }
+      $this->logger->notice($this->migrationProcessors->flags($vocabulary_id));
 
       $this->logger->notice('Processing parent terms for taxonomy vocabulary: @type', ['@type' => $vocabulary_id]);
 
