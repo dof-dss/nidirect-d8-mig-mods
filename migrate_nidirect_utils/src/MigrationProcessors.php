@@ -223,13 +223,20 @@ class MigrationProcessors {
 
     // Process each flag type individually.
     foreach ($flags as $flag_id => $flag_name) {
-      $existing_flagging = $this->dbConnDrupal8->query("
-        SELECT f.entity_id, f.flag_id
-        FROM {flagging} AS f 
-        INNER JOIN {node} AS n 
-        ON f.entity_id = n.nid 
-        WHERE n.type = '$entity_type'
-        AND f.flag_id = '$flag_name'")->fetchAllAssoc('entity_id');
+      // Extract existing Flag data in the D8 database.
+      $query = $this->dbConnDrupal8->select('flagging', 'f');
+      if ($entity_base == 'taxonomy') {
+        $query->join('taxonomy_term_data', 't', 'f.entity_id = t.tid');
+        $query->fields('f', ['entity_id', 'flag_id']);
+        $query->condition('t.vid', $entity_type);
+      } else {
+        $query->join('node', 'n', 'f.entity_id = n.nid');
+        $query->fields('f', ['entity_id', 'flag_id']);
+        $query->condition('n.type', $entity_type);
+      }
+      $query->condition('f.flag_id', $flag_name);
+
+      $existing_flagging = $query->execute()->fetchAllAssoc('entity_id');
 
       $flag_count_results = $this->dbConnMigrate->query("
         SELECT
