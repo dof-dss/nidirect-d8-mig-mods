@@ -6,7 +6,7 @@ use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateImportEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\Core\Logger\LoggerChannelFactory;
-use Drupal\migrate_nidirect_node\NodeMigrationProcessors;
+use Drupal\migrate_nidirect_utils\MigrationProcessors;
 
 /**
  * Class PostMigrationSubscriber.
@@ -25,21 +25,21 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
   /**
    * NodeMigrationProcessors definition.
    *
-   * @var \Drupal\migrate_nidirect_node\NodeMigrationProcessors
+   * @var \Drupal\migrate_nidirect_utils\MigrationProcessors
    */
-  protected $nodeMigrationProcessors;
+  protected $migrationProcessors;
 
   /**
    * PostMigrationSubscriber constructor.
    *
    * @param \Drupal\Core\Logger\LoggerChannelFactory $logger
    *   Drupal logger.
-   * @param \Drupal\migrate_nidirect_node\NodeMigrationProcessors $node_migration_processors
-   *   Migration processors for nodes.
+   * @param \Drupal\migrate_nidirect_utils\MigrationProcessors $migration_processors
+   *   Migration processors.
    */
-  public function __construct(LoggerChannelFactory $logger, NodeMigrationProcessors $node_migration_processors) {
+  public function __construct(LoggerChannelFactory $logger, MigrationProcessors $migration_processors) {
     $this->logger = $logger->get('migrate_nidirect_node');
-    $this->nodeMigrationProcessors = $node_migration_processors;
+    $this->migrationProcessors = $migration_processors;
   }
 
   /**
@@ -64,8 +64,9 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     // Only process nodes, nothing else.
     if (substr($event_id, 0, 5) == 'node_') {
       $content_type = substr($event_id, 5);
-      $this->logger->notice($this->nodeMigrationProcessors->PublishingStatus($content_type));
-      $this->logger->notice($this->nodeMigrationProcessors->metatags());
+      $this->logger->notice($this->migrationProcessors->PublishingStatus($content_type));
+      $this->logger->notice($this->migrationProcessors->flags($content_type));
+      $this->logger->notice($this->migrationProcessors->metatags());
     }
   }
 
