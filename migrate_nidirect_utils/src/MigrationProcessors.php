@@ -211,8 +211,33 @@ class MigrationProcessors {
     }
 
     $output = '';
-    $entity_type = 'landing_page';
 
+    // Map the migration id's to the D7 vocabularies.
+    $migration_vocabulary_ids = [
+      'recipe_special_diet' => 'nidirect_recipe_special_diet',
+      'recipe_ingredient' => 'nidirect_recipe_ingredient',
+      'recipe_course_types' => 'nidirect_recipe_course_types',
+      'ni_postcodes' => 'ni_postcodes',
+      'hc_symptoms' => 'hc_symptoms',
+      'hc_info_sources' => 'hc_info_sources',
+      'hc_condition_type' => 'hc_condition_type',
+      'hc_body_system' => 'hc_body_system',
+      'hc_body_location' => 'hc_body_location',
+      'drive_instr_categories' => 'di_categories',
+      'districts_in_northern_ireland' => 'districts_in_northern_ireland',
+      'contact_categories' => 'nidirect_contact_categories',
+      'accessni_ub_sectors' => 'accessni_ub_sectors',
+      'accessni_ub_services' => 'accessni_ub_services',
+      'site_themes' => 'site_topics',
+    ];
+
+    // If it's a vocabulary, assign the correct machine name.
+    if (array_key_exists($entity_type, $migration_vocabulary_ids)) {
+      $entity_base = 'taxonomy';
+      $entity_type = $migration_vocabulary_ids[$entity_type];
+    }
+
+    // Map the Flag id to the machine name.
     $flags = [
       '2' => 'featured_content',
       '4' => 'hide_content',
