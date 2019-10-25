@@ -221,6 +221,14 @@ class MigrationProcessors {
       '7' => 'promote_to_all_pages',
     ];
 
+    $flag_id_expression = "CASE fid 
+      WHEN 2 THEN 'featured_content'
+      WHEN 4 THEN 'hide_content'
+      WHEN 5 THEN 'hide_theme'
+      WHEN 6 THEN 'show_listing'
+      WHEN 7 THEN 'promote_to_all_pages'
+     END";
+
     // Process each flag type individually.
     foreach ($flags as $flag_id => $flag_name) {
       // Extract existing Flag data in the D8 database.
@@ -238,21 +246,26 @@ class MigrationProcessors {
 
       $existing_flagging = $query->execute()->fetchAllAssoc('entity_id');
 
-      $flag_count_results = $this->dbConnMigrate->query("
-        SELECT
-        CASE f.fid
-            WHEN 2 THEN 'featured_content'
-            WHEN 4 THEN 'hide_content'
-            WHEN 5 THEN 'hide_theme'
-            WHEN 6 THEN 'show_listing'
-            WHEN 7 THEN 'promote_to_all_pages'
-        END as flag_id,
-        f.entity_type, f.entity_id, f.count, f.last_updated
-        FROM {flag_counts} AS f
-        INNER JOIN {node} AS n
-        ON f.entity_id = n.nid
-        WHERE f.fid = $flag_id
-        AND n.type = '$entity_type'")->fetchAllAssoc('entity_id');
+      // Fetch existing flagging results for the vocabulary or node type.
+      $query = $this->dbConnMigrate->select('flagging', 'f');
+      if ($entity_base == 'taxonomy') {
+        $query->join('taxonomy_term_data', 't', 'f.entity_id = t.tid');
+        $query->join('taxonomy_vocabulary', 'v', 't.vid = v.vid');
+      } else {
+        $query->join('node', 'n', 'f.entity_id = n.nid');
+      }
+      $query->addExpression($flag_id_expression, 'flag_id');
+      $query->fields('f', ['entity_type', 'entity_id', 'uid']);
+      $query->addField('f', 'flagging_id', 'id');
+      $query->addField('f', 'sid', 'session_id');
+      $query->addField('f', 'timestamp', 'created');
+      $query->condition('f.fid', $flag_id);
+      if ($entity_base == 'taxonomy') {
+        $query->condition('v.machine_name', $entity_type);
+      } else {
+        $query->condition('n.type', $entity_type);
+      }
+      $flagging_results = $query->execute()->fetchAllAssoc('entity_id');
 
       $flagging_results = $this->dbConnMigrate->query("
         SELECT
