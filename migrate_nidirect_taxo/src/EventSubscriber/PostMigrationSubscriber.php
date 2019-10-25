@@ -10,6 +10,7 @@ use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\pathauto\PathautoGenerator;
+use Drupal\migrate_nidirect_utils\MigrationProcessors;
 
 /**
  * Class PostMigrationSubscriber.
@@ -61,6 +62,13 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
   protected $pathautoGenerator;
 
   /**
+   * NodeMigrationProcessors definition.
+   *
+   * @var \Drupal\migrate_nidirect_utils\MigrationProcessors
+   */
+  protected $migrationProcessors;
+
+  /**
    * PostMigrationSubscriber constructor.
    *
    * @param \Drupal\Core\Logger\LoggerChannelFactory $logger
@@ -71,12 +79,21 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
    *   Entity Type Manager.
    * @param \Drupal\pathauto\PathautoGenerator $pathauto_generator
    *   Pathauto Generator.
+    * @param \Drupal\migrate_nidirect_utils\MigrationProcessors $migration_processors
+   *   Migration processors.
    */
-  public function __construct(LoggerChannelFactory $logger, QueryFactory $entity_query, EntityTypeManager $entity_type_manager, PathautoGenerator $pathauto_generator) {
+  public function __construct(
+    LoggerChannelFactory $logger,
+    QueryFactory $entity_query,
+    EntityTypeManager $entity_type_manager,
+    PathautoGenerator $pathauto_generator,
+    MigrationProcessors $migration_processors
+  ) {
     $this->logger = $logger->get('migrate_nidirect_taxo');
     $this->entityQuery = $entity_query;
     $this->entityTypeManager = $entity_type_manager;
     $this->pathautoGenerator = $pathauto_generator;
+    $this->migrationProcessors = $migration_processors;
 
     $this->dbConnMigrate = Database::getConnection('default', 'migrate');
     $this->dbConnDrupal8 = Database::getConnection('default', 'default');
@@ -103,6 +120,14 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     // Only process taxonomy terms, nothing else.
     if (substr($event_id, 0, 25) == 'upgrade_d7_taxonomy_term_') {
       $vocabulary_id = substr($event_id, 25);
+
+      $this->logger->notice('Processing Flags for taxonomy vocabulary: @type', ['@type' => $vocabulary_id]);
+      $result = $this->migrationProcessors->flags($vocabulary_id);
+
+      if (!empty($result)) {
+        $this->logger->notice($result);
+      }
+
       $this->logger->notice('Processing parent terms for taxonomy vocabulary: @type', ['@type' => $vocabulary_id]);
 
       $updated = 0;

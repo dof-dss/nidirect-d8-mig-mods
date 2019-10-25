@@ -192,7 +192,7 @@ class MigrationProcessors {
    * @return string
    *   Information/results of on the process.
    */
-  public function nodeFlags($entity_type) {
+  public function flags($entity_type) {
 
     // Verify that the flag module is enabled.
     $moduleHandler = \Drupal::service('module_handler');
