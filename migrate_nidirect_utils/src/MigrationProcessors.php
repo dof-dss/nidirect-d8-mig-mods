@@ -246,6 +246,24 @@ class MigrationProcessors {
 
       $existing_flagging = $query->execute()->fetchAllAssoc('entity_id');
 
+      // Fetch existing flag counts for the vocabulary or node type.
+      $query = $this->dbConnMigrate->select('flag_counts', 'f');
+      if ($entity_base == 'taxonomy') {
+        $query->join('taxonomy_term_data', 't', 'f.entity_id = t.tid');
+        $query->join('taxonomy_vocabulary', 'v', 't.vid = v.vid');
+      } else {
+        $query->join('node', 'n', 'f.entity_id = n.nid');
+      }
+      $query->addExpression($flag_id_expression, 'flag_id');
+      $query->fields('f', ['entity_type', 'entity_id', 'count', 'last_updated']);
+      $query->condition('f.fid', $flag_id);
+      if ($entity_base == 'taxonomy') {
+        $query->condition('v.machine_name', $entity_type);
+      } else {
+        $query->condition('n.type', $entity_type);
+      }
+      $flag_count_results = $query->execute()->fetchAllAssoc('entity_id');
+
       // Fetch existing flagging results for the vocabulary or node type.
       $query = $this->dbConnMigrate->select('flagging', 'f');
       if ($entity_base == 'taxonomy') {
@@ -266,23 +284,6 @@ class MigrationProcessors {
         $query->condition('n.type', $entity_type);
       }
       $flagging_results = $query->execute()->fetchAllAssoc('entity_id');
-
-      $flagging_results = $this->dbConnMigrate->query("
-        SELECT
-        f.flagging_id as id,
-        CASE f.fid
-          WHEN 2 THEN 'featured_content'
-          WHEN 4 THEN 'hide_content'
-          WHEN 5 THEN 'hide_theme'
-          WHEN 6 THEN 'show_listing'
-          WHEN 7 THEN 'promote_to_all_pages'
-        END as flag_id,
-        f.entity_type, f.entity_id, f.uid, f.sid as session_id, f.timestamp as created
-        FROM {flagging} AS f
-        INNER JOIN {node} AS n
-        ON f.entity_id = n.nid
-        WHERE f.fid = $flag_id
-        AND n.type = '$entity_type'")->fetchAllAssoc('entity_id');
 
       // Remove any existing D8 flags from the arrays to be processed.
       foreach ($flag_count_results as $id => $flag_count_result) {
