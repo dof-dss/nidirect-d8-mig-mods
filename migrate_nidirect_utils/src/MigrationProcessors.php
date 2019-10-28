@@ -406,6 +406,21 @@ class MigrationProcessors {
       AND f.fid = 1
     ")->fetchCol(0);
 
+    $today = date('Y-m-d', \Drupal::time()->getCurrentTime());
+
+    // Fetch current or future audit dates.
+    $excluded_audit_nids = $this->dbConnDrupal8->query("
+      SELECT a.entity_id
+      FROM node__field_next_audit_due AS a
+      JOIN node n
+      ON a.entity_id = n.nid
+      WHERE STR_TO_DATE(field_next_audit_due_value, '%Y-%m-%d') >= DATE_FORMAT(NOW(), '%Y-%m-%d')
+      AND n.type = '$entity_type'
+    ")->fetchCol(0);
+
+    // Create an array based on D7 nids but with excluded nids removed.
+    $nids_to_update = array_diff($d7_audit_nids, $excluded_audit_nids);
+
   }
 
 }
