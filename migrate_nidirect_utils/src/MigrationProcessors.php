@@ -392,6 +392,11 @@ class MigrationProcessors {
    */
   public function audit($entity_type) {
 
+    // Only process the entity types listed in the array.
+    if (!in_array($entity_type, ['article', 'contact', 'page'])) {
+      return;
+    }
+
     $d7_audit_nids = $this->dbConnMigrate->query("
       SELECT f.entity_id 
       FROM flagging f
