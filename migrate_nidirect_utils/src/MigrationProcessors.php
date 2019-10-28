@@ -5,7 +5,8 @@ namespace Drupal\migrate_nidirect_utils;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\ModuleHandler;
 use Drupal\node\Entity\Node;
-
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 /**
  * Class MigrationProcessors.
  *
@@ -19,6 +20,13 @@ class MigrationProcessors {
    * @var \Drupal\Core\Extension\ModuleHandler
    */
   protected $moduleHandler;
+
+  /**
+   * Node Storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface definition
+   */
+  protected $nodeStorage;
 
   /**
    * Migration database connection (Drupal 7).
@@ -37,8 +45,9 @@ class MigrationProcessors {
   /**
    * {@inheritdoc}
    */
-  public function __construct(ModuleHandler $module_handler) {
+  public function __construct(ModuleHandler $module_handler, EntityTypeManagerInterface $entity_type_manager) {
     $this->moduleHandler = $module_handler;
+    $this->nodeStorage = $entity_type_manager->getStorage('node');
     $this->dbConnMigrate = Database::getConnection('default', 'migrate');
     $this->dbConnDrupal8 = Database::getConnection('default', 'default');
   }
@@ -420,6 +429,22 @@ class MigrationProcessors {
 
     // Create an array based on D7 nids but with excluded nids removed.
     $nids_to_update = array_diff($d7_audit_nids, $excluded_audit_nids);
+
+    $error_nids = [];
+
+    foreach ($nids_to_update as $id => $nid) {
+      $node = $this->nodeStorage->load($nid);
+      if ($node instanceof Node) {
+        if ($node->hasField('field_next_audit_due')) {
+          // Just set next audit date to today as will show in 'needs audit' report
+          // if next audit date is today or earlier.
+          $node->set('field_next_audit_due', $today);
+          $node->save();
+        }
+      } else {
+        $error_nids[] = $nid;
+      }
+    }
 
   }
 
