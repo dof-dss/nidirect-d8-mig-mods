@@ -381,4 +381,26 @@ class MigrationProcessors {
     return $output;
   }
 
+  /**
+   * Import audit data.
+   *
+   * @param string $entity_type
+   *   The entity type to process.
+   *
+   * @return string
+   *   Information/results of on the process.
+   */
+  public function audit($entity_type) {
+
+    $d7_audit_nids = $this->dbConnMigrate->query("
+      SELECT f.entity_id 
+      FROM flagging f
+      JOIN node n
+      ON f.entity_id = n.nid
+      WHERE n.type = '$entity_type'
+      AND f.fid = 1
+    ")->fetchCol(0);
+
+  }
+
 }
