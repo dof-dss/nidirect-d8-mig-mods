@@ -6,7 +6,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\ModuleHandler;
 use Drupal\node\Entity\Node;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
+
 /**
  * Class MigrationProcessors.
  *
@@ -22,9 +22,9 @@ class MigrationProcessors {
   protected $moduleHandler;
 
   /**
-   * Node Storage.
+   * Node Storage definition.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface definition
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $nodeStorage;
 
@@ -403,7 +403,7 @@ class MigrationProcessors {
 
     // Only process the entity types listed in the array.
     if (!in_array($entity_type, ['article', 'contact', 'page'])) {
-      return "Audit processing is set to the ";
+      return "Audit processing for " . $entity_type . " is not enabled.";
     }
 
     $d7_audit_nids = $this->dbConnMigrate->query("
@@ -436,19 +436,21 @@ class MigrationProcessors {
       $node = $this->nodeStorage->load($nid);
       if ($node instanceof Node) {
         if ($node->hasField('field_next_audit_due')) {
-          // Just set next audit date to today as will show in 'needs audit' report
-          // if next audit date is today or earlier.
+          // Just set next audit date to today as will show in 'needs audit'
+          // report if next audit date is today or earlier.
           $node->set('field_next_audit_due', $today);
           $node->save();
         }
-      } else {
+      }
+      else {
         $error_nids[] = $nid;
       }
     }
 
     if (count($error_nids) > 0) {
-      return "Unable to process audit for nids: " . implode(',', $error_nids );
-    } else {
+      return "Unable to process audit for nids: " . implode(',', $error_nids);
+    }
+    else {
       return "Processed audit for " . count($nids_to_update) . " nodes";
     }
   }
