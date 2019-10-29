@@ -403,7 +403,7 @@ class MigrationProcessors {
 
     // Only process the entity types listed in the array.
     if (!in_array($entity_type, ['article', 'contact', 'page'])) {
-      return;
+      return "Audit processing is set to the ";
     }
 
     $d7_audit_nids = $this->dbConnMigrate->query("
@@ -446,6 +446,11 @@ class MigrationProcessors {
       }
     }
 
+    if (count($error_nids) > 0) {
+      return "Unable to process audit for nids: " . implode(',', $error_nids );
+    } else {
+      return "Processed audit for " . count($nids_to_update) . " nodes";
+    }
   }
 
 }

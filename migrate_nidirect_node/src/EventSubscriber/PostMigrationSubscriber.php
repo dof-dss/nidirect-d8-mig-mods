@@ -67,6 +67,11 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       $this->logger->notice($this->migrationProcessors->PublishingStatus($content_type));
       $this->logger->notice($this->migrationProcessors->flags($content_type));
       $this->logger->notice($this->migrationProcessors->metatags());
+
+      // Process audit flags for listed content types.
+      if (!in_array($content_type, ['article', 'contact', 'page'])) {
+        $this->logger->notice($this->migrationProcessors->audit($content_type));
+      }
     }
   }
 
