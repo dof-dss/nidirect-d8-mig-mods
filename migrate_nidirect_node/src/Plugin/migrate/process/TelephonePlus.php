@@ -73,15 +73,31 @@ class TelephonePlus extends ProcessPluginBase {
         $telephone[] =[
           'title' => $matches[0][3],
           'number' => $matches[0][5],
+          'supplementary' => '',
         ];
       } else {
         $telephone[] =[
           'title' => $matches[0][2],
           'number' => $matches[0][4],
+          'supplementary' => '',
         ];
       }
       return $value;
     }
+
+    // Number and supplementary regex (D8NID-326 : Case 3).
+    preg_match_all('/^(\h+)?(\+?[0-9\h\(\)]{8,16}\d\d\d)\h+(\(?\w+[a-zA-Z0-9\-\'\h:;,\.\)]+[a-zA-Z]+\)?)\.?(\h+)?$/m', $value['value'], $matches, PREG_SET_ORDER, 0);
+
+    if ($matches) {
+      $telephone[] =[
+        'title' => '',
+        'number' => $matches[0][2],
+        'supplementary' => $matches[0][3],
+      ];
+      return $value;
+    }
+
+
 
     return $value;
   }
