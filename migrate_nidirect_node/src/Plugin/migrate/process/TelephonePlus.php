@@ -49,7 +49,7 @@ class TelephonePlus extends ProcessPluginBase {
           'supplementary' => $number_parts[2] ?? '',
         ];
       }
-      return;
+      return $value;
     }
 
     // See https://digitaldevelopment.atlassian.net/browse/D8NID-326 for details.
@@ -62,8 +62,27 @@ class TelephonePlus extends ProcessPluginBase {
         'title' => '',
         'supplementary' => '',
       ];
+      return $value;
     }
 
-  }
+    // Number and title regex (D8NID-326 : Case 2).
+    preg_match_all('/^(\h+)?([a-zA-Z\-\'\h:,]+[a-zA-Z])\h?\:?(\h\-)?\h(\+?[0-9\h\(\)]{8,16}\d\d\d)(\h+)?$/m', $value['value'], $matches, PREG_SET_ORDER, 0);
 
+    if ($matches) {
+      if (count($matches) == 4) {
+        $telephone[] =[
+          'title' => $matches[0][3],
+          'number' => $matches[0][5],
+        ];
+      } else {
+        $telephone[] =[
+          'title' => $matches[0][2],
+          'number' => $matches[0][4],
+        ];
+      }
+      return $value;
+    }
+
+    return $value;
+  }
 }
