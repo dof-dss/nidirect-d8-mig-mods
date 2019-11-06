@@ -58,8 +58,9 @@ class TelephonePlus extends ProcessPluginBase {
 
     if ($matches) {
       $telephone[] = [
-        'number' => $matches[0][0],
         'title' => '',
+        'number' => $matches[0][0],
+        'extension' => '',
         'supplementary' => '',
       ];
       return $value;
@@ -73,12 +74,14 @@ class TelephonePlus extends ProcessPluginBase {
         $telephone[] =[
           'title' => $matches[0][3],
           'number' => $matches[0][5],
+          'extension' => '',
           'supplementary' => '',
         ];
       } else {
         $telephone[] =[
           'title' => $matches[0][2],
           'number' => $matches[0][4],
+          'extension' => '',
           'supplementary' => '',
         ];
       }
@@ -92,12 +95,11 @@ class TelephonePlus extends ProcessPluginBase {
       $telephone[] =[
         'title' => '',
         'number' => $matches[0][2],
+        'extension' => '',
         'supplementary' => $matches[0][3],
       ];
       return $value;
     }
-
-
 
     return $value;
   }
