@@ -1,0 +1,29 @@
+id: nidirect_book
+label: 'NI Direct Book'
+migration_group: migrate_drupal_7_global
+source:
+  plugin: book
+process:
+  nid: nid
+  book/bid: bid
+  book/weight: weight
+  book/pid: bid
+  book/has_children: has_children
+  book/depth: 0
+  p1: bid
+  p2: nid
+destination:
+  plugin: book
+migration_dependencies:
+  required:
+    - node_application
+    - node_article
+    - node_contact
+    - node_external_link
+    - node_health_condition
+    - node_landing_page
+    - node_news
+    - node_nidirect_contact
+    - node_page
+    - node_publication
+    - node_recipe
