@@ -40,7 +40,15 @@ class TelephonePlus extends ProcessPluginBase {
       [':id' => $nid]);
 
     if (is_array($data = $result->fetchAssoc())) {
-      var_dump($data);
+      $multiple_numbers = explode('~', $data['telephone_destination']);
+      foreach ($multiple_numbers as $number) {
+        $number_parts = explode('|', $number);
+        $telephone[] =[
+          'title' => $number_parts[1] ?? '',
+          'number' => $number_parts[0] ?? '',
+          'supplementary' => $number_parts[2] ?? '',
+        ];
+      }
       return;
     }
 
