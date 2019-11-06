@@ -52,6 +52,18 @@ class TelephonePlus extends ProcessPluginBase {
       return;
     }
 
+    // See https://digitaldevelopment.atlassian.net/browse/D8NID-326 for details.
+    // Number only regex (D8NID-326 : Case 1).
+    preg_match_all('/^(\h+)?(\+?[0-9\h\(\)]{8,16}\d\d\d)(\h+)?$/m', $value['value'], $matches, PREG_SET_ORDER, 0);
+
+    if ($matches) {
+      $telephone[] = [
+        'number' => $matches[0][0],
+        'title' => '',
+        'supplementary' => '',
+      ];
+    }
+
   }
 
 }
