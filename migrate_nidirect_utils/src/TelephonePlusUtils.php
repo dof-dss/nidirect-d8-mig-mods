@@ -7,6 +7,26 @@ class TelephonePlusUtils {
   const COUNTRY_CODE = 'GB';
   const DISPLAY_INTERNATIONAL_NUMBER = 0;
 
+  public static function lookup($nid) {
+    $node = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['field_telephone_lookup_nid' => $nid]);
+
+    $node = current($node);
+    $telephone_lookup_data = $node->get('field_telephone_lookup_data');
+
+    foreach ($telephone_lookup_data as $telephone_item) {
+      $telephone[] =[
+        'telephone_title' => $telephone_item->telephone_title ?? '',
+        'telephone_number' => $telephone_item->telephone_number ?? '',
+        'telephone_extension' => $telephone_item->telephone_extension ?? '',
+        'telephone_supplementary' => $telephone_item->telephone_supplementary ?? '',
+        'country_code' => $telephone_item->country_code ?? 'GB',
+        'display_international_number' => $telephone_item->display_international_number ?? '0',
+      ];
+    }
+
+    return $telephone;
+  }
+
   /**
    * Parse a string to TelephonePlus field format.
    *
