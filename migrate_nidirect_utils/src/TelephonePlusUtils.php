@@ -2,19 +2,40 @@
 
 namespace Drupal\migrate_nidirect_utils;
 
+/**
+ * Class TelephonePlusUtils.
+ *
+ * @package Drupal\migrate_nidirect_utils
+ */
 class TelephonePlusUtils {
 
   const COUNTRY_CODE = 'GB';
   const DISPLAY_INTERNATIONAL_NUMBER = 0;
 
+  /**
+   * Telephone data lookup.
+   *
+   * Fetches manually adjusted contact data for D7 nodes with
+   * troublesome contact data that cannot be parsed using the
+   * TelephonePlusUtils::parse() function.
+   *
+   * @param int $nid
+   *   Node ID to lookup.
+   *
+   * @return array|null
+   *   Null or an array of suitable Telephone Plus data.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
   public static function lookup($nid) {
     $node = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['field_telephone_lookup_nid' => $nid]);
-
+    
     $node = current($node);
     $telephone_lookup_data = $node->get('field_telephone_lookup_data');
 
     foreach ($telephone_lookup_data as $telephone_item) {
-      $telephone[] =[
+      $telephone[] = [
         'telephone_title' => $telephone_item->telephone_title ?? '',
         'telephone_number' => $telephone_item->telephone_number ?? '',
         'telephone_extension' => $telephone_item->telephone_extension ?? '',
@@ -33,12 +54,15 @@ class TelephonePlusUtils {
    * Extracts details from a string to return
    * an array of telephone numbers.
    *
-   * @param $input
+   * @param string $input
+   *   String of contact information such as title, number, extension etc.
+   *
    * @return array
+   *   Array of telephone objects for insertion into Telephone Plus field.
    */
   public static function parse($input) {
 
-    // See https://digitaldevelopment.atlassian.net/browse/D8NID-326 for details.
+    // See https://digitaldevelopment.atlassian.net/browse/D8NID-326 for info.
     // Number only regex (D8NID-326 : Case 1).
     preg_match_all('/^(\h+)?(\+?[0-9\h\(\)]{8,16}\d\d\d)(\h+)?$/m', $input, $matches, PREG_SET_ORDER, 0);
 
@@ -49,7 +73,7 @@ class TelephonePlusUtils {
         'telephone_extension' => '',
         'telephone_supplementary' => '',
         'country_code' => static::COUNTRY_CODE,
-        'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER
+        'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER,
       ];
 
       return $telephone;
@@ -60,22 +84,23 @@ class TelephonePlusUtils {
 
     if ($matches) {
       if (count($matches) == 4) {
-        $telephone[] =[
+        $telephone[] = [
           'telephone_title' => $matches[0][3],
           'telephone_number' => $matches[0][5],
           'telephone_extension' => '',
           'telephone_supplementary' => '',
           'country_code' => static::COUNTRY_CODE,
-          'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER
+          'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER,
         ];
-      } else {
-        $telephone[] =[
+      }
+      else {
+        $telephone[] = [
           'telephone_title' => $matches[0][2],
           'telephone_number' => $matches[0][4],
           'telephone_extension' => '',
           'telephone_supplementary' => '',
           'country_code' => static::COUNTRY_CODE,
-          'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER
+          'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER,
         ];
       }
       return $telephone;
@@ -85,13 +110,13 @@ class TelephonePlusUtils {
     preg_match_all('/^(\h+)?(\+?[0-9\h\(\)]{8,16}\d\d\d)\h+(\(?\w+[a-zA-Z0-9\-\'\h:;,\.\)]+[a-zA-Z]+\)?)\.?(\h+)?$/m', $input, $matches, PREG_SET_ORDER, 0);
 
     if ($matches) {
-      $telephone[] =[
+      $telephone[] = [
         'telephone_title' => '',
         'telephone_number' => $matches[0][2],
         'telephone_extension' => '',
         'telephone_supplementary' => $matches[0][3],
         'country_code' => static::COUNTRY_CODE,
-        'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER
+        'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER,
       ];
       return $telephone;
     }
@@ -100,13 +125,13 @@ class TelephonePlusUtils {
     preg_match_all('/^(\h+)?(\+?[0-9\h\(\)]{8,16}\d\d\d)\h+([eE]xt\.?(ension)?\.?\:?\h?)([0-9]{4,6})\h?$/m', $input, $matches, PREG_SET_ORDER, 0);
 
     if ($matches) {
-      $telephone[] =[
+      $telephone[] = [
         'telephone_title' => '',
         'telephone_number' => $matches[0][2],
         'telephone_extension' => $matches[0][5],
         'telephone_supplementary' => '',
         'country_code' => static::COUNTRY_CODE,
-        'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER
+        'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER,
       ];
       return $telephone;
     }
@@ -115,13 +140,13 @@ class TelephonePlusUtils {
     preg_match_all('/^(\h+)?([a-zA-Z\-\'\h]+[a-zA-Z\)])\h?(:|-)?\h?(\+?[0-9\h\(\)]{8,16}\d\d\d)\h?(\([a-zA-Z0-9\-\'\h:\.,]+\))\.?(\h+)?$/m', $input, $matches, PREG_SET_ORDER, 0);
 
     if ($matches) {
-      $telephone[] =[
+      $telephone[] = [
         'telephone_title' => $matches[0][2],
         'telephone_number' => $matches[0][4],
         'telephone_extension' => '',
         'telephone_supplementary' => $matches[0][5],
         'country_code' => static::COUNTRY_CODE,
-        'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER
+        'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER,
       ];
       return $telephone;
     }
@@ -130,22 +155,22 @@ class TelephonePlusUtils {
     preg_match_all('/^(\h+)?(\+?[0-9\h\(\)]*\d\d\d)\h*([eE]xt\.?(ension)?\.?\:?\h*)?([0-9]{4,6})?\h*(\/|or|and)\h+(\+?[0-9\h\(\)]*\d\d\d)\h*([eE]xt\.?(ension)?\.?\:?\h*)?([0-9]{4,6})?\h*$/m', $input, $matches, PREG_SET_ORDER, 0);
 
     if ($matches) {
-      $telephone[] =[
+      $telephone[] = [
         'telephone_title' => '',
         'telephone_number' => $matches[0][2],
         'telephone_extension' => $matches[0][5] ?? '',
         'telephone_supplementary' => '',
         'country_code' => static::COUNTRY_CODE,
-        'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER
+        'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER,
       ];
 
-      $telephone[] =[
+      $telephone[] = [
         'telephone_title' => '',
         'telephone_number' => $matches[0][7],
         'telephone_extension' => $matches[0][10] ?? '',
         'telephone_supplementary' => '',
         'country_code' => static::COUNTRY_CODE,
-        'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER
+        'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER,
       ];
       return $telephone;
     }
@@ -156,9 +181,10 @@ class TelephonePlusUtils {
       'telephone_extension' => '',
       'telephone_supplementary' => '',
       'country_code' => static::COUNTRY_CODE,
-      'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER
+      'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER,
     ];
 
     return $telephone;
   }
+
 }
