@@ -36,7 +36,7 @@ class NIDirectDrivingInstructorNodeSource extends Node {
     if (!empty($landline)) {
       $telephone[] = [
         'telephone_title' => 'Landline',
-        'telephone_number' => $landline ?? '',
+        'telephone_number' => $landline,
         'telephone_extension' => '',
         'telephone_supplementary' => '',
         'country_code' => 'GB',
@@ -58,7 +58,7 @@ class NIDirectDrivingInstructorNodeSource extends Node {
     if (!empty($mobile)) {
       $telephone[] = [
         'telephone_title' => 'Mobile',
-        'telephone_number' => $mobile ?? '',
+        'telephone_number' => $mobile,
         'telephone_extension' => '',
         'telephone_supplementary' => '',
         'country_code' => 'GB',
