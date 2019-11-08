@@ -43,6 +43,28 @@ class NIDirectDrivingInstructorNodeSource extends Node
       ];
     }
 
+    // Fetch mobile phone number.
+    $query = $this->getDatabase()->query('
+        SELECT field_contact_sms_value
+        FROM {field_data_field_contact_sms}
+        WHERE entity_id = :nid', [
+        ':nid' => $nid
+      ]
+    );
+
+    $mobile = $query->fetchField();
+
+    if (!empty($mobile)) {
+      $telephone[] = [
+        'telephone_title' => 'Mobile',
+        'telephone_number' => $mobile ?? '',
+        'telephone_extension' => '',
+        'telephone_supplementary' => '',
+        'country_code' => 'GB',
+        'display_international_number' => '0',
+      ];
+    }
+
     $row->setSourceProperty('telephone_number', $telephone);
     return parent::prepareRow($row);
   }
