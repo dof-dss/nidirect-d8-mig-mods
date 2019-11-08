@@ -30,7 +30,11 @@ class TelephonePlusUtils {
    */
   public static function lookup($nid) {
     $node = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['field_telephone_lookup_nid' => $nid]);
-    
+
+    if (empty($node)) {
+      return NULL;
+    }
+
     $node = current($node);
     $telephone_lookup_data = $node->get('field_telephone_lookup_data');
 
