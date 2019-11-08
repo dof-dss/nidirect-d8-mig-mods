@@ -12,21 +12,22 @@ use Drupal\migrate\Row;
  *   id = "driving_instructor_node_source",
  * )
  */
-class NIDirectDrivingInstructorNodeSource extends Node
-{
+class NIDirectDrivingInstructorNodeSource extends Node {
 
-  public function prepareRow(Row $row)
-  {
+  /**
+   * {@inheritdoc}
+   */
+  public function prepareRow(Row $row) {
     $telephone = [];
     $ids = $row->getSourceIdValues();
     $nid = $ids['nid'];
 
     // Fetch landline phone number.
     $query = $this->getDatabase()->query('
-        SELECT field_contact_phone_value
-        FROM {field_data_field_contact_phone}
-        WHERE entity_id = :nid', [
-        ':nid' => $nid
+      SELECT field_contact_phone_value
+      FROM {field_data_field_contact_phone}
+      WHERE entity_id = :nid', [
+        ':nid' => $nid,
       ]
     );
 
@@ -45,10 +46,10 @@ class NIDirectDrivingInstructorNodeSource extends Node
 
     // Fetch mobile phone number.
     $query = $this->getDatabase()->query('
-        SELECT field_contact_sms_value
-        FROM {field_data_field_contact_sms}
-        WHERE entity_id = :nid', [
-        ':nid' => $nid
+      SELECT field_contact_sms_value
+      FROM {field_data_field_contact_sms}
+      WHERE entity_id = :nid', [
+        ':nid' => $nid,
       ]
     );
 
