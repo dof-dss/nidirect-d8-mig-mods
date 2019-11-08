@@ -56,6 +56,9 @@ class NidirectMigratePreCommand extends MigrateCommand {
    *
    * @param string $query
    *   SQL query to execute.
+   *
+   * @return \Drupal\Core\Database\StatementInterface
+   *   Prepared database statement.
    */
   private function drupal7DatabaseQuery($query) {
     $conn_query = $this->connMigrate->query($query);
@@ -63,13 +66,13 @@ class NidirectMigratePreCommand extends MigrateCommand {
   }
 
   /**
-   * Removes shortcuts from the default shortcut set to prevent errors
-   * during configuration import.
+   * Remove shortcuts from the default shortcut set.
+   *
+   * Required to prevent errors during configuration import.
    */
   // phpcs:disable
   public function task_remove_default_shortcuts() {
-  // phpcs:enable
-    // Remove the installed default admin shortcuts which trip up config sync import.
+    // phpcs:enable
     $query = \Drupal::entityTypeManager()->getStorage('shortcut')->getQuery();
     $nids = $query->condition('shortcut_set', 'default')->execute();
     $shortcuts = \Drupal::entityTypeManager()->getStorage("shortcut")->loadMultiple($nids);
@@ -82,17 +85,19 @@ class NidirectMigratePreCommand extends MigrateCommand {
   }
 
   /**
-   * Update the current site UUID to use the config/sync site UUID or we won't
-   * be able to import configuration.
+   * Update the current site UUID.
+   *
+   * To use the config/sync site we need to update the active UUID
+   * to match that of the import configuration UUID.
    */
   // phpcs:disable
   protected function task_update_site_uuid() {
-  // phpcs:enable
+    // phpcs:enable
     global $config_directories;
     $site_config = Yaml::parse(file_get_contents($config_directories['sync'] . '/system.site.yml'));
 
-    // Config imports will fail if the exported Site UUID doesn't match the current
-    // Site UUID.
+    // Config imports will fail if the exported Site UUID doesn't
+    // match the current site UUID.
     if ($site_config) {
       $site_uuid_sync = $site_config['uuid'];
 
@@ -106,7 +111,9 @@ class NidirectMigratePreCommand extends MigrateCommand {
   }
 
   /**
-   * Update to lowercase traffic light rating values to match the option keys on the 8.x widget.
+   * Update to lowercase traffic light rating values.
+   *
+   * Update to match the option keys on the 8.x widget.
    */
   // phpcs:disable
   protected function task_update_traffic_light_rating_values() {
@@ -131,6 +138,7 @@ class NidirectMigratePreCommand extends MigrateCommand {
 
   /**
    * Fix issue with zero status redirect imports to Drupal 8.
+   *
    * Credit to Jaime Contreras.
    */
   // phpcs:disable
@@ -160,6 +168,64 @@ class NidirectMigratePreCommand extends MigrateCommand {
     }
 
     $insert->execute();
+  }
+
+  /**
+   * Prepare telephone numbers for new multiple value telephone plus field.
+   */
+  // phpcs:disable
+  protected function task_prepare_phone_field_data() {
+  // phpcs:enable
+    $phone_numbers = $this->connMigrate->query('SELECT revision_id, field_contact_phone_value FROM field_data_field_contact_phone WHERE bundle = \'nidirect_contact\'');
+
+    $counter = 0;
+    $updates = [];
+
+    foreach ($phone_numbers as $phone_number) {
+      /* Pattern for:
+       *
+       * 028 6634 3165 / 028 6634 3144
+       * 01234 269110 / 01234 269609
+       * 028 3751 8569 or 0751 168 6433
+       */
+      $regex = '/^((\d+\s){2,3})(or|\/)((\s\d+){2,3})$/m';
+      preg_match_all($regex, $phone_number->field_contact_phone_value, $matches, PREG_SET_ORDER, 0);
+      if (count($matches) > 0) {
+        $value = '[' . trim($matches[0][1]) . '][' . trim($matches[0][4]) . ']';
+        $updates[$phone_number->revision_id] = $value;
+        $counter++;
+        continue;
+      }
+
+      /* Pattern for
+       *
+       * 028 9023 8152 (Monday to Friday 8.45 am to 5.00 pm)
+       */
+      $regex = '/^((\d+\s){2,3})\(([^\/)]*)\)/m';
+      preg_match_all($regex, $phone_number->field_contact_phone_value, $matches, PREG_SET_ORDER, 0);
+      if (count($matches) > 0) {
+        $value = '[' . trim($matches[0][1]) . '|' . $matches[0][3] . ']';
+        $updates[$phone_number->revision_id] = $value;
+        $counter++;
+        continue;
+      }
+
+      /* Pattern for:
+       *
+       * 020 7089 5050 / Parents Helpline - 0808 802 5544
+       * 01476 581111 / Northern Ireland Office - 028 9127 5787
+       */
+      $regex = '/^((\d+\s){2,3})\/\s(.+)[:-]\s((\d+\s?){2,3})$/m';
+      preg_match_all($regex, $phone_number->field_contact_phone_value, $matches, PREG_SET_ORDER, 0);
+      if (count($matches) > 0) {
+        $value = '[' . trim($matches[0][1]) . '][' . $matches[0][4] . '|' . trim($matches[0][3]) . ']';
+        $updates[$phone_number->revision_id] = $value;
+        $counter++;
+        continue;
+      }
+    }
+
+    $this->getIo()->info('Processed ' . $counter . ' phone fields.');
   }
 
 }
