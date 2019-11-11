@@ -6,7 +6,7 @@ use Drupal\node\Plugin\migrate\source\d7\Node;
 use Drupal\migrate\Row;
 
 /**
- * Prepares Contact nodes for telephone plus field.
+ * Prepares Driving instructor nodes for telephone plus field.
  *
  * @MigrateSource(
  *   id = "driving_instructor_node_source",

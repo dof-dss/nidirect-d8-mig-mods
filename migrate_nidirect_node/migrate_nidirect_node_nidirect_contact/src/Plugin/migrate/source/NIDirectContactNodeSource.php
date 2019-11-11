@@ -14,14 +14,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Logger\LoggerChannelFactory;
 
 /**
- * Prepares Contact nodes for telephone plus field.
+ * Prepares NIDirect Contact nodes for telephone plus field.
  *
  * @MigrateSource(
  *   id = "nidirect_contact_node_source",
  * )
  */
 class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginInterface {
-
 
   /**
    * Logger.
@@ -74,12 +73,12 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
         ]
       );
 
-      $contact_details = $query->fetchCol(0);
-      $contact_details = $contact_details[0];
+      $contact_details = $query->fetchField();
 
       $value = TelephonePlusUtils::parse($contact_details);
     }
 
+    // Report any nodes with blank numbers.
     if (empty($value['telephone_number'])) {
       $this->logger->notice("Blank telephone details for NID: $nid");
 
