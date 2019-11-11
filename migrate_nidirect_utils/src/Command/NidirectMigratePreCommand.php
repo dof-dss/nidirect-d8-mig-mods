@@ -56,9 +56,6 @@ class NidirectMigratePreCommand extends MigrateCommand {
    *
    * @param string $query
    *   SQL query to execute.
-   *
-   * @return \Drupal\Core\Database\StatementInterface
-   *   Prepared database statement.
    */
   private function drupal7DatabaseQuery($query) {
     $conn_query = $this->connMigrate->query($query);
@@ -66,13 +63,13 @@ class NidirectMigratePreCommand extends MigrateCommand {
   }
 
   /**
-   * Remove shortcuts from the default shortcut set.
-   *
-   * Required to prevent errors during configuration import.
+   * Removes shortcuts from the default shortcut set to prevent errors
+   * during configuration import.
    */
   // phpcs:disable
   public function task_remove_default_shortcuts() {
-    // phpcs:enable
+  // phpcs:enable
+    // Remove the installed default admin shortcuts which trip up config sync import.
     $query = \Drupal::entityTypeManager()->getStorage('shortcut')->getQuery();
     $nids = $query->condition('shortcut_set', 'default')->execute();
     $shortcuts = \Drupal::entityTypeManager()->getStorage("shortcut")->loadMultiple($nids);
@@ -85,19 +82,17 @@ class NidirectMigratePreCommand extends MigrateCommand {
   }
 
   /**
-   * Update the current site UUID.
-   *
-   * To use the config/sync site we need to update the active UUID
-   * to match that of the import configuration UUID.
+   * Update the current site UUID to use the config/sync site UUID or we won't
+   * be able to import configuration.
    */
   // phpcs:disable
   protected function task_update_site_uuid() {
-    // phpcs:enable
+  // phpcs:enable
     global $config_directories;
     $site_config = Yaml::parse(file_get_contents($config_directories['sync'] . '/system.site.yml'));
 
-    // Config imports will fail if the exported Site UUID doesn't
-    // match the current site UUID.
+    // Config imports will fail if the exported Site UUID doesn't match the current
+    // Site UUID.
     if ($site_config) {
       $site_uuid_sync = $site_config['uuid'];
 
@@ -111,9 +106,7 @@ class NidirectMigratePreCommand extends MigrateCommand {
   }
 
   /**
-   * Update to lowercase traffic light rating values.
-   *
-   * Update to match the option keys on the 8.x widget.
+   * Update to lowercase traffic light rating values to match the option keys on the 8.x widget.
    */
   // phpcs:disable
   protected function task_update_traffic_light_rating_values() {
@@ -138,7 +131,6 @@ class NidirectMigratePreCommand extends MigrateCommand {
 
   /**
    * Fix issue with zero status redirect imports to Drupal 8.
-   *
    * Credit to Jaime Contreras.
    */
   // phpcs:disable
@@ -169,5 +161,5 @@ class NidirectMigratePreCommand extends MigrateCommand {
 
     $insert->execute();
   }
-  
+
 }
