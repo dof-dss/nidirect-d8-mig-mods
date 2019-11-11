@@ -36,6 +36,7 @@ class TelephonePlusUtils {
     }
 
     $node = current($node);
+    $telephone = [];
     $telephone_lookup_data = $node->get('field_telephone_lookup_data');
 
     foreach ($telephone_lookup_data as $telephone_item) {
