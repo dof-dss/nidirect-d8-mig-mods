@@ -8,7 +8,7 @@ cck_plugin_method: null
 migration_group: migrate_nidirect_node_driving_instructor
 label: 'Nodes (Nidirect driving instructor)'
 source:
-  plugin: d7_node
+  plugin: driving_instructor_node_source
   node_type: nidirect_driving_instructor
 process:
   nid:
@@ -68,14 +68,10 @@ process:
     -
       plugin: get
       source: comment
-  field_contact_phone:
+  field_telephone:
     -
       plugin: get
-      source: field_contact_phone
-  field_contact_mobile:
-    -
-      plugin: get
-      source: field_contact_sms
+      source: telephone_number
   field_di_adi_no:
     -
       plugin: get
