@@ -8,7 +8,7 @@ cck_plugin_method: null
 migration_group: migrate_nidirect_node_nidirect_contact
 label: 'Nodes (Nidirect contact)'
 source:
-  plugin: d7_node
+  plugin: nidirect_contact_node_source
   node_type: nidirect_contact
 process:
   nid:
@@ -135,10 +135,6 @@ process:
         html_for_admins: full_html
         paste_format: plain_text
         plain_text: plain_text
-  field_contact_phone:
-    -
-      plugin: get
-      source: field_contact_phone
   field_contact_mobile:
     -
       plugin: get
@@ -230,6 +226,10 @@ process:
     -
       plugin: get
       source: field_map/0/lat
+  field_telephone:
+    -
+      plugin: get
+      source: telephone_number
 destination:
   plugin: 'entity:node'
   default_bundle: contact
