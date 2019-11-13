@@ -423,8 +423,7 @@ class MigrationProcessors {
       FROM node__field_next_audit_due AS a
       JOIN node n
       ON a.entity_id = n.nid
-      WHERE STR_TO_DATE(field_next_audit_due_value, '%Y-%m-%d') >= DATE_FORMAT(NOW(), '%Y-%m-%d')
-      AND n.type = '$entity_type'
+      WHERE n.type = '$entity_type'
     ")->fetchCol(0);
 
     // Create an array based on D7 nids but with excluded nids removed.
