@@ -5,6 +5,7 @@ namespace Drupal\migrate_nidirect_utils;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\ModuleHandler;
 use Drupal\node\Entity\Node;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Class MigrationProcessors.
@@ -19,6 +20,13 @@ class MigrationProcessors {
    * @var \Drupal\Core\Extension\ModuleHandler
    */
   protected $moduleHandler;
+
+  /**
+   * Node Storage definition.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $nodeStorage;
 
   /**
    * Migration database connection (Drupal 7).
@@ -37,8 +45,9 @@ class MigrationProcessors {
   /**
    * {@inheritdoc}
    */
-  public function __construct(ModuleHandler $module_handler) {
+  public function __construct(ModuleHandler $module_handler, EntityTypeManagerInterface $entity_type_manager) {
     $this->moduleHandler = $module_handler;
+    $this->nodeStorage = $entity_type_manager->getStorage('node');
     $this->dbConnMigrate = Database::getConnection('default', 'migrate');
     $this->dbConnDrupal8 = Database::getConnection('default', 'default');
   }
@@ -379,6 +388,70 @@ class MigrationProcessors {
     }
 
     return $output;
+  }
+
+  /**
+   * Import audit data.
+   *
+   * @param string $entity_type
+   *   The entity type to process.
+   *
+   * @return string
+   *   Information/results of on the process.
+   */
+  public function audit($entity_type) {
+
+    // Only process the entity types listed in the array.
+    if (!in_array($entity_type, ['article', 'contact', 'page'])) {
+      return "Audit processing for " . $entity_type . " is not enabled.";
+    }
+
+    $d7_audit_nids = $this->dbConnMigrate->query("
+      SELECT f.entity_id 
+      FROM flagging f
+      JOIN node n
+      ON f.entity_id = n.nid
+      WHERE n.type = '$entity_type'
+      AND f.fid = 1
+    ")->fetchCol(0);
+
+    $today = date('Y-m-d', \Drupal::time()->getCurrentTime());
+
+    // Fetch current or future audit dates.
+    $excluded_audit_nids = $this->dbConnDrupal8->query("
+      SELECT a.entity_id
+      FROM node__field_next_audit_due AS a
+      JOIN node n
+      ON a.entity_id = n.nid
+      WHERE n.type = '$entity_type'
+    ")->fetchCol(0);
+
+    // Create an array based on D7 nids but with excluded nids removed.
+    $nids_to_update = array_diff($d7_audit_nids, $excluded_audit_nids);
+
+    $error_nids = [];
+
+    foreach ($nids_to_update as $id => $nid) {
+      $node = $this->nodeStorage->load($nid);
+      if ($node instanceof Node) {
+        if ($node->hasField('field_next_audit_due')) {
+          // Just set next audit date to today as will show in 'needs audit'
+          // report if next audit date is today or earlier.
+          $node->set('field_next_audit_due', $today);
+          $node->save();
+        }
+      }
+      else {
+        $error_nids[] = $nid;
+      }
+    }
+
+    if (count($error_nids) > 0) {
+      return "Unable to process audit for nids: " . implode(',', $error_nids);
+    }
+    else {
+      return "Processed audit for " . count($nids_to_update) . " nodes";
+    }
   }
 
 }
