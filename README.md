@@ -18,27 +18,26 @@ are enabled.
 8. Use `lando mist` to display the migration status
 9. Use `lando miip --group=<group name>` or `lando miip <individual migration>`
 
-
 ## Migration order
 
-2. Run `lando drush mim` for the following migrations
-* group=migrate_drupal_7_user
-* group=migrate_drupal_7_file
-* group=migrate_drupal_7_taxo
-* group=migrate_nidirect_node_driving_instructor
-* group=migrate_nidirect_entity_gp
-* group=migrate_nidirect_node_application
-* group=migrate_nidirect_node_article
-* group=migrate_nidirect_node_external_link
-* group=migrate_nidirect_node_gp_practice
-* group=migrate_nidirect_health_condition_node
-* group=migrate_nidirect_node_landing_page
-* group=migrate_nidirect_node_news
-* group=migrate_nidirect_node_nidirect_contact
-* group=migrate_nidirect_node_page
-* group=migrate_nidirect_node_publication
-* group=migrate_nidirect_node_recipe
-3. After all migrations have completed run `lando Drupal nidirect:migrate:post' tasks.
+2. Run `lando miip --group=<group name>` with the following:
+* migrate_drupal_7_user
+* migrate_drupal_7_file
+* migrate_drupal_7_taxo
+* migrate_nidirect_node_driving_instructor
+* migrate_nidirect_entity_gp
+* migrate_nidirect_node_application
+* migrate_nidirect_node_article
+* migrate_nidirect_node_external_link
+* migrate_nidirect_node_gp_practice
+* migrate_nidirect_health_condition_node
+* migrate_nidirect_node_landing_page
+* migrate_nidirect_node_news
+* migrate_nidirect_node_nidirect_contact
+* migrate_nidirect_node_page
+* migrate_nidirect_node_publication
+* migrate_nidirect_node_recipe
+* migrate_nidirect_links
 
 ## Running tests
 
