@@ -18,14 +18,11 @@ source:
 process:
   mid: fid
   bundle: 'constants/bundle'
-
   langcode:
     plugin: default_value
     source: language
     default_value: "und"
-
   name: filename
-
   uid:
     -
       plugin: skip_on_empty
@@ -34,16 +31,12 @@ process:
     -
       plugin: migration
       migration: my_users
-
   status: status
   created: timestamp
   changed: timestamp
-
   field_media_file_1/target_id: fid
-
   field_media_doc_file_language: field_file_language
   field_media_doc_file_title: field_file_title
-
 destination:
   plugin: entity:media
 migration_dependencies:
