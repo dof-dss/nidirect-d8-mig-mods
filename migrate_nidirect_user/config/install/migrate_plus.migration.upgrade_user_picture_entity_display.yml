@@ -26,30 +26,12 @@ source:
         image_style: ''
         image_link: content
 process:
-  entity_type:
-    -
-      plugin: get
-      source: constants/entity_type
-  bundle:
-    -
-      plugin: get
-      source: constants/bundle
-  view_mode:
-    -
-      plugin: get
-      source: constants/view_mode
-  field_name:
-    -
-      plugin: get
-      source: constants/name
-  type:
-    -
-      plugin: get
-      source: constants/type
-  options:
-    -
-      plugin: get
-      source: constants/options
+  entity_type: constants/entity_type
+  bundle: constants/bundle
+  view_mode: constants/view_mode
+  field_name: constants/name
+  type: constants/type
+  options: constants/options
   options/type:
     -
       plugin: get

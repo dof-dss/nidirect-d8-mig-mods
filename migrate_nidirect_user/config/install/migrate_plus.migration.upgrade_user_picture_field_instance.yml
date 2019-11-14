@@ -26,34 +26,13 @@ source:
       alt_field_required: false
       title_field_required: false
 process:
-  entity_type:
-    -
-      plugin: get
-      source: constants/entity_type
-  bundle:
-    -
-      plugin: get
-      source: constants/bundle
-  field_name:
-    -
-      plugin: get
-      source: constants/name
-  settings:
-    -
-      plugin: get
-      source: constants/settings
-  settings/file_directory:
-    -
-      plugin: get
-      source: file_directory
-  settings/max_filesize:
-    -
-      plugin: get
-      source: max_filesize
-  settings/max_resolution:
-    -
-      plugin: get
-      source: max_resolution
+  entity_type: constants/entity_type
+  bundle: constants/bundle
+  field_name: constants/name
+  settings: constants/settings
+  settings/file_directory: file_directory
+  settings/max_filesize: max_filesize
+  settings/max_resolution: max_resolution
 destination:
   plugin: 'entity:field_config'
 migration_dependencies:
