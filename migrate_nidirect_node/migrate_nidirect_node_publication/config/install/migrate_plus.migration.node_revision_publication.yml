@@ -11,63 +11,24 @@ source:
   plugin: d7_node_revision
   node_type: publication
 process:
-  nid:
-    -
-      plugin: get
-      source: nid
-  vid:
-    -
-      plugin: get
-      source: vid
+  nid: nid
+  vid: vid
   langcode:
     -
       plugin: default_value
       source: language
       default_value: und
-  title:
-    -
-      plugin: get
-      source: title
-  uid:
-    -
-      plugin: get
-      source: node_uid
-  status:
-    -
-      plugin: get
-      source: status
-  created:
-    -
-      plugin: get
-      source: created
-  changed:
-    -
-      plugin: get
-      source: changed
-  promote:
-    -
-      plugin: get
-      source: promote
-  sticky:
-    -
-      plugin: get
-      source: sticky
-  revision_uid:
-    -
-      plugin: get
-      source: revision_uid
-  revision_log:
-    -
-      plugin: get
-      source: log
-  revision_timestamp:
-    -
-      plugin: get
-      source: timestamp
-  comment_node_publication/0/status:
-    -
-      plugin: get
-      source: comment
+  title: title
+  uid: node_uid
+  status: status
+  created: created
+  changed: changed
+  promote: promote
+  sticky: sticky
+  revision_uid: revision_uid
+  revision_log: log
+  revision_timestamp: timestamp
+  comment_node_publication/0/status: comment
   body:
     -
       plugin: get
@@ -95,10 +56,7 @@ process:
         target_id: fid
         display: display
         description: description
-  field_publication_type:
-    -
-      plugin: get
-      source: field_publication_type
+  field_publication_type: field_publication_type
   field_published_date:
     -
       plugin: sub_process
