@@ -17,14 +17,8 @@ source:
   constants:
     source_base_path: ../d7/files/
 process:
-  fid:
-    -
-      plugin: get
-      source: fid
-  filename:
-    -
-      plugin: get
-      source: filename
+  fid: fid
+  filename: filename
   source_full_path:
     -
       plugin: concat
@@ -38,26 +32,11 @@ process:
       source:
         - '@source_full_path'
         - uri
-  filemime:
-    -
-      plugin: get
-      source: filemime
-  status:
-    -
-      plugin: get
-      source: status
-  created:
-    -
-      plugin: get
-      source: timestamp
-  changed:
-    -
-      plugin: get
-      source: timestamp
-  uid:
-    -
-      plugin: get
-      source: uid
+  filemime: filemime
+  status: status
+  created: timestamp
+  changed: timestamp
+  uid: uid
 destination:
   plugin: 'entity:file'
 migration_dependencies:
