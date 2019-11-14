@@ -15,10 +15,7 @@ source:
   plugin: d7_taxonomy_term
   bundle: site_topics
 process:
-  tid:
-    -
-      plugin: get
-      source: tid
+  tid: tid
   vid:
     -
       plugin: static_map
@@ -26,22 +23,10 @@ process:
       source: vid
       map:
         1: site_themes
-  name:
-    -
-      plugin: get
-      source: name
-  description/value:
-    -
-      plugin: get
-      source: description
-  description/format:
-    -
-      plugin: get
-      source: format
-  weight:
-    -
-      plugin: get
-      source: weight
+  name: name
+  description/value: description
+  description/format: format
+  weight: weight
   parent_id:
     -
       plugin: skip_on_empty
@@ -70,22 +55,10 @@ process:
       plugin: default_value
       default_value: 0
       source: '@parent_id'
-  forum_container:
-    -
-      plugin: get
-      source: is_container
-  changed:
-    -
-      plugin: get
-      source: timestamp
-  langcode:
-    -
-      plugin: get
-      source: language
-  field_enable_toc:
-    -
-      plugin: get
-      source: field_enable_toc
+  forum_container: is_container
+  changed: timestamp
+  langcode: language
+  field_enable_toc: field_enable_toc
   field_photo:
     -
       plugin: sub_process
@@ -96,18 +69,9 @@ process:
         title: title
         width: width
         height: height
-  field_theme_summary:
-    -
-      plugin: get
-      source: field_summary
-  field_teaser:
-    -
-      plugin: get
-      source: field_teaser
-  field_additional_info:
-    -
-      plugin: get
-      source: field_additional_info
+  field_theme_summary: field_summary
+  field_teaser: field_teaser
+  field_additional_info: field_additional_info
   field_banner_image:
     -
       plugin: sub_process
@@ -130,10 +94,7 @@ process:
       source: field_top_level_theme
       process:
         target_id: tid
-  field_taxonomy_rank:
-    -
-      plugin: get
-      source: field_taxonomy_rank
+  field_taxonomy_rank: field_taxonomy_rank
 destination:
   plugin: 'entity:taxonomy_term'
   default_bundle: site_themes
