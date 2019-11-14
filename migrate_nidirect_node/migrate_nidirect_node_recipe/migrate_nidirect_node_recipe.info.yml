@@ -9,6 +9,5 @@ dependencies:
   - drupal:migrate
   - drupal:migrate_plus
   - drupal:migrate_tools
-  - migrate_nidirect_global
   - migrate_nidirect_user
   - migrate_nidirect_taxo
