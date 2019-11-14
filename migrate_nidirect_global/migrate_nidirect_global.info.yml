@@ -11,6 +11,7 @@ dependencies:
   - drupal:migrate_tools
   - drupal:migrate_drupal
   - media
+  - migrate_nidirect_node
   - migrate_nidirect_node_application
   - migrate_nidirect_node_article
   - migrate_nidirect_node_contact
