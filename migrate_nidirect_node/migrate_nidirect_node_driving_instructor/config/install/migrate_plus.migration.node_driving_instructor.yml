@@ -25,9 +25,9 @@ process:
   changed: changed
   promote: promote
   sticky: sticky
-  revision_uid:revision_uid
-  revision_log:log
-  revision_timestamp:timestamp
+  revision_uid: revision_uid
+  revision_log: log
+  revision_timestamp: timestamp
   comment_node_nidirect_driving_instructor/0/status: comment
   field_telephone: telephone_number
   field_di_adi_no: field_di_adi_no
