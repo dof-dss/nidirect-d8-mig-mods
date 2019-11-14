@@ -11,71 +11,26 @@ source:
   plugin: driving_instructor_node_source
   node_type: nidirect_driving_instructor
 process:
-  nid:
-    -
-      plugin: get
-      source: tnid
-  vid:
-    -
-      plugin: get
-      source: vid
+  nid: tnid
+  vid: vid
   langcode:
     -
       plugin: default_value
       source: language
       default_value: und
-  title:
-    -
-      plugin: get
-      source: title
-  uid:
-    -
-      plugin: get
-      source: node_uid
-  status:
-    -
-      plugin: get
-      source: status
-  created:
-    -
-      plugin: get
-      source: created
-  changed:
-    -
-      plugin: get
-      source: changed
-  promote:
-    -
-      plugin: get
-      source: promote
-  sticky:
-    -
-      plugin: get
-      source: sticky
-  revision_uid:
-    -
-      plugin: get
-      source: revision_uid
-  revision_log:
-    -
-      plugin: get
-      source: log
-  revision_timestamp:
-    -
-      plugin: get
-      source: timestamp
-  comment_node_nidirect_driving_instructor/0/status:
-    -
-      plugin: get
-      source: comment
-  field_telephone:
-    -
-      plugin: get
-      source: telephone_number
-  field_di_adi_no:
-    -
-      plugin: get
-      source: field_di_adi_no
+  title: title
+  uid: node_uid
+  status: status
+  created: created
+  changed: changed
+  promote: promote
+  sticky: sticky
+  revision_uid:revision_uid
+  revision_log:log
+  revision_timestamp:timestamp
+  comment_node_nidirect_driving_instructor/0/status: comment
+  field_telephone: telephone_number
+  field_di_adi_no: field_di_adi_no
   field_di_areas:
     -
       plugin: sub_process
@@ -88,14 +43,8 @@ process:
       source: field_di_categories
       process:
         target_id: tid
-  field_di_firstname:
-    -
-      plugin: get
-      source: field_di_firstname
-  field_di_lastname:
-    -
-      plugin: get
-      source: field_di_lastname
+  field_di_firstname: field_di_firstname
+  field_di_lastname: field_di_lastname
   field_email_address:
     -
       plugin: sub_process
