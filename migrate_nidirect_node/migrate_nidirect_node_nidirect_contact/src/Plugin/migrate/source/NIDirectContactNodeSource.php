@@ -61,10 +61,10 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
     $nid = $ids['nid'];
 
     // Check if we have a telephone lookup table entry for the node.
-    $value = TelephonePlusUtils::lookup($nid);
+    $telephone = TelephonePlusUtils::lookup($nid);
 
     // If we don't have a lookup fetch the value for parsing.
-    if (empty($value)) {
+    if (empty($telephone)) {
       $query = $this->getDatabase()->query('
         SELECT field_contact_phone_value 
         FROM {field_data_field_contact_phone} 
@@ -75,16 +75,30 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
 
       $contact_details = $query->fetchField();
 
-      $value = TelephonePlusUtils::parse($contact_details);
+      $telephone = TelephonePlusUtils::parse($contact_details);
     }
 
-    // Report any nodes with blank numbers.
-    if (empty($value['telephone_number'])) {
+    // Fetch fax line number.
+    $query = $this->getDatabase()->query('
+      SELECT field_contact_fax_value
+      FROM {field_data_field_contact_fax}
+      WHERE entity_id = :nid', [
+        ':nid' => $nid,
+      ]
+    );
+
+    $fax = TelephonePlusUtils::parse($query->fetchField());
+
+    if (!empty($fax)) {
+      $telephone[] = $fax;
+    }
+
+    // Log any nodes with blank telephone info.
+    if ($empty_telephone) {
       $this->logger->notice("Blank telephone details for NID: $nid");
-
     }
 
-    $row->setSourceProperty('telephone_number', $value);
+    $row->setSourceProperty('telephone_number', $telephone);
     return parent::prepareRow($row);
   }
 
