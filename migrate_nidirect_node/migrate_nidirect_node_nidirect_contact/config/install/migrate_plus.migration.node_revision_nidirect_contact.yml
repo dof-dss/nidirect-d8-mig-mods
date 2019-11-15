@@ -8,7 +8,7 @@ cck_plugin_method: null
 migration_group: migrate_nidirect_node_nidirect_contact
 label: 'Node revisions (Nidirect contact)'
 source:
-  plugin: d7_node_revision
+  plugin: nidirect_contact_node_revision_source
   node_type: nidirect_contact
 process:
   nid: nid
@@ -67,15 +67,12 @@ process:
         html_for_admins: full_html
         paste_format: plain_text
         plain_text: plain_text
-  field_contact_benefits_no: field_contact_benefits_no
   field_contact_category:
     -
       plugin: sub_process
       source: field_contact_category
       process:
         target_id: tid
-  field_contact_emp_svcs_no: field_contact_emp_svcs_no
-  field_contact_fax: field_contact_fax
   field_contact_hours:
     -
       plugin: get
@@ -95,8 +92,6 @@ process:
         html_for_admins: full_html
         paste_format: plain_text
         plain_text: plain_text
-  field_contact_phone: field_contact_phone
-  field_contact_mobile: field_contact_sms
   field_contact_website:
     -
       plugin: field_link
@@ -172,6 +167,7 @@ process:
       plugin: addressfield
   field_location/lng: field_map/0/lon
   field_location/lat: field_map/0/lat
+  field_telephone: telephone_number
 destination:
   plugin: 'entity_revision:node'
   default_bundle: contact
