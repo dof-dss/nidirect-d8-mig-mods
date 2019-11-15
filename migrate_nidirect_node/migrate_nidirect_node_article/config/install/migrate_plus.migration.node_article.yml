@@ -15,63 +15,24 @@ source:
   plugin: d7_node
   node_type: article
 process:
-  nid:
-    -
-      plugin: get
-      source: tnid
-  vid:
-    -
-      plugin: get
-      source: vid
+  nid: tnid
+  vid: vid
   langcode:
     -
       plugin: default_value
       source: language
       default_value: und
-  title:
-    -
-      plugin: get
-      source: title
-  uid:
-    -
-      plugin: get
-      source: node_uid
-  status:
-    -
-      plugin: get
-      source: status
-  created:
-    -
-      plugin: get
-      source: created
-  changed:
-    -
-      plugin: get
-      source: changed
-  promote:
-    -
-      plugin: get
-      source: promote
-  sticky:
-    -
-      plugin: get
-      source: sticky
-  revision_uid:
-    -
-      plugin: get
-      source: revision_uid
-  revision_log:
-    -
-      plugin: get
-      source: log
-  revision_timestamp:
-    -
-      plugin: get
-      source: timestamp
-  comment_node_article/0/status:
-    -
-      plugin: get
-      source: comment
+  title: title
+  uid: node_uid
+  status: status
+  created: created
+  changed: changed
+  promote: promote
+  sticky: sticky
+  revision_uid: revision_uid
+  revision_log: log
+  revision_timestamp: timestamp
+  comment_node_article/0/status: comment
   body:
     -
       plugin: get
@@ -91,10 +52,7 @@ process:
         html_for_admins: full_html
         paste_format: plain_text
         plain_text: plain_text
-  field_enable_toc:
-    -
-      plugin: get
-      source: field_enable_toc
+  field_enable_toc: field_enable_toc
   field_site_topics:
     -
       plugin: sub_process
@@ -126,10 +84,7 @@ process:
       source: field_subtheme
       process:
         target_id: tid
-  field_teaser:
-    -
-      plugin: get
-      source: field_teaser
+  field_teaser: field_teaser
   field_top_level_theme:
     -
       plugin: sub_process

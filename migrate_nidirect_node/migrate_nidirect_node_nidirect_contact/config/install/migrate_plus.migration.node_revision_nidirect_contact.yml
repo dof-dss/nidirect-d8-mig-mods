@@ -11,63 +11,24 @@ source:
   plugin: d7_node_revision
   node_type: nidirect_contact
 process:
-  nid:
-    -
-      plugin: get
-      source: nid
-  vid:
-    -
-      plugin: get
-      source: vid
+  nid: nid
+  vid: vid
   langcode:
     -
       plugin: default_value
       source: language
       default_value: und
-  title:
-    -
-      plugin: get
-      source: title
-  uid:
-    -
-      plugin: get
-      source: node_uid
-  status:
-    -
-      plugin: get
-      source: status
-  created:
-    -
-      plugin: get
-      source: created
-  changed:
-    -
-      plugin: get
-      source: changed
-  promote:
-    -
-      plugin: get
-      source: promote
-  sticky:
-    -
-      plugin: get
-      source: sticky
-  revision_uid:
-    -
-      plugin: get
-      source: revision_uid
-  revision_log:
-    -
-      plugin: get
-      source: log
-  revision_timestamp:
-    -
-      plugin: get
-      source: timestamp
-  comment_node_nidirect_contact/0/status:
-    -
-      plugin: get
-      source: comment
+  title: title
+  uid: node_uid
+  status: status
+  created: created
+  changed: changed
+  promote: promote
+  sticky: sticky
+  revision_uid: revision_uid
+  revision_log: log
+  revision_timestamp: timestamp
+  comment_node_nidirect_contact/0/status: comment
   body:
     -
       plugin: get
@@ -106,24 +67,15 @@ process:
         html_for_admins: full_html
         paste_format: plain_text
         plain_text: plain_text
-  field_contact_benefits_no:
-    -
-      plugin: get
-      source: field_contact_benefits_no
+  field_contact_benefits_no: field_contact_benefits_no
   field_contact_category:
     -
       plugin: sub_process
       source: field_contact_category
       process:
         target_id: tid
-  field_contact_emp_svcs_no:
-    -
-      plugin: get
-      source: field_contact_emp_svcs_no
-  field_contact_fax:
-    -
-      plugin: get
-      source: field_contact_fax
+  field_contact_emp_svcs_no: field_contact_emp_svcs_no
+  field_contact_fax: field_contact_fax
   field_contact_hours:
     -
       plugin: get
@@ -143,14 +95,8 @@ process:
         html_for_admins: full_html
         paste_format: plain_text
         plain_text: plain_text
-  field_contact_phone:
-    -
-      plugin: get
-      source: field_contact_phone
-  field_contact_mobile:
-    -
-      plugin: get
-      source: field_contact_sms
+  field_contact_phone: field_contact_phone
+  field_contact_mobile: field_contact_sms
   field_contact_website:
     -
       plugin: field_link
@@ -167,10 +113,7 @@ process:
       source: field_site_topics
       process:
         target_id: tid
-  field_supplementary_contact:
-    -
-      plugin: get
-      source: field_supplementary_contact
+  field_supplementary_contact: field_supplementary_contact
   field_summary:
     -
       plugin: get
@@ -190,10 +133,7 @@ process:
         html_for_admins: full_html
         paste_format: plain_text
         plain_text: plain_text
-  field_contact_group:
-    -
-      plugin: get
-      source: field_contact_group
+  field_contact_group: field_contact_group
   field_address:
     -
       plugin: default_value
@@ -230,14 +170,8 @@ process:
           - field_contact_postcode
     -
       plugin: addressfield
-  field_location/lng:
-    -
-      plugin: get
-      source: field_map/0/lon
-  field_location/lat:
-    -
-      plugin: get
-      source: field_map/0/lat
+  field_location/lng: field_map/0/lon
+  field_location/lat: field_map/0/lat
 destination:
   plugin: 'entity_revision:node'
   default_bundle: contact

@@ -11,59 +11,23 @@ source:
   plugin: d7_node
   node_type: contact
 process:
-  nid:
-    -
-      plugin: get
-      source: tnid
-  vid:
-    -
-      plugin: get
-      source: vid
+  nid: tnid
+  vid: vid
   langcode:
     -
       plugin: default_value
       source: language
       default_value: und
-  title:
-    -
-      plugin: get
-      source: title
-  uid:
-    -
-      plugin: get
-      source: node_uid
-  status:
-    -
-      plugin: get
-      source: status
-  created:
-    -
-      plugin: get
-      source: created
-  changed:
-    -
-      plugin: get
-      source: changed
-  promote:
-    -
-      plugin: get
-      source: promote
-  sticky:
-    -
-      plugin: get
-      source: sticky
-  revision_uid:
-    -
-      plugin: get
-      source: revision_uid
-  revision_log:
-    -
-      plugin: get
-      source: log
-  revision_timestamp:
-    -
-      plugin: get
-      source: timestamp
+  title: title
+  uid: node_uid
+  status: status
+  created: created
+  changed: changed
+  promote: promote
+  sticky: sticky
+  revision_uid: revision_uid
+  revision_log: log
+  revision_timestamp: timestamp
   comment_node_contact/0/status:
     -
       plugin: get
@@ -106,10 +70,7 @@ process:
         html_for_admins: full_html
         paste_format: plain_text
         plain_text: plain_text
-  field_supplementary_contact:
-    -
-      plugin: get
-      source: field_supplementary_contact
+  field_supplementary_contact: field_supplementary_contact
   field_summary:
     -
       plugin: get

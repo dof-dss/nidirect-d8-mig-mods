@@ -14,42 +14,15 @@ label: 'User accounts'
 source:
   plugin: d7_user
 process:
-  uid:
-    -
-      plugin: get
-      source: uid
-  name:
-    -
-      plugin: get
-      source: name
-  pass:
-    -
-      plugin: get
-      source: pass
-  mail:
-    -
-      plugin: get
-      source: mail
-  created:
-    -
-      plugin: get
-      source: created
-  access:
-    -
-      plugin: get
-      source: access
-  login:
-    -
-      plugin: get
-      source: login
-  status:
-    -
-      plugin: get
-      source: status
-  timezone:
-    -
-      plugin: get
-      source: timezone
+  uid: uid
+  name: name
+  pass: pass
+  mail: mail
+  created: created
+  access: access
+  login: login
+  status: status
+  timezone: timezone
   langcode:
     -
       plugin: user_langcode
@@ -65,10 +38,7 @@ process:
       plugin: user_langcode
       source: language
       fallback_to_site_default: true
-  init:
-    -
-      plugin: get
-      source: init
+  init: init
   roles:
     -
       plugin: static_map

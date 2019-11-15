@@ -9,59 +9,23 @@ source:
   plugin: d7_node
   node_type: nidirect_gp
 process:
-  id:
-    -
-      plugin: get
-      source: tnid
-  vid:
-    -
-      plugin: get
-      source: vid
+  id: tnid
+  vid: vid
   langcode:
     -
       plugin: default_value
       source: language
       default_value: und
-  first_name:
-    -
-      plugin: get
-      source: field_gp_forename
-  last_name:
-    -
-      plugin: get
-      source: field_gp_name
-  cypher:
-    -
-      plugin: get
-      source: field_gp_cypher
-  user_id:
-    -
-      plugin: get
-      source: node_uid
-  status:
-    -
-      plugin: get
-      source: status
-  created:
-    -
-      plugin: get
-      source: created
-  changed:
-    -
-      plugin: get
-      source: changed
-  revision_uid:
-    -
-      plugin: get
-      source: revision_uid
-  revision_log:
-    -
-      plugin: get
-      source: log
-  revision_timestamp:
-    -
-      plugin: get
-      source: timestamp
+  first_name: field_gp_forename
+  last_name: field_gp_name
+  cypher: field_gp_cypher
+  user_id: node_uid
+  status: status
+  created: created
+  changed: changed
+  revision_uid: revision_uid
+  revision_log: log
+  revision_timestamp: timestamp
 destination:
   plugin: 'entity:gp'
   default_bundle: gp

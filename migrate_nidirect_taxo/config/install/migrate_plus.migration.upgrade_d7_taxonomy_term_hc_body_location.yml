@@ -15,31 +15,16 @@ source:
   plugin: d7_taxonomy_term
   bundle: hc_body_location
 process:
-  tid:
-    -
-      plugin: get
-      source: tid
+  tid: tid
   vid:
     -
       plugin: migration_lookup
       migration: upgrade_d7_taxonomy_vocabulary
       source: vid
-  name:
-    -
-      plugin: get
-      source: name
-  description/value:
-    -
-      plugin: get
-      source: description
-  description/format:
-    -
-      plugin: get
-      source: format
-  weight:
-    -
-      plugin: get
-      source: weight
+  name: name
+  description/value: description
+  description/format: format
+  weight: weight
   parent_id:
     -
       plugin: skip_on_empty
@@ -68,22 +53,10 @@ process:
       plugin: default_value
       default_value: 0
       source: '@parent_id'
-  forum_container:
-    -
-      plugin: get
-      source: is_container
-  changed:
-    -
-      plugin: get
-      source: timestamp
-  langcode:
-    -
-      plugin: get
-      source: language
-  field_term_hc_synonyms:
-    -
-      plugin: get
-      source: field_term_hc_synonyms
+  forum_container: is_container
+  changed: timestamp
+  langcode: language
+  field_term_hc_synonyms: field_term_hc_synonyms
 destination:
   plugin: 'entity:taxonomy_term'
   default_bundle: hc_body_location

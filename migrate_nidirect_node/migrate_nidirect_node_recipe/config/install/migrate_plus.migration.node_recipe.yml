@@ -9,67 +9,25 @@ source:
   plugin: d7_node
   node_type: nidirect_recipe
 process:
-  nid:
-    -
-      plugin: get
-      source: tnid
-  vid:
-    -
-      plugin: get
-      source: vid
+  nid: tnid
+  vid: vid
   langcode:
     -
       plugin: default_value
       source: language
       default_value: und
-  title:
-    -
-      plugin: get
-      source: title
-  uid:
-    -
-      plugin: get
-      source: node_uid
-  status:
-    -
-      plugin: get
-      source: status
-  created:
-    -
-      plugin: get
-      source: created
-  changed:
-    -
-      plugin: get
-      source: changed
-  promote:
-    -
-      plugin: get
-      source: promote
-  sticky:
-    -
-      plugin: get
-      source: sticky
-  revision_uid:
-    -
-      plugin: get
-      source: revision_uid
-  revision_log:
-    -
-      plugin: get
-      source: log
-  revision_timestamp:
-    -
-      plugin: get
-      source: timestamp
-  comment_node_recipe/0/status:
-    -
-      plugin: get
-      source: comment
-  field_recipe_description:
-    -
-      plugin: get
-      source: field_recipe_description
+  title: title
+  uid: node_uid
+  status: status
+  created: created
+  changed: changed
+  promote: promote
+  sticky: sticky
+  revision_uid: revision_uid
+  revision_log: log
+  revision_timestamp: timestamp
+  comment_node_recipe/0/status: comment
+  field_recipe_description: field_recipe_description
   field_recipe_main_ingredient:
     -
       plugin: sub_process
@@ -88,22 +46,10 @@ process:
       source: field_recipe_special_diet
       process:
         target_id: tid
-  field_recipe_preptime:
-    -
-      plugin: get
-      source: field_recipe_preptime
-  field_recipe_season:
-    -
-      plugin: get
-      source: field_recipe_season
-  field_recipe_serves:
-    -
-      plugin: get
-      source: field_recipe_serves
-  field_recipe_allergens:
-    -
-      plugin: get
-      source: field_recipe_allergens
+  field_recipe_preptime: field_recipe_preptime
+  field_recipe_season: field_recipe_season
+  field_recipe_serves: field_recipe_serves
+  field_recipe_allergens: field_recipe_allergens
   field_recipe_image:
     -
       plugin: sub_process
@@ -247,18 +193,9 @@ process:
         html_for_admins: full_html
         paste_format: plain_text
         plain_text: plain_text
-  field_recipe_saturates:
-    -
-      plugin: get
-      source: field_recipe_saturates
-  field_recipe_sugar:
-    -
-      plugin: get
-      source: field_recipe_sugar
-  field_recipe_salt:
-    -
-      plugin: get
-      source: field_recipe_salt
+  field_recipe_saturates: field_recipe_saturates
+  field_recipe_sugar: field_recipe_sugar
+  field_recipe_salt: field_recipe_salt
 destination:
   plugin: 'entity:node'
   default_bundle: recipe

@@ -21,22 +21,10 @@ source:
     cardinality: 1
   source_module: user
 process:
-  entity_type:
-    -
-      plugin: get
-      source: constants/entity_type
-  field_name:
-    -
-      plugin: get
-      source: constants/name
-  type:
-    -
-      plugin: get
-      source: constants/type
-  cardinality:
-    -
-      plugin: get
-      source: constants/cardinality
+  entity_type: constants/entity_type
+  field_name: constants/name
+  type: constants/type
+  cardinality: constants/cardinality
 destination:
   plugin: 'entity:field_storage_config'
   dependencies:
