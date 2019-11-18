@@ -93,6 +93,29 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
       $telephone[] = $fax;
     }
 
+    // Fetch text/mobile phone number.
+    $query = $this->getDatabase()->query('
+      SELECT field_contact_sms_value
+      FROM {field_data_field_contact_sms}
+      WHERE entity_id = :nid', [
+        ':nid' => $nid,
+      ]
+    );
+
+    $mobile = TelephonePlusUtils::parse($query->fetchField());
+
+    if (!empty($mobile)) {
+      $telephone[] = $mobile;
+    }
+
+    // Check if we have a node with no replacement telephone details.
+    $empty_telephone = TRUE;
+    foreach ($telephone as $entry) {
+      if (!empty($entry['telephone_number'])) {
+        $empty_telephone = FALSE;
+      }
+    }
+
     // Log any nodes with blank telephone info.
     if ($empty_telephone) {
       $this->logger->notice("Blank telephone details for NID: $nid");
