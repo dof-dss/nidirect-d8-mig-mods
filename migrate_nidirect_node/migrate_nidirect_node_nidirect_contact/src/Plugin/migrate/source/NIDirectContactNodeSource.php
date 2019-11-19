@@ -73,9 +73,8 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
         ]
       );
 
-      $contact_details = $query->fetchField();
-
-      $telephone = TelephonePlusUtils::parse($contact_details);
+      $contact_value = $query->fetchField();
+      $telephone = TelephonePlusUtils::parse($contact_value);
     }
 
     // Fetch fax line number.
@@ -87,7 +86,8 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
       ]
     );
 
-    $fax = TelephonePlusUtils::parse($query->fetchField());
+    $fax_value = $query->fetchField();
+    $fax = TelephonePlusUtils::parse($fax_value);
 
     // Add the entry if we have at least one number.
     if (!empty($fax[0]['telephone_number'])) {
@@ -108,7 +108,8 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
       ]
     );
 
-    $mobile = TelephonePlusUtils::parse($query->fetchField());
+    $mobile_value = $query->fetchField();
+    $mobile = TelephonePlusUtils::parse($mobile_value);
 
     // Add the entry if we have at least one number.
     if (!empty($mobile[0]['telephone_number'])) {
@@ -120,17 +121,20 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
       $telephone = array_merge($telephone, $mobile);
     }
 
-    // Check if we have a node with no replacement telephone details.
-    $empty_telephone = TRUE;
-    foreach ($telephone as $entry) {
-      if (!empty($entry['telephone_number'])) {
-        $empty_telephone = FALSE;
+    // Check if we have any data from the existing fields and determine if
+    // we weren't able to process the numbers.
+    if (strlen($contact_value . $fax_value . $mobile_value) > 0) {
+      $telephone_processed = TRUE;
+      foreach ($telephone as $entry) {
+        if (empty($entry['telephone_number'])) {
+          $telephone_processed = FALSE;
+        }
       }
-    }
 
-    // Log any nodes with blank telephone info.
-    if ($empty_telephone) {
-      $this->logger->notice("Blank telephone details for NID: $nid");
+      // Log any nodes with blank telephone info.
+      if (!$telephone_processed) {
+        $this->logger->notice("Unable to process telephone details for NID: $nid");
+      }
     }
 
     $row->setSourceProperty('telephone_number', $telephone);
