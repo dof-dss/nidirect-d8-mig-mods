@@ -61,10 +61,10 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
     $nid = $ids['nid'];
 
     // Check if we have a telephone lookup table entry for the node.
-    $value = TelephonePlusUtils::lookup($nid);
+    $telephone = TelephonePlusUtils::lookup($nid);
 
     // If we don't have a lookup fetch the value for parsing.
-    if (empty($value)) {
+    if (empty($telephone)) {
       $query = $this->getDatabase()->query('
         SELECT field_contact_phone_value 
         FROM {field_data_field_contact_phone} 
@@ -73,18 +73,71 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
         ]
       );
 
-      $contact_details = $query->fetchField();
-
-      $value = TelephonePlusUtils::parse($contact_details);
+      $contact_value = $query->fetchField();
+      $telephone = TelephonePlusUtils::parse($contact_value);
     }
 
-    // Report any nodes with blank numbers.
-    if (empty($value['telephone_number'])) {
-      $this->logger->notice("Blank telephone details for NID: $nid");
+    // Fetch fax line number.
+    $query = $this->getDatabase()->query('
+      SELECT field_contact_fax_value
+      FROM {field_data_field_contact_fax}
+      WHERE entity_id = :nid', [
+        ':nid' => $nid,
+      ]
+    );
 
+    $fax_value = $query->fetchField();
+    $fax = TelephonePlusUtils::parse($fax_value);
+
+    // Add the entry if we have at least one number.
+    if (!empty($fax[0]['telephone_number'])) {
+      // Ensure we always have a title for the entry.
+      if (empty($fax[0]['telephone_title'])) {
+        $fax[0]['telephone_title'] = 'Fax';
+      }
+
+      $telephone = array_merge($telephone, $fax);
     }
 
-    $row->setSourceProperty('telephone_number', $value);
+    // Fetch text/mobile phone number.
+    $query = $this->getDatabase()->query('
+      SELECT field_contact_sms_value
+      FROM {field_data_field_contact_sms}
+      WHERE entity_id = :nid', [
+        ':nid' => $nid,
+      ]
+    );
+
+    $mobile_value = $query->fetchField();
+    $mobile = TelephonePlusUtils::parse($mobile_value);
+
+    // Add the entry if we have at least one number.
+    if (!empty($mobile[0]['telephone_number'])) {
+      // Ensure we always have a title for the entry.
+      if (empty($mobile[0]['telephone_title'])) {
+        $mobile[0]['telephone_title'] = 'Text number';
+      }
+
+      $telephone = array_merge($telephone, $mobile);
+    }
+
+    // Check if we have any data from the existing fields and determine if
+    // we weren't able to process the numbers.
+    if (strlen($contact_value . $fax_value . $mobile_value) > 0) {
+      $telephone_processed = TRUE;
+      foreach ($telephone as $entry) {
+        if (empty($entry['telephone_number'])) {
+          $telephone_processed = FALSE;
+        }
+      }
+
+      // Log any nodes with blank telephone info.
+      if (!$telephone_processed) {
+        $this->logger->notice("Unable to process telephone details for NID: $nid");
+      }
+    }
+
+    $row->setSourceProperty('telephone_number', $telephone);
     return parent::prepareRow($row);
   }
 

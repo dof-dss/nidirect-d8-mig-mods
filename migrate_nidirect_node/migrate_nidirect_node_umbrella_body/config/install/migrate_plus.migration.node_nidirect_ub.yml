@@ -11,7 +11,7 @@ migration_tags:
 migration_group: migrate_nidirect_node_umbrella_body
 label: 'Nodes (Umbrella Body)'
 source:
-  plugin: d7_node
+  plugin: phone_field_node_source
   node_type: nidirect_ub
 process:
   nid: tnid
@@ -51,10 +51,7 @@ process:
         html_for_admins: full_html
         paste_format: plain_text
         plain_text: plain_text
-  field_contact_phone:
-    -
-      plugin: get
-      source: field_contact_phone
+  field_telephone: telephone_number
   field_contact_website:
     -
       plugin: field_link
@@ -85,10 +82,7 @@ process:
           from_format: 'Y-m-d H:i:s'
           to_format: 'Y-m-d'
           source: value
-  field_ub_price:
-    -
-      plugin: get
-      source: field_ub_price
+  field_ub_price: field_ub_price
   field_ub_price_addinfo:
     -
       plugin: get
@@ -108,10 +102,7 @@ process:
         html_for_admins: full_html
         paste_format: plain_text
         plain_text: plain_text
-  field_ub_price_volunteer:
-    -
-      plugin: get
-      source: field_ub_price_volunteer
+  field_ub_price_volunteer: field_ub_price_volunteer
   field_ub_sector:
     -
       plugin: sub_process
@@ -160,14 +151,8 @@ process:
           - field_contact_postcode
     -
       plugin: addressfield
-  field_location/lng:
-    -
-      plugin: get
-      source: field_map/0/lon
-  field_location/lat:
-    -
-      plugin: get
-      source: field_map/0/lat
+  field_location/lng: field_map/0/lon
+  field_location/lat: field_map/0/lat
 destination:
   plugin: 'entity:node'
   default_bundle: umbrella_body

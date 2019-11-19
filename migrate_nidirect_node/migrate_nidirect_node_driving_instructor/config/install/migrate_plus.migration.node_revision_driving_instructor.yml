@@ -11,7 +11,7 @@ migration_tags:
 migration_group: migrate_nidirect_node_driving_instructor
 label: 'Node revisions (Nidirect driving instructor)'
 source:
-  plugin: d7_node_revision
+  plugin: driving_instructor_node_revision_source
   node_type: nidirect_driving_instructor
 process:
   nid: nid
@@ -32,8 +32,7 @@ process:
   revision_log: log
   revision_timestamp: timestamp
   comment_node_nidirect_driving_instructor/0/status: comment
-  field_contact_phone: field_contact_phone
-  field_contact_mobile: field_contact_sms
+  field_telephone: telephone_number
   field_di_adi_no: field_di_adi_no
   field_di_areas:
     -
