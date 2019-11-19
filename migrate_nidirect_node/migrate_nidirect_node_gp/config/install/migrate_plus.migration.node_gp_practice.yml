@@ -6,7 +6,7 @@ migration_group: migrate_nidirect_node_gp_practice
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldInstanceMigration
 source:
-  plugin: d7_node
+  plugin: gp_practice_node_source
   node_type: nidirect_gp_practice
 process:
   nid: tnid
@@ -44,7 +44,7 @@ process:
     -
       plugin: field_link
       source: field_gp_practice_website
-  field_contact_phone: field_contact_phone
+  field_telephone: telephone_number
   field_gp_practice_lead: field_gp_practice_lead
   field_gp_practice_member: field_gp_practice_member
   field_address:
