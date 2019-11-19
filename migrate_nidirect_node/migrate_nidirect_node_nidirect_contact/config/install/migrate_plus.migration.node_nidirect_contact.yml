@@ -73,7 +73,6 @@ process:
       source: field_contact_category
       process:
         target_id: tid
-  field_contact_fax: field_contact_fax
   field_contact_hours:
     -
       plugin: get
@@ -93,7 +92,6 @@ process:
         html_for_admins: full_html
         paste_format: plain_text
         plain_text: plain_text
-  field_contact_mobile: field_contact_sms
   field_contact_website:
     -
       plugin: field_link

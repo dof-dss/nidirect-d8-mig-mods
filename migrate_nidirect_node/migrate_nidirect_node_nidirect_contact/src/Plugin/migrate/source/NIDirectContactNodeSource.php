@@ -89,8 +89,14 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
 
     $fax = TelephonePlusUtils::parse($query->fetchField());
 
-    if (!empty($fax)) {
-      $telephone[] = $fax;
+    // Add the entry if we have at least one number.
+    if (!empty($fax[0]['telephone_number'])) {
+      // Ensure we always have a title for the entry.
+      if (empty($fax[0]['telephone_title'])) {
+        $fax[0]['telephone_title'] = 'Fax';
+      }
+
+      $telephone = array_merge($telephone, $fax);
     }
 
     // Fetch text/mobile phone number.
@@ -104,8 +110,14 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
 
     $mobile = TelephonePlusUtils::parse($query->fetchField());
 
-    if (!empty($mobile)) {
-      $telephone[] = $mobile;
+    // Add the entry if we have at least one number.
+    if (!empty($mobile[0]['telephone_number'])) {
+      // Ensure we always have a title for the entry.
+      if (empty($mobile[0]['telephone_title'])) {
+        $mobile[0]['telephone_title'] = 'Text number';
+      }
+
+      $telephone = array_merge($telephone, $mobile);
     }
 
     // Check if we have a node with no replacement telephone details.
