@@ -11,7 +11,7 @@ migration_tags:
 migration_group: migrate_nidirect_node_umbrella_body
 label: 'Nodes (Umbrella Body)'
 source:
-  plugin: umbrella_body_node_source
+  plugin: phone_field_node_source
   node_type: nidirect_ub
 process:
   nid: tnid

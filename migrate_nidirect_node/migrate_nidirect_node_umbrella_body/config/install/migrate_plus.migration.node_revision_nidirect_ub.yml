@@ -11,7 +11,7 @@ migration_tags:
 migration_group: migrate_nidirect_node_umbrella_body
 label: 'Node revisions (Umbrella Body)'
 source:
-  plugin: d7_node_revision
+  plugin: phone_field_revision_node_source
   node_type: nidirect_ub
 process:
   nid: nid
@@ -52,6 +52,7 @@ process:
         paste_format: plain_text
         plain_text: plain_text
   field_contact_website: field_contact_website
+  field_telephone: telephone_number
   field_district:
     -
       plugin: sub_process

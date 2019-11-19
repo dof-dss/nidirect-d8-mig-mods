@@ -6,7 +6,7 @@ migration_group: migrate_nidirect_node_gp_practice
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldInstanceMigration
 source:
-  plugin: gp_practice_node_source
+  plugin: phone_field_node_source
   node_type: nidirect_gp_practice
 process:
   nid: tnid
