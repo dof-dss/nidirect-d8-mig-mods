@@ -221,6 +221,20 @@ class MigrationProcessors {
 
     $output = '';
 
+    // Map the old D7 node types to the new D8 types.
+    // We need to use the new node name to look up existing flag data.
+    $node_type_map = [
+      'nidirect_contact' => 'contact',
+      'nidirect_driving_instructor' => 'driving_instructor',
+      'nidirect_gp_practice' => 'gp_practice',
+      'nidirect_recipe' => 'recipe',
+      'nidirect_ub' => 'umbrella_body',
+    ];
+
+    if (array_key_exists($entity_type, $node_type_map)) {
+      $entity_type = $node_type_map[$entity_type];
+    }
+
     // Map the migration id's to the D7 vocabularies.
     $migration_vocabulary_ids = [
       'recipe_special_diet' => 'nidirect_recipe_special_diet',
@@ -342,18 +356,20 @@ class MigrationProcessors {
           $flag_count_data[] = (array) $row;
         }
 
-        // Populate the flag_counts table.
-        $query = $this->dbConnDrupal8->insert('flag_counts')->fields([
-          'flag_id',
-          'entity_type',
-          'entity_id',
-          'count',
-          'last_updated',
-        ]);
-        foreach ($flag_count_data as $row) {
-          $query->values($row);
+        if (count($flag_count_data) > 0) {
+          // Populate the flag_counts table.
+          $query = $this->dbConnDrupal8->insert('flag_counts')->fields([
+            'flag_id',
+            'entity_type',
+            'entity_id',
+            'count',
+            'last_updated',
+          ]);
+          foreach ($flag_count_data as $row) {
+            $query->values($row);
+          }
+          $query->execute();
         }
-        $query->execute();
       }
 
       // Process Flagging data.
