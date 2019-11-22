@@ -27,11 +27,9 @@ module.exports = {
         browser
             .expect.element('#field-di-lastname').to.be.present;
         browser
-            .expect.element('#field-contact-phone').to.be.present;
+            .expect.element('#field-telephone').to.be.present;
         browser
             .expect.element('#field-meta-tags').to.be.present;
-        browser
-            .expect.element('#field-contact-sms').to.be.present;
         browser
             .expect.element('#field-link-url').to.be.present;
     },
