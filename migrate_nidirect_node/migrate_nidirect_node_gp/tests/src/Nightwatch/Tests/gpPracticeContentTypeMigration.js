@@ -19,7 +19,7 @@ module.exports = {
     browser.expect.element('#field-meta-tags').to.be.present
     browser.expect.element('#field-gp-appointments').to.be.present
     browser.expect.element('#field-gp-partnership-no').to.be.present
-    browser.expect.element('#field-contact-phone').to.be.present
+    browser.expect.element('#field-telephone').to.be.present
     browser.expect.element('#field-gp-practice-name').to.be.present
     browser.expect.element('#field-gp-practice-no').to.be.present
     browser.expect.element('#field-gp-practice-website').to.be.present
