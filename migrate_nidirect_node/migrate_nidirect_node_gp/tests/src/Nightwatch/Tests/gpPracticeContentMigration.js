@@ -23,7 +23,7 @@ module.exports = {
   'Test whether GP Practice content matches original': browser => {
 
     browser
-      .pause(2000, function () {
+      .pause(9000, function () {
         browser
           .drupalLogin({ name: process.env.TEST_USER, password: process.env.TEST_PASS })
           .drupalRelativeURL('/node/' + nid + '/edit')
@@ -93,7 +93,7 @@ module.exports = {
 
         if (Object.keys(node.phone).length !== 0) {
           browser
-            .expect.element('#edit-field-contact-phone-0-value')
+            .expect.element('#edit-field-telephone-0-telephone-container-telephone-number')
             .to.have.value.which.contains(node.phone);
         }
 
