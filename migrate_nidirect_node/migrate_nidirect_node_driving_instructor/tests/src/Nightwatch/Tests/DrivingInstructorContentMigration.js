@@ -25,7 +25,7 @@ module.exports = {
   'Test whether Driving Instructor content matches original': browser => {
 
     browser
-      .pause(2000, function () {
+      .pause(8000, function () {
         browser
           .drupalLogin({ name: process.env.TEST_USER, password: process.env.TEST_PASS })
           .drupalRelativeURL('/node/' + nid + '/edit')
@@ -38,7 +38,6 @@ module.exports = {
           .expect.element('#edit-field-di-firstname-0-value')
           .to.have.value.which.contains(node.first_name);
 
-
         browser
           .expect.element('#edit-field-di-firstname-0-value')
           .to.have.value.which.contains(node.first_name);
@@ -49,13 +48,13 @@ module.exports = {
 
         if (Object.keys(node.mobile).length !== 0) {
           browser
-            .expect.element('#edit-field-contact-sms-0-value')
+            .expect.element('#edit-field-telephone-1-telephone-container-telephone-number')
             .to.have.value.which.contains(node.mobile);
         }
 
         if (Object.keys(node.phone).length !== 0) {
           browser
-            .expect.element('#edit-field-contact-phone-0-value')
+            .expect.element('#edit-field-telephone-0-telephone-container-telephone-number')
             .to.have.value.which.contains(node.phone);
         }
 
@@ -85,7 +84,7 @@ module.exports = {
                   if (result.value.length > 0) {
                     // Check the D8 form value exists in the D7 data.
                     if (areas.includes(result.value)) {
-                      // It stinks but it's a simple way to show this assertion passes, else fail below. 
+                      // It stinks but it's a simple way to show this assertion passes, else fail below.
                       browser.assert.equal(result.value, result.value);
                     } else {
                       browser.assert.fail('field-di-areas: data mismatch on : ' + result.value);
@@ -107,7 +106,7 @@ module.exports = {
                     let area = result.value.replace(regx_strip_taxoheir, '');
                     // Check the D8 form value exists in the D7 data.
                     if (categories.includes(area)) {
-                      // It stinks but it's a simple way to show this assertion passes, else fail below. 
+                      // It stinks but it's a simple way to show this assertion passes, else fail below.
                       browser.assert.equal(area, area);
                     } else {
                       browser.assert.fail('field_di_categories: data mismatch on : ' + result.value);
