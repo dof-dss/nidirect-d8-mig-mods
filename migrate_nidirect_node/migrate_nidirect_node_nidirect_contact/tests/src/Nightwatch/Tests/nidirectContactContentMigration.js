@@ -24,7 +24,7 @@ module.exports = {
   'Test whether NI Direct Contact content matches original': browser => {
 
     browser
-      .pause(2000, function () {
+      .pause(9000, function () {
         browser
           .drupalLogin({ name: process.env.TEST_USER, password: process.env.TEST_PASS })
           .drupalRelativeURL('/node/' + nid + '/edit')
@@ -88,27 +88,6 @@ module.exports = {
               .expect.element('#edit-field-contact-website-0-title')
               .to.have.value.which.contains(node.website_title);
           }
-        }
-
-        if (Object.keys(node.phone).length !== 0) {
-          browser
-            .useCss()
-            .expect.element('#edit-field-contact-phone-0-value')
-            .to.have.value.which.contains(node.phone);
-        }
-
-        if (Object.keys(node.benefits_phone).length !== 0) {
-          browser
-            .useCss()
-            .expect.element('#edit-field-contact-benefits-no-0-value')
-            .to.have.value.which.contains(node.benefits_phone);
-        }
-
-        if (Object.keys(node.employment_phone).length !== 0) {
-          browser
-            .useCss()
-            .expect.element('#edit-field-contact-emp-svcs-no-0-value')
-            .to.have.value.which.contains(node.employment_phone);
         }
 
         if (Object.keys(node.fax).length !== 0) {

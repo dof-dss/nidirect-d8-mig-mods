@@ -13,21 +13,17 @@ module.exports = {
     browser.drupalRelativeURL('/admin/structure/types/manage/contact/fields');
     browser.expect.element('#field-contact-additional-info').to.be.present;
     browser.expect.element('#field-address').to.be.present;
-    browser.expect.element('#field-contact-benefits-no').to.be.present;
     browser.expect.element('#body').to.be.present;
     browser.expect.element('#field-contact-category').to.be.present;
     browser.expect.element('#field-email-address').to.be.present;
-    browser.expect.element('#field-contact-emp-svcs-no').to.be.present;
-    browser.expect.element('#field-contact-fax	').to.be.present;
     browser.expect.element('#field-location').to.be.present;
     browser.expect.element('#field-meta-tags').to.be.present;
     browser.expect.element('#field-contact-hours').to.be.present;
     browser.expect.element('#field-contact-group').to.be.present;
-    browser.expect.element('#field-contact-phone').to.be.present;
+    browser.expect.element('#field-telephone').to.be.present;
     browser.expect.element('#field-site-themes').to.be.present;
     browser.expect.element('#field-summary').to.be.present;
     browser.expect.element('#field-supplementary-contact').to.be.present;
-    browser.expect.element('#field-contact-sms').to.be.present;
     browser.expect.element('#field-contact-website').to.be.present;
   },
 
