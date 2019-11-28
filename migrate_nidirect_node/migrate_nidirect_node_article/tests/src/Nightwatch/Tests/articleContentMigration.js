@@ -2,6 +2,7 @@ var parser = require('xml2json');
 var http = require('http');
 var nid, node;
 const regx_strip_taxoheir = /^-*/gm;
+const regx_spaceless_html = /(^|>)[ \n\t]+/g;
 
 module.exports = {
   '@tags': ['nidirect-migrations', 'nidirect-article'],
@@ -91,14 +92,14 @@ module.exports = {
         if (Object.keys(node.summary).length !== 0) {
           browser
             .useCss()
-            .expect.element('#edit-field-summary-0-value')
-            .to.have.value.which.contains(node.summary);
+            .expect.element('textarea[data-drupal-selector="edit-field-summary-0-value"]')
+            .to.have.value.which.contains(node.summary.replace(regx_spaceless_html, ">"));
         }
 
         browser
           .useCss()
-          .expect.element('#edit-body-0-value')
-          .to.have.value.which.contains(node.body);
+          .expect.element('textarea[data-drupal-selector="edit-body-0-value"]')
+          .to.have.value.which.contains(node.body.replace(regx_spaceless_html, ">"));
 
         if (Object.keys(node.footer).length !== 0) {
           browser

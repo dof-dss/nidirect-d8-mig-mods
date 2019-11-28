@@ -1,6 +1,7 @@
 var parser = require('xml2json');
 var http = require('http');
 var nid, node;
+const regx_spaceless_html = /(^|>)[ \n\t]+/g;
 
 module.exports = {
   '@tags': ['nidirect-migrations', 'nidirect-node-page'],
@@ -40,8 +41,8 @@ module.exports = {
         if (Object.keys(node.body).length !== 0) {
           browser
             .useCss()
-            .expect.element('#edit-body-0-value')
-            .to.have.value.which.contains(node.body);
+            .expect.element('textarea[data-drupal-selector="edit-body-0-value"]')
+            .to.have.value.which.contains(node.body.replace(regx_spaceless_html, ">"));
         }
       })
   }

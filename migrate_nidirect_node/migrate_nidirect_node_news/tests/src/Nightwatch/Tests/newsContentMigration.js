@@ -43,13 +43,13 @@ module.exports = {
 
         if (Object.keys(node.summary).length !== 0) {
           browser
-            .expect.element('#edit-field-summary-0-value')
-            .to.have.value.which.contains(node.summary);
+            .expect.element('textarea[data-drupal-selector="edit-field-summary-0-value"]')
+            .to.have.value.which.contains(node.summary.replace(/(^|>)[ \n\t]+/g, ">"));
         }
 
         browser
-          .expect.element('#edit-field-body-0-value')
-          .to.have.value.which.contains(node.body);
+          .expect.element('textarea[data-drupal-selector="edit-body-0-value"]')
+          .to.have.value.which.contains(node.body.replace(/(^|>)[ \n\t]+/g, ">"));
 
         if (node.enable_toc == 1) {
           browser.expect.element('#edit-field-enable-toc-value').to.be.selected;

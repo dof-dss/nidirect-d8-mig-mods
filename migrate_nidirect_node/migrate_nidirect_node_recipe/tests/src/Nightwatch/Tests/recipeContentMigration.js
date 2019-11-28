@@ -144,8 +144,8 @@ module.exports = {
           // Use parseFloat to trim trailing zero from value.
           browser
             .useCss()
-            .expect.element('#edit-field-recipe-fat-content-0-value')
-            .to.have.value.that.equals(parseFloat(fat_vals[2]));
+            .expect.element('#edit-field-recipe-fat-content-0-value"]')
+            .to.have.value.that.equals(parseFloat(fat_vals[2]).toString());
 
           browser
             .element("xpath", "//select[@id='edit-field-recipe-fat-content-0-status']/option[@selected='selected']", function (element) {

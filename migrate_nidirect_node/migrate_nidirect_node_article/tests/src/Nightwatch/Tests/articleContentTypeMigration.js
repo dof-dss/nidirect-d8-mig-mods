@@ -13,7 +13,6 @@ module.exports = {
         browser.drupalRelativeURL('/admin/structure/types/manage/article/fields');
         browser.expect.element('#field-banner-image').to.be.present;
         browser.expect.element('#body').to.be.present;
-        browser.expect.element('#comment').to.be.present;
         browser.expect.element('#field-enable-toc').to.be.present;
         browser.expect.element('#field-additional-info').to.be.present;
         browser.expect.element('#field-meta-tags').to.be.present;
