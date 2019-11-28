@@ -24,7 +24,7 @@ module.exports = {
   'Test whether Application content matches original': browser => {
 
     browser
-      .pause(2000, function () {
+      .pause(9000, function () {
         browser
           .drupalLogin({ name: process.env.TEST_USER, password: process.env.TEST_PASS })
           .drupalRelativeURL('/node/' + nid + '/edit')
@@ -52,7 +52,7 @@ module.exports = {
                       let text = result.value.replace(regx_strip_taxoheir, '');
                       // Check the D8 form value exists in the D7 data.
                       if (supp_themes.includes(text)) {
-                        // It stinks but it's a simple way to show this assertion passes, else fail below. 
+                        // It stinks but it's a simple way to show this assertion passes, else fail below.
                         browser.assert.equal(text, text);
                       } else {
                         browser.assert.fail('field-site-themes: data mismatch on : ' + text);
