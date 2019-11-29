@@ -40,7 +40,7 @@ module.exports = {
   // Now test a random sample of actual nodes.
   'Check title of Embargoed Publication node': browser => {
     browser
-      .pause(2000, function () {
+      .pause(9000, function () {
         browser
           .drupalRelativeURL('/node/' + nid + '/edit')
           .waitForElementVisible('body', 1000)
