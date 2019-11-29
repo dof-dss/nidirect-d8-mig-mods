@@ -4,7 +4,12 @@ var node, nid;
 const regx_strip_html = /<([^>]+)>/ig;
 
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-node-news'],
+  '@tags': [
+    'nidirect',
+    'nidirect_content',
+    'nidirect_content_migration',
+    'nidirect_content_migration_news',
+  ],
 
   before: function (browser) {
     http.get(process.env.TEST_D7_URL + '/migrate/news', (response) => {

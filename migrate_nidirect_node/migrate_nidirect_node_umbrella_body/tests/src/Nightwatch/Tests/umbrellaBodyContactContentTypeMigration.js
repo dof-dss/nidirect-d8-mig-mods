@@ -1,5 +1,9 @@
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-node-umbrella-body'],
+  '@tags': [
+    'nidirect',
+    'nidirect_config',
+    'nidirect_config_umbrella_body',
+  ],
 
   'Test whether Umbrella Body content type exists': browser => {
     browser

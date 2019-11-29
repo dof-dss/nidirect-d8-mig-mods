@@ -5,7 +5,12 @@ const regx_strip_taxoheir = /^-*/gm;
 const regx_spaceless_html = /(^|>)[ \n\t]+/g;
 
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-article'],
+  '@tags': [
+    'nidirect',
+    'nidirect_content',
+    'nidirect_content_migration',
+    'nidirect_content_migration_article',
+  ],
 
   before: function (browser) {
     http.get(process.env.TEST_D7_URL + '/migrate/article', (response) => {
@@ -104,8 +109,8 @@ module.exports = {
         if (Object.keys(node.footer).length !== 0) {
           browser
             .useCss()
-            .expect.element('#edit-field-additional-info-0-value')
-            .to.have.value.which.contains(node.footer);
+            .expect.element('textarea[data-drupal-selector="edit-field-additional-info-0-value"]')
+            .to.have.value.which.contains(node.footer.replace(regx_spaceless_html, ">"));
         }
 
         if (node.enable_toc == 1) {

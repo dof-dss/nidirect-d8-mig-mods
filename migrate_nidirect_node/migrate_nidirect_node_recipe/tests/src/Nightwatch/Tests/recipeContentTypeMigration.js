@@ -1,5 +1,9 @@
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-node-recipe'],
+  '@tags': [
+    'nidirect',
+    'nidirect_config',
+    'nidirect_config_recipe',
+  ],
 
   'Test whether Recipe content type exists': function (browser) {
     browser

@@ -1,5 +1,9 @@
 module.exports = {
-    '@tags': ['nidirect-migrations', 'nidirect-article'],
+  '@tags': [
+    'nidirect',
+    'nidirect_config',
+    'nidirect_config_article',
+  ],
 
     'Test whether Article content type exists': browser => {
         browser

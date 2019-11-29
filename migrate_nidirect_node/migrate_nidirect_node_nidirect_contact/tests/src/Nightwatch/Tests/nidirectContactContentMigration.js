@@ -5,7 +5,12 @@ const regx_strip_taxoheir = /^-*/gm;
 const regx_spaceless_html = /(^|>)[ \n\t]+/g;
 
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-node-nidirect-contact'],
+  '@tags': [
+    'nidirect',
+    'nidirect_content',
+    'nidirect_content_migration',
+    'nidirect_content_migration_nidirect_contact',
+  ],
 
   before: function (browser) {
     http.get(process.env.TEST_D7_URL + '/migrate/nidcontact', (response) => {

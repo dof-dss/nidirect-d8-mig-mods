@@ -1,5 +1,9 @@
 module.exports = {
-    '@tags': ['nidirect-migrations', 'nidirect-node-health-condition'],
+  '@tags': [
+    'nidirect',
+    'nidirect_config',
+    'nidirect_config_health_condition',
+  ],
 
     'Test whether Health Condition content type exists': browser => {
         browser

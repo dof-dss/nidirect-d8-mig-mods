@@ -1,5 +1,9 @@
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-node-page'],
+  '@tags': [
+    'nidirect',
+    'nidirect_config',
+    'nidirect_config_page',
+  ],
 
   'Test whether Page content type exists': function (browser) {
     browser

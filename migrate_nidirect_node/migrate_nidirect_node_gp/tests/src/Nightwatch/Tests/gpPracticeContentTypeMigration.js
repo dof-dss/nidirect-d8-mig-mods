@@ -1,5 +1,9 @@
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-node-gp-practice'],
+  '@tags': [
+    'nidirect',
+    'nidirect_config',
+    'nidirect_config_gp_practice',
+  ],
 
   'Test whether GP Practice content type exists': browser => {
     browser

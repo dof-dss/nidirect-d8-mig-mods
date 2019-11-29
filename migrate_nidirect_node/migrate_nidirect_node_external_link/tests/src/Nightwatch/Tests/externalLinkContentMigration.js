@@ -4,7 +4,12 @@ var nid, node;
 const regx_strip_taxoheir = /^-*/gm;
 
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-node-external-link'],
+  '@tags': [
+    'nidirect',
+    'nidirect_content',
+    'nidirect_content_migration',
+    'nidirect_content_migration_external_link',
+  ],
 
   before: function (browser) {
     http.get(process.env.TEST_D7_URL + '/migrate/extlink', (response) => {
@@ -31,11 +36,11 @@ module.exports = {
         .waitForElementVisible('body', 1000)
         .expect.element('#edit-title-0-value')
         .to.have.value.which.contains(node.title);
-  
+
       browser
         .expect.element('#edit-field-link-0-uri')
         .to.have.value.which.contains(node.link_url);
-  
+
       /* If the link text is blank the XML export plugin will still output it
          using with the URL value so if they match, ignore the text field in
          the edit form. */

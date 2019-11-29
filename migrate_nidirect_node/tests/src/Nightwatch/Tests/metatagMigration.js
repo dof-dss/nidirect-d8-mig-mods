@@ -1,5 +1,9 @@
 module.exports = {
-    '@tags': ['nidirect-migrations', 'nidirect-metatag'],
+  '@tags': [
+    'nidirect',
+    'nidirect_content',
+    'nidirect_content_metatag',
+  ],
 
     'Test whether Metatag tokens exist on Articles': browser => {
         browser

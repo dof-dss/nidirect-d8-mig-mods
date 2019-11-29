@@ -6,7 +6,12 @@ const regx_strip_html = /<([^>]+)>/ig;
 const regx_spaceless_html = /(^|>)[ \n\t]+/g;
 
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-node-health-condition'],
+  '@tags': [
+    'nidirect',
+    'nidirect_content',
+    'nidirect_content_migration',
+    'nidirect_content_migration_health_condition',
+  ],
 
   before: function (browser) {
     http.get(process.env.TEST_D7_URL + '/migrate/healthcond', (response) => {
