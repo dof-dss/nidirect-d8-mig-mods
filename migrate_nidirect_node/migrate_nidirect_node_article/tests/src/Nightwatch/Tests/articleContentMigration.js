@@ -29,7 +29,7 @@ module.exports = {
 
   'Test whether Article content matches original': browser => {
     browser
-      .pause(2000, function () {
+      .pause(9000, function () {
         browser
           .drupalLogin({ name: process.env.TEST_USER, password: process.env.TEST_PASS })
           .drupalRelativeURL('/node/' + nid + '/edit')
