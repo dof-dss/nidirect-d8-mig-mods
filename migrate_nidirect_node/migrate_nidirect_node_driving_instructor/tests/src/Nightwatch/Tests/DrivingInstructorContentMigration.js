@@ -30,7 +30,7 @@ module.exports = {
   'Test whether Driving Instructor content matches original': browser => {
 
     browser
-      .pause(8000, function () {
+      .pause(9000, function () {
         browser
           .drupalLogin({ name: process.env.TEST_USER, password: process.env.TEST_PASS })
           .drupalRelativeURL('/node/' + nid + '/edit')
