@@ -1,12 +1,16 @@
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-application'],
+  '@tags': [
+    'nidirect',
+    'nidirect_config',
+    'nidirect_config_application',
+  ],
 
   'Test whether Application content type exists': browser => {
     browser
       .drupalLogin({ name: process.env.TEST_USER, password: process.env.TEST_PASS })
-      .drupalRelativeURL('/admin/structure/types')
-      .expect.element('#block-seven-content > table > tbody > tr:nth-child(1) > td.menu-label')
-      .text.to.equal('Application');
+      .drupalRelativeURL('/admin/structure/types/manage/application')
+      // The text match takes a regex, not a literal string.
+      .expect.element('h1.page-title').text.to.match(/edit application content type/i);
   },
 
   'Test whether Application content type fields exist': browser => {

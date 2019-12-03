@@ -1,5 +1,9 @@
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-node-news'],
+  '@tags': [
+    'nidirect',
+    'nidirect_config',
+    'nidirect_config_news',
+  ],
 
   'Test whether News content type exists': function (browser) {
     browser

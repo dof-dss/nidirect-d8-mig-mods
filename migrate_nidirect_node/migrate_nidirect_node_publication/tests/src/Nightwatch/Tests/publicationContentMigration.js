@@ -3,9 +3,15 @@ var http = require('http');
 var nid, node;
 const regx_strip_taxoheir = /^-*/gm;
 const regx_strip_html = /<([^>]+)>/ig;
+const regx_spaceless_html = /(^|>)[ \n\t]+/g;
 
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-node-publication'],
+  '@tags': [
+    'nidirect',
+    'nidirect_content',
+    'nidirect_content_migration',
+    'nidirect_content_migration_publication',
+  ],
 
   before: function (browser) {
     http.get(process.env.TEST_D7_URL + '/migrate/publication', (response) => {
@@ -95,14 +101,14 @@ module.exports = {
 
         if (Object.keys(node.summary).length !== 0) {
           browser
-            .expect.element('#edit-field-summary-0-value')
-            .to.have.value.which.contains(node.summary);
+            .expect.element('textarea[data-drupal-selector="edit-field-summary-0-value"]')
+            .to.have.value.which.contains(node.summary.replace(regx_spaceless_html, ">"));
         }
 
         if (Object.keys(node.body).length !== 0) {
           browser
-            .expect.element('#edit-body-0-value')
-            .to.have.value.which.contains(node.body);
+            .expect.element('textarea[data-drupal-selector="edit-body-0-value"]')
+            .to.have.value.which.contains(node.body.replace(regx_spaceless_html, ">"));
         }
 
       });

@@ -5,7 +5,12 @@ const regx_strip_html = /<([^>]+)>/ig;
 const regx_traffic_vals = />(Low|Med|High)<\/.+nutrient-value">([0-9.]+)g<\//gm;
 
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-node-recipe'],
+  '@tags': [
+    'nidirect',
+    'nidirect_content',
+    'nidirect_content_migration',
+    'nidirect_content_migration_recipe',
+  ],
 
   before: function (browser) {
     http.get(process.env.TEST_D7_URL + '/migrate/recipe', (response) => {
@@ -144,8 +149,8 @@ module.exports = {
           // Use parseFloat to trim trailing zero from value.
           browser
             .useCss()
-            .expect.element('#edit-field-recipe-fat-content-0-value')
-            .to.have.value.that.equals(parseFloat(fat_vals[2]));
+            .expect.element('#edit-field-recipe-fat-content-0-value"]')
+            .to.have.value.that.equals(parseFloat(fat_vals[2]).toString());
 
           browser
             .element("xpath", "//select[@id='edit-field-recipe-fat-content-0-status']/option[@selected='selected']", function (element) {

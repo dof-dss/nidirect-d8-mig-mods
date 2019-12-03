@@ -4,7 +4,12 @@ var nid, node;
 const regx_strip_taxoheir = /^-*/gm;
 
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-application'],
+  '@tags': [
+    'nidirect',
+    'nidirect_content',
+    'nidirect_content_migration',
+    'nidirect_content_migration_application',
+  ],
 
   before: function (browser) {
     http.get(process.env.TEST_D7_URL + '/migrate/application', (response) => {

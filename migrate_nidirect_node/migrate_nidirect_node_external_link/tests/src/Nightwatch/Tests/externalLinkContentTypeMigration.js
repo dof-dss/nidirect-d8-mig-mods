@@ -1,5 +1,9 @@
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-node-external-link'],
+  '@tags': [
+    'nidirect',
+    'nidirect_config',
+    'nidirect_config_external_link',
+  ],
 
   'Test whether External links content type exists': function (browser) {
     browser

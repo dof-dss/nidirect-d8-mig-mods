@@ -1,5 +1,9 @@
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-entity-gp'],
+  '@tags': [
+    'nidirect',
+    'nidirect_config',
+    'nidirect_config_gp',
+  ],
 
   'Test whether GP entity exists': function (browser) {
     browser

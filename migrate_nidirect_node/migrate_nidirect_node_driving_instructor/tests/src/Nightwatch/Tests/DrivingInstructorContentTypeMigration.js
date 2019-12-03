@@ -1,5 +1,9 @@
 module.exports = {
-    '@tags': ['nidirect-migrations'],
+  '@tags': [
+    'nidirect',
+    'nidirect_config',
+    'nidirect_config_driving_instructor',
+  ],
 
     'Test whether Driving Instructor content type exists': browser => {
         browser

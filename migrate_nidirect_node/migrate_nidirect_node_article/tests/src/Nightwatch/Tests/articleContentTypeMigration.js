@@ -1,5 +1,9 @@
 module.exports = {
-    '@tags': ['nidirect-migrations', 'nidirect-article'],
+  '@tags': [
+    'nidirect',
+    'nidirect_config',
+    'nidirect_config_article',
+  ],
 
     'Test whether Article content type exists': browser => {
         browser
@@ -13,7 +17,6 @@ module.exports = {
         browser.drupalRelativeURL('/admin/structure/types/manage/article/fields');
         browser.expect.element('#field-banner-image').to.be.present;
         browser.expect.element('#body').to.be.present;
-        browser.expect.element('#comment').to.be.present;
         browser.expect.element('#field-enable-toc').to.be.present;
         browser.expect.element('#field-additional-info').to.be.present;
         browser.expect.element('#field-meta-tags').to.be.present;

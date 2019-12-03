@@ -1,5 +1,9 @@
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-node-nidirect-contact'],
+  '@tags': [
+    'nidirect',
+    'nidirect_config',
+    'nidirect_config_nidirect_contact',
+  ],
 
   'Test whether Contact content type exists': browser => {
     browser

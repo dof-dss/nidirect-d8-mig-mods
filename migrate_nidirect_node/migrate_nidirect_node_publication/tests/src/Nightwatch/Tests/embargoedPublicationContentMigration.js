@@ -2,6 +2,7 @@ var parser = require('xml2json');
 var http = require('http');
 var nid, node;
 const regx_strip_taxoheir = /^-*/gm;
+const regx_strip_html = /<([^>]+)>/ig;
 const regx_spaceless_html = /(^|>)[ \n\t]+/g;
 
 module.exports = {
@@ -9,11 +10,11 @@ module.exports = {
     'nidirect',
     'nidirect_content',
     'nidirect_content_migration',
-    'nidirect_content_migration_article',
+    'nidirect_content_migration_embargoed_publication',
   ],
 
   before: function (browser) {
-    http.get(process.env.TEST_D7_URL + '/migrate/article', (response) => {
+    http.get(process.env.TEST_D7_URL + '/migrate/embargoed_publication', (response) => {
       let data = '';
       response.on('data', (chunk) => { data += chunk });
 
@@ -27,7 +28,17 @@ module.exports = {
     });
   },
 
-  'Test whether Article content matches original': browser => {
+  'Test whether Embargoed Publication nodes exist': browser => {
+    // See if we have any landing_page nodes created.
+    browser
+      .drupalLogin({ name: process.env.TEST_USER, password: process.env.TEST_PASS })
+      .drupalRelativeURL('/admin/content?type=embargoed_publication')
+      .expect.element('#views-form-content-page-1 > table > tbody > tr > td:nth-child(3)')
+      .text.to.contain('Embargoed publication');
+  },
+
+  'Test whether Embargoed Publication content matches original': browser => {
+
     browser
       .pause(9000, function () {
         browser
@@ -36,6 +47,17 @@ module.exports = {
           .waitForElementVisible('body', 1000)
           .expect.element('#edit-title-0-value')
           .to.have.value.which.contains(node.title);
+
+        browser
+          .useCss()
+          .expect.element('#edit-field-published-date-0-value-date')
+          .to.have.value.which.contains(node.published_date.replace(regx_strip_html, ''));
+
+        if (Object.keys(node.summary).length !== 0) {
+          browser
+            .expect.element('textarea[data-drupal-selector="edit-field-summary-0-value"]')
+            .to.have.value.which.contains(node.summary.replace(/(^|>)[ \n\t]+/g, ">"));
+        }
 
         if (Object.keys(node.subtheme).length !== 0) {
           browser
@@ -87,37 +109,21 @@ module.exports = {
             });
         }
 
-        if (Object.keys(node.teaser).length !== 0) {
+        if (Object.keys(node.body).length !== 0) {
           browser
-            .useCss()
-            .expect.element('#edit-field-teaser-0-value')
-            .to.have.value.which.contains(node.teaser);
+            .expect.element('textarea[data-drupal-selector="edit-body-0-value"]')
+            .to.have.value.which.contains(node.body.replace(/(^|>)[ \n\t]+/g, ">"));
         }
 
-        if (Object.keys(node.summary).length !== 0) {
+        if (Object.keys(node.publication_type).length !== 0) {
           browser
-            .useCss()
-            .expect.element('textarea[data-drupal-selector="edit-field-summary-0-value"]')
-            .to.have.value.which.contains(node.summary.replace(regx_spaceless_html, ">"));
+            .useXpath()
+            .expect.element('//*[@id="edit-field-publication-type"]/option[@selected="selected"]')
+            .to.have.value.which.contains(node.publication_type);
         }
 
-        browser
-          .useCss()
-          .expect.element('textarea[data-drupal-selector="edit-body-0-value"]')
-          .to.have.value.which.contains(node.body.replace(regx_spaceless_html, ">"));
+      });
 
-        if (Object.keys(node.footer).length !== 0) {
-          browser
-            .useCss()
-            .expect.element('textarea[data-drupal-selector="edit-field-additional-info-0-value"]')
-            .to.have.value.which.contains(node.footer.replace(regx_spaceless_html, ">"));
-        }
-
-        if (node.enable_toc == 1) {
-          browser.expect.element('#edit-field-enable-toc-value').to.be.selected;
-        } else {
-          browser.expect.element('#edit-field-enable-toc-value').to.not.be.selected;
-        }
-      })
   }
+
 };

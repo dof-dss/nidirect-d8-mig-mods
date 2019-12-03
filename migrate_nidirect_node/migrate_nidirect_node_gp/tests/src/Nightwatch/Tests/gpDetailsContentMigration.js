@@ -3,7 +3,12 @@ var http = require('http');
 var nid, node;
 
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-entity-gp'],
+  '@tags': [
+    'nidirect',
+    'nidirect_content',
+    'nidirect_content_migration',
+    'nidirect_content_migration_gp',
+  ],
 
   before: function (browser) {
     http.get(process.env.TEST_D7_URL + '/migrate/gp', (response) => {

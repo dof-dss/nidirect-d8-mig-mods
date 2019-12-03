@@ -1,5 +1,9 @@
 module.exports = {
-  '@tags': ['nidirect-migrations', 'nidirect-node-umbrella-body'],
+  '@tags': [
+    'nidirect',
+    'nidirect_config',
+    'nidirect_config_umbrella_body',
+  ],
 
   'Test whether Umbrella Body content type exists': browser => {
     browser
@@ -22,7 +26,7 @@ module.exports = {
     browser.expect.element('#field-email-address').to.be.present;
     browser.expect.element('#field-location').to.be.present;
     browser.expect.element('#field-meta-tags').to.be.present;
-    browser.expect.element('#field-contact-phone').to.be.present;
+    browser.expect.element('#field-telephone').to.be.present;
     browser.expect.element('#field-ub-sector').to.be.present;
     browser.expect.element('#field-ub-services').to.be.present;
     browser.expect.element('#field-ub-price-volunteer').to.be.present;

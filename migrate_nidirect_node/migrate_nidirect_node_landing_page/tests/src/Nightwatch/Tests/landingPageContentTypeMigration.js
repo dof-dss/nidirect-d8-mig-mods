@@ -1,5 +1,9 @@
 module.exports = {
-    '@tags': ['nidirect-migrations', 'nidirect-node-landing-page'],
+  '@tags': [
+    'nidirect',
+    'nidirect_config',
+    'nidirect_config_landing_page',
+  ],
 
     'Test whether Landing Page content type exists': browser => {
         browser
