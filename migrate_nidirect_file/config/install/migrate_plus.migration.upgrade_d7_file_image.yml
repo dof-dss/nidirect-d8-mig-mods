@@ -25,9 +25,9 @@ process:
   name: filename
   uid:
     -
-      plugin: skip_on_empty
-      method: process
+      plugin: default_value
       source: uid
+      default_value: 1
     -
       plugin: migration
       migration: my_users
