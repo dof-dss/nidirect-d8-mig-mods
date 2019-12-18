@@ -52,15 +52,14 @@ process:
         paste_format: plain_text
         plain_text: plain_text
   field_banner_image:
-    -
-      plugin: sub_process
+    - plugin: sub_process
       source: field_banner_image
       process:
-        target_id: fid
-        alt: alt
-        title: title
-        width: width
-        height: height
+        target_id:
+          plugin: migration_lookup
+          migration:
+            - upgrade_d7_file_image
+          source: fid
   field_subtheme:
     -
       plugin: sub_process
@@ -95,15 +94,14 @@ process:
         target_id: tid
   field_enable_title: field_enable_title
   field_banner_image_overlay:
-    -
-      plugin: sub_process
+    - plugin: sub_process
       source: field_banner_image_overlay
       process:
-        target_id: fid
-        alt: alt
-        title: title
-        width: width
-        height: height
+        target_id:
+          plugin: migration_lookup
+          migration:
+            - upgrade_d7_file_image
+          source: fid
 destination:
   plugin: 'entity:node'
   default_bundle: landing_page
@@ -111,3 +109,4 @@ migration_dependencies:
   required:
     - upgrade_d7_user
     - upgrade_d7_taxonomy_term_site_themes
+    - upgrade_d7_file_image

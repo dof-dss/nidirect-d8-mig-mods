@@ -72,27 +72,25 @@ process:
         paste_format: plain_text
         plain_text: plain_text
   field_banner_image:
-    -
-      plugin: sub_process
+    - plugin: sub_process
       source: field_banner_image
       process:
-        target_id: fid
-        alt: alt
-        title: title
-        width: width
-        height: height
+        target_id:
+          plugin: migration_lookup
+          migration:
+            - upgrade_d7_file_image
+          source: fid
   field_enable_toc: field_enable_toc
   field_index_letter: field_index_letter
   field_photo:
-    -
-      plugin: sub_process
+    - plugin: sub_process
       source: field_photo
       process:
-        target_id: fid
-        alt: alt
-        title: title
-        width: width
-        height: height
+        target_id:
+          plugin: migration_lookup
+          migration:
+            - upgrade_d7_file_image
+          source: fid
   field_site_topics:
     -
       plugin: sub_process
