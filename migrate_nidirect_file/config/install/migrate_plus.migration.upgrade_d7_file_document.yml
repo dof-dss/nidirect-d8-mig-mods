@@ -30,7 +30,7 @@ process:
       source: uid
     -
       plugin: migration
-      migration: my_users
+      migration: upgrade_d7_user
   status: status
   created: timestamp
   changed: timestamp

@@ -55,11 +55,11 @@ process:
       plugin: sub_process
       source: field_recipe_image
       process:
-        target_id: fid
-        alt: alt
-        title: title
-        width: width
-        height: height
+        target_id:
+          plugin: migration_lookup
+          migration:
+            - upgrade_d7_file_image
+          source: fid
   field_recipe_other_options:
     -
       plugin: get
@@ -202,7 +202,7 @@ destination:
 migration_dependencies:
   required:
     - upgrade_d7_user
-    - upgrade_d7_file
+    - upgrade_d7_file_image
     - upgrade_d7_recipe_course_type
     - upgrade_d7_recipe_ingredient
     - upgrade_d7_recipe_special_diet
