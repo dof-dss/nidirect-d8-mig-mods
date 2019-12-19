@@ -61,6 +61,8 @@ TEMPLATE;
       $decoder = new JsonDecode(TRUE);
       try {
         $tag_info = $decoder->decode($matches['tag_info'], JsonEncoder::FORMAT);
+        // Convert any 'default' view modes to 'embed'.
+        $tag_info['view_mode'] = str_replace('default', 'embed', $tag_info['view_mode']);
         return sprintf($replacement_template, $tag_info['view_mode'], $tag_info['fid']);
       }
       catch (NotEncodableValueException $e) {
