@@ -53,15 +53,14 @@ process:
   field_recipe_serves: field_recipe_serves
   field_recipe_allergens: field_recipe_allergens
   field_recipe_image:
-    -
-      plugin: sub_process
+    - plugin: sub_process
       source: field_recipe_image
       process:
-        target_id: fid
-        alt: alt
-        title: title
-        width: width
-        height: height
+        target_id:
+          plugin: migration_lookup
+          migration:
+            - upgrade_d7_file_image
+          source: fid
   field_recipe_other_options:
     -
       plugin: get

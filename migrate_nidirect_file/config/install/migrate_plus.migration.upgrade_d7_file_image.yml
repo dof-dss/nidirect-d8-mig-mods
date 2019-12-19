@@ -24,13 +24,12 @@ process:
     default_value: "und"
   name: filename
   uid:
-    -
-      plugin: skip_on_empty
+    - plugin: skip_on_empty
       method: process
       source: uid
     -
       plugin: migration
-      migration: my_users
+      migration: upgrade_d7_user
   status: status
   created: timestamp
   changed: timestamp

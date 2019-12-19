@@ -96,21 +96,21 @@ process:
       plugin: sub_process
       source: field_photo
       process:
-        target_id: fid
-        alt: alt
-        title: title
-        width: width
-        height: height
+        target_id:
+          plugin: migration_lookup
+          migration:
+            - upgrade_d7_file_image
+          source: fid
   field_banner_image:
     -
       plugin: sub_process
       source: field_banner_image
       process:
-        target_id: fid
-        alt: alt
-        title: title
-        width: width
-        height: height
+        target_id:
+          plugin: migration_lookup
+          migration:
+            - upgrade_d7_file_image
+          source: fid
   field_additional_info:
     -
       plugin: get
@@ -138,3 +138,4 @@ migration_dependencies:
     - upgrade_d7_user
     - upgrade_d7_comment_field_instance
     - upgrade_d7_taxonomy_term_site_themes
+    - upgrade_d7_file_image

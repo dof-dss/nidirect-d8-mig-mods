@@ -49,15 +49,14 @@ process:
         paste_format: plain_text
         plain_text: plain_text
   field_photo:
-    -
-      plugin: sub_process
+    - plugin: sub_process
       source: field_photo
       process:
-        target_id: fid
-        alt: alt
-        title: title
-        width: width
-        height: height
+        target_id:
+          plugin: migration_lookup
+          migration:
+            - upgrade_d7_file_image
+          source: fid
   field_published_date:
     -
       plugin: sub_process
