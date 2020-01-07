@@ -25,29 +25,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class NidirectMigratePostAliasCommand extends ContainerAwareCommand {
 
   /**
-   * Path alias manager service.
-   *
-   * @var \Drupal\path_alias\AliasManagerInterface
-   */
-  protected $pathAliasManager;
-
-  /**
-   * Class constructor.
-   */
-  public function __construct(AliasManagerInterface $path_alias_manager) {
-    $this->pathAliasManager = $path_alias_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('path.alias_manager')
-    );
-  }
-
-  /**
    * {@inheritdoc}
    */
   protected function configure() {
@@ -74,45 +51,60 @@ class NidirectMigratePostAliasCommand extends ContainerAwareCommand {
       "select path, alias from {path_alias} where alias like '%-to-%'  and alias not like '/articles%'"
     );
     $alias_list = $query->fetchAll();
+    $strings_removed = ['a', 'an', 'as', 'at', 'before', 'but', 'for', 'from', 'is',
+      'in', 'into', 'like', 'of', 'off', 'on', 'onto', 'per', 'since', 'than', 'the',
+      'this', 'that', 'to', 'up', 'via', 'with'];
     foreach ($alias_list as $thisalias) {
-      $this_path = $thisresult->path;
-      $full_alias = $thisresult->alias;
-      // Derive shortened alias (with keyword removed).
-      $short_alias = preg_replace('/-to-/', '-', $full_alias);
+      $this_path = $thisalias->path;
+      $this_path_d7 = substr($this_path, 1);
+      $full_alias = $thisalias->alias;
+      // Derive shortened alias (with keywords removed).
+      $short_alias = $full_alias;
+      foreach ($strings_removed as $keyword) {
+        $short_alias = preg_replace('/-' . $keyword . '-/', '-', $short_alias);
+      }
+      if ($short_alias == $full_alias) {
+        continue;
+      }
+      $short_alias_d7 = substr($short_alias, 1);
       $this->getIo()->info(
-        'Alias before - ' . $full_alias
-      );
-      $this->getIo()->info(
-        'Alias after - ' . $short_alias
+        'Looking for alias on D7 - ' . $short_alias_d7 . ', and source - ' . $this_path_d7
       );
 
       // See if shortened alias existed on D7 for this item.
       $query = $conn_migrate->query(
-        "select * from {url_alias} where alias = @short_alias and source = @this_path",
-        ['@short_alias' => $short_alias, '@this_path' => $this_path] );
+        "select * from {url_alias} where alias = :short_alias and source = :this_path",
+        [':short_alias' => $short_alias_d7, ':this_path' => $this_path_d7]);
       $d7_check = $query->fetchAll();
       if (count($d7_check) == 0) {
         // Shortened alias did not exist on D7, no further action required.
+        $this->getIo()->info(
+          'does not exist on D7'
+        );
         continue;
       }
 
       // See if shortened alias already exists on D8 for this item.
       $query = $conn_drupal8->query(
-        "select * from {path_alias} where alias = @short_alias and path = @this_path",
-        ['@short_alias' => $short_alias, '@this_path' => $this_path] );
+        "select * from {path_alias} where alias = :short_alias and path = :this_path",
+        [':short_alias' => $short_alias, ':this_path' => $this_path]);
       $d8_check = $query->fetchAll();
       if (count($d8_check) > 0) {
         // Shortened alias already exists on D8, no further action required.
+        $this->getIo()->info(
+          'already exists on D8'
+        );
         continue;
       }
 
       // If we get to here then we need to create the shortened alias in D8.
       //$aliasManager = $this->container->get('path_alias.manager');
       //Need to use the DI service for this !!
-      //\Drupal::service('path.alias_storage')->save($this_path, $short_alias);
-      $this->pathAliasManager->save($this_path, $short_alias);
-
-      break;
+      \Drupal::service('path.alias_storage')->save($this_path, $short_alias);
+      $this->getIo()->info(
+        '** Creating alias - ' . $short_alias
+      );
+      //$this->pathAliasManager->save($this_path, $short_alias);
     }
   }
 

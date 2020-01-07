@@ -30,6 +30,7 @@ class NiDirectMigratePostCommand extends ContainerAwareCommand {
     'nidirect:migrate:post:article',
     'nidirect:migrate:post:publish_status',
     'nidirect:migrate:post:audit',
+    'nidirect:migrate:post:alias'
   ];
 
   /**
