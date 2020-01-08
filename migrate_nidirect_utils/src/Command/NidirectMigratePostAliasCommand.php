@@ -6,6 +6,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\path_alias\AliasManagerInterface;
+use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Queue\QueueFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,6 +24,24 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class NidirectMigratePostAliasCommand extends ContainerAwareCommand {
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Constructs a EntityActionBase object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   */
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    parent::__construct();
+    $this->entityTypeManager = $entity_type_manager;
+  }
 
   /**
    * {@inheritdoc}
@@ -66,12 +85,18 @@ class NidirectMigratePostAliasCommand extends ContainerAwareCommand {
       // If we get to here then we need to create the shortened alias in D8.
       //$aliasManager = $this->container->get('path_alias.manager');
       //Need to use the DI service for this !!
-      \Drupal::service('path.alias_storage')->save($d8_path, $d8_alias);
+      $path_alias = $this->entityTypeManager->getStorage('path_alias')->create([
+        'path' => $d8_path,
+        'alias' => $d8_alias
+      ]);
+      $path_alias->save();
+      //\Drupal::service('path.alias_storage')->save($d8_path, $d8_alias);
       $this->getIo()->info(
         '** Creating alias - ' . $d8_alias
       );
-      //$this->pathAliasManager->save($this_path, $short_alias);
+
     }
+    $this->getIo()->info('Completed post migration alias processing.');
   }
 
 }
