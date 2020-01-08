@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Drupal\Console\Core\Command\ContainerAwareCommand;
 use Drupal\Core\Database\Database;
+use Drupal\Console\Annotations\DrupalCommand;
 
 /**
  * Class NidirectMigratePostAliasCommand.
@@ -26,7 +27,7 @@ class NidirectMigratePostAliasCommand extends ContainerAwareCommand {
   protected $entityTypeManager;
 
   /**
-   * Constructs a EntityActionBase object.
+   * Constructs a NidirectMigratePostAliasCommand object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
