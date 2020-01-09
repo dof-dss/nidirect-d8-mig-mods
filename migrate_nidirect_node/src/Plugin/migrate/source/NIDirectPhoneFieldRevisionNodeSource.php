@@ -11,7 +11,6 @@ use Drupal\node\Plugin\migrate\source\d7\NodeRevision;
  *
  * @MigrateSource(
  *   id = "phone_field_revision_node_source",
- *   source_module = "migrate_nidirect_node"
  * )
  */
 class NIDirectPhoneFieldRevisionNodeSource extends NodeRevision {

@@ -11,7 +11,6 @@ use Drupal\migrate\Row;
  *
  * @MigrateSource(
  *   id = "phone_field_node_source",
- *   source_module = "migrate_nidirect_node"
  * )
  */
 class NIDirectPhoneFieldNodeSource extends Node {
