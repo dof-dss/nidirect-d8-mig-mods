@@ -20,7 +20,8 @@ are enabled.
 
 ## Migration order
 
-2. Run `lando miip --group=<group name>` with the following:
+2. Run `lando drupal nidirect:migrate:pre`,
+then run `lando miip --group=<group name>` with the following:
 * migrate_drupal_7_user
 * migrate_drupal_7_file
 * migrate_drupal_7_taxo
@@ -30,7 +31,7 @@ are enabled.
 * migrate_nidirect_node_article
 * migrate_nidirect_node_external_link
 * migrate_nidirect_node_gp_practice
-* migrate_nidirect_health_condition_node
+* migrate_nidirect_node_health_condition
 * migrate_nidirect_node_landing_page
 * migrate_nidirect_node_news
 * migrate_nidirect_node_nidirect_contact
