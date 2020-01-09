@@ -10,7 +10,6 @@ use Drupal\migrate\Row;
  *
  * @MigrateSource(
  *   id = "driving_instructor_node_source",
- *   source_module = "migrate_nidirect_node_driving_instructor"
  * )
  */
 class NIDirectDrivingInstructorNodeSource extends Node {
