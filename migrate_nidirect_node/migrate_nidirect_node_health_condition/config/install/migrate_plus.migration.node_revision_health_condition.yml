@@ -80,7 +80,7 @@ process:
           migration:
             - upgrade_d7_file_image
           source: fid
-  field_enable_toc: field_enable_toc
+  field_toc_enable: field_enable_toc
   field_index_letter: field_index_letter
   field_photo:
     - plugin: sub_process
