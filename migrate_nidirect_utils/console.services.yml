@@ -26,11 +26,6 @@ services:
     arguments: ['@migrate_nidirect_utils.queue_factory']
     tags:
       - { name: drupal.command }
-  migrate_nidirect_utils.nidirect_migrate_post_alias:
-    class: Drupal\migrate_nidirect_utils\Command\NidirectMigratePostAliasCommand
-    arguments: ['@entity_type.manager']
-    tags:
-      - { name: drupal.command }
   migrate_nidirect_utils.nidirect_migrate_post:
     class: Drupal\migrate_nidirect_utils\Command\NiDirectMigratePostCommand
     arguments: []
