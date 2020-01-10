@@ -38,9 +38,7 @@ then run `lando miip --group=<group name>` with the following:
 * migrate_nidirect_node_page
 * migrate_nidirect_node_publication
 * migrate_nidirect_node_recipe
-* migrate_nidirect_link
-* upgrade_d7_url_alias
-* upgrade_d7_path_redirect
+* migrate_drupal_7_link
 
 ## Running tests
 
