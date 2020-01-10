@@ -38,8 +38,6 @@ are enabled.
 * migrate_nidirect_node_publication
 * migrate_nidirect_node_recipe
 * migrate_drupal_7_link
-* upgrade_d7_url_alias
-* upgrade_d7_path_redirect
 
 ## Running tests
 
