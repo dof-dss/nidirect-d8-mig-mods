@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate_nidirect_utils\Command;
 
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -81,9 +82,18 @@ class NidirectMigratePostAliasCommand extends ContainerAwareCommand {
         'path' => $d8_path,
         'alias' => $d8_alias,
       ]);
-      $path_alias->save();
+      try {
+        $path_alias->save();
+      }
+      catch (EntityStorageException $e) {
+        $this->getIo()->error(
+          '** Failed to create alias - ' . $d8_alias . ' for path ' . $d8_path
+        );
+        continue;
+      }
+
       $this->getIo()->info(
-        '** Creating alias - ' . $d8_alias
+        'Creating alias - ' . $d8_alias
       );
 
     }
