@@ -21,6 +21,7 @@ are enabled.
 ## Migration order
 
 2. Run `lando drupal nidirect:migrate:pre`,
+
 then run `lando miip --group=<group name>` with the following:
 * migrate_drupal_7_user
 * migrate_drupal_7_file
@@ -39,6 +40,13 @@ then run `lando miip --group=<group name>` with the following:
 * migrate_nidirect_node_publication
 * migrate_nidirect_node_recipe
 * migrate_drupal_7_link
+
+then run the following individual migrations:
+lando miip node_contact
+lando miip nidirect_book
+
+finally, publish migrated content by running:
+lando drupal nidirect:migrate:post:publish_status
 
 ## Running tests
 
