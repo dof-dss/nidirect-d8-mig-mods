@@ -34,14 +34,24 @@ process:
   field_gp_surgery_name: field_gp_surgery_name
   field_gp_partnership_no: field_gp_partnership_no
   field_gp_lcg: field_gp_lcg
-  field_gp_appointments:
-    -
-      plugin: field_link
-      source: field_gp_appointments
+field_gp_appointments:
+  plugin: sub_process
+  source: field_gp_appointments
+  process:
+    title:
+      plugin: default_value
+      default_value: 'Online appointments'
+    uri: url
+    options: attributes
   field_gp_prescriptions:
-    -
-      plugin: field_link
-      source: field_gp_prescriptions
+    plugin: sub_process
+    source: field_gp_prescriptions
+    process:
+      title:
+        plugin: default_value
+        default_value: 'Repeat prescriptions'
+      uri: url
+      options: attributes
   field_gp_practice_website:
     -
       plugin: field_link
