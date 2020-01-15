@@ -132,7 +132,7 @@ class MigrationProcessors {
 
     // Get a list of custom metatags from NIDirect (D7)
     // (only take the latest revision).
-    $query = $this->dbConnMigrate->query("select m1.entity_id, m1.data 
+    $query = $this->dbConnMigrate->query("select m1.entity_id, m1.data
         from {metatag} m1
         join (select max(revision_id) as revision_id, entity_id
               from {metatag}
@@ -269,7 +269,7 @@ class MigrationProcessors {
       '7' => 'promote_to_all_pages',
     ];
 
-    $flag_id_expression = "CASE fid 
+    $flag_id_expression = "CASE fid
       WHEN 2 THEN 'featured_content'
       WHEN 4 THEN 'hide_content'
       WHEN 5 THEN 'hide_theme'
@@ -357,6 +357,11 @@ class MigrationProcessors {
         }
 
         if (count($flag_count_data) > 0) {
+          // Fetch an array of existing flag_counts data to avoid
+          // primary key integrity key errors on future inserts.
+          $query = $this->dbConnDrupal8->query('SELECT * FROM {flag_counts}');
+          $d8_flag_counts = $query->fetchAllAssoc('entity_id');
+
           // Populate the flag_counts table.
           $query = $this->dbConnDrupal8->insert('flag_counts')->fields([
             'flag_id',
@@ -366,7 +371,10 @@ class MigrationProcessors {
             'last_updated',
           ]);
           foreach ($flag_count_data as $row) {
-            $query->values($row);
+            // Check we haven't already got this present in the destination table.
+            if (array_key_exists($row['entity_id'], $d8_flag_counts) == FALSE) {
+              $query->values($row);
+            }
           }
           $query->execute();
         }
@@ -382,6 +390,11 @@ class MigrationProcessors {
           $flagging_data[] = $row;
         }
 
+        // Fetch an array of existing flagging data to avoid
+        // primary key integrity key errors on future inserts.
+        $query = $this->dbConnDrupal8->query('SELECT * FROM {flagging}');
+        $d8_flagging = $query->fetchAllAssoc('entity_id');
+
         // Populate the flagging table.
         $query = $this->dbConnDrupal8->insert('flagging')->fields([
           'id',
@@ -395,7 +408,10 @@ class MigrationProcessors {
           'created',
         ]);
         foreach ($flagging_data as $row) {
-          $query->values($row);
+          // Check we haven't already got this present in the destination table.
+          if (array_key_exists($row['entity_id'], $d8_flagging) == FALSE) {
+            $query->values($row);
+          }
         }
         $query->execute();
       }
@@ -423,7 +439,7 @@ class MigrationProcessors {
     }
 
     $d7_audit_nids = $this->dbConnMigrate->query("
-      SELECT f.entity_id 
+      SELECT f.entity_id
       FROM flagging f
       JOIN node n
       ON f.entity_id = n.nid
