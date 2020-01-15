@@ -58,7 +58,7 @@ process:
   forum_container: is_container
   changed: timestamp
   langcode: language
-  field_enable_toc: field_enable_toc
+  field_toc_enable: field_toc_enable
   field_photo:
     -
       plugin: sub_process
