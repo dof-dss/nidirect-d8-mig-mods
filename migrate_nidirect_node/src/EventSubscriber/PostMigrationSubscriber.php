@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate_nidirect_node\EventSubscriber;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateImportEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -30,16 +31,28 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
   protected $migrationProcessors;
 
   /**
+   * Stores the entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * PostMigrationSubscriber constructor.
    *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The Entity manager.
    * @param \Drupal\Core\Logger\LoggerChannelFactory $logger
    *   Drupal logger.
    * @param \Drupal\migrate_nidirect_utils\MigrationProcessors $migration_processors
    *   Migration processors.
    */
-  public function __construct(LoggerChannelFactory $logger, MigrationProcessors $migration_processors) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager,
+                              LoggerChannelFactory $logger,
+                              MigrationProcessors $migration_processors) {
     $this->logger = $logger->get('migrate_nidirect_node');
     $this->migrationProcessors = $migration_processors;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -76,9 +89,9 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     }
 
     if ($event_id == 'node_landing_page') {
-      $this->logger->notice('Post migrate landing page processing.');
+      $this->logger->notice('XXY Post migrate landing page processing.');
       $entity = $this->entityTypeManager->getStorage("node")->load('7387');
-      $this->logger->notice('Got hold of node ' . $entity->id());
+      $this->logger->notice('XXY Got hold of node ' . $entity->id());
     }
   }
 
