@@ -1,6 +1,0 @@
-services:
-  migrate_nidirect_node_landing_page.default:
-    class: Drupal\migrate_nidirect_node_landing_page\EventSubscriber\PostMigrationSubscriber
-    arguments: []
-    tags:
-      - { name: event_subscriber }
