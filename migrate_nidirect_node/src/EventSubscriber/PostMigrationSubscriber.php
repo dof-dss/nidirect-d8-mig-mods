@@ -88,6 +88,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       }
     }
 
+    // One off landing page updates.
     if ($event_id == 'node_landing_page') {
       $this->logger->notice('Post migrate landing page processing.');
       $entity = $this->entityTypeManager->getStorage("node")->load('7387');
