@@ -89,9 +89,13 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     }
 
     if ($event_id == 'node_landing_page') {
-      $this->logger->notice('XXY Post migrate landing page processing.');
+      $this->logger->notice('Post migrate landing page processing.');
       $entity = $this->entityTypeManager->getStorage("node")->load('7387');
-      $this->logger->notice('XXY Got hold of node ' . $entity->id());
+      $entity->set('field_subtheme', ['target_id' => '322']);
+      $entity->set('moderation_state', 'published');
+      $entity->save();
+      $this->logger->notice('Node 7387 updated');
+      $this->logger->notice('Post migrate landing page processing completed.');
     }
   }
 
