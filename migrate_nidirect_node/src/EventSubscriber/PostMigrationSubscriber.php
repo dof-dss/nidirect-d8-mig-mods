@@ -91,41 +91,50 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
 
     // One off landing page updates.
     if ($event_id == 'node_landing_page') {
-      $this->logger->notice('Post migrate landing page processing.');
+      $this->landingPageUpdates();
+    }
+  }
 
-      $conn_migrate = Database::getConnection('default', 'migrate');
-      $conn_drupal8 = Database::getConnection('default', 'default');
+  /**
+   * Post migrate updates for Landing Pages.
+   */
+  public function landingPageUpdates() {
+    $this->logger->notice('Post migrate landing page processing.');
 
-      // Retrieve all landing pages from D7.
-      $query = $conn_migrate->query(
-        "select * from {node} where type = 'landing_page' and status = 1");
-      $d7_landing_pages = $query->fetchAll();
-      foreach ($d7_landing_pages as $d7_landing_page) {
-        $nid = $d7_landing_page->nid;
+    $conn_migrate = Database::getConnection('default', 'migrate');
+    $conn_drupal8 = Database::getConnection('default', 'default');
 
-        // Now look to see if there is a redirect to this node from a taxonomy term.
-        $query2 = $conn_migrate->query(
-          "select source from {redirect} where redirect = 'node/" . $nid . "' and source like 'taxonomy/term/%'");
-        $source= $query2->fetchField();
-        if ($source) {
-          // Extract the term tid from the source.
-          $tid = str_replace('taxonomy/term/', '', $source);
-          $term = $this->entityTypeManager->getStorage("taxonomy_term")->load($tid);
-          if ($term) {
-            // Load the landing page node.
-            $entity = $this->entityTypeManager->getStorage("node")->load($nid);
-            if ($entity) {
-              // Now set the landing page subtheme to this tid.
-              $entity->set('field_subtheme', ['target_id' => $tid]);
-              $entity->set('moderation_state', 'published');
-              $entity->save();
-            }
-            //$this->logger->notice('Updated landing page node ' . $nid . ' with target id ' . $tid);
+    // Retrieve all landing pages from D7.
+    $query = $conn_migrate->query(
+      "select * from {node} where type = 'landing_page' and status = 1");
+    $d7_landing_pages = $query->fetchAll();
+    foreach ($d7_landing_pages as $d7_landing_page) {
+      $nid = $d7_landing_page->nid;
+
+      // Now look to see if there is a redirect to this node
+      // from a taxonomy term.
+      $query2 = $conn_migrate->query(
+        "select source from {redirect} where redirect = 'node/" . $nid . "' and source like 'taxonomy/term/%'");
+      $source = $query2->fetchField();
+      if ($source) {
+        // Extract the term tid from the source.
+        $tid = str_replace('taxonomy/term/', '', $source);
+        $term = $this->entityTypeManager->getStorage("taxonomy_term")->load($tid);
+        if ($term) {
+          // Load the landing page node.
+          $entity = $this->entityTypeManager->getStorage("node")->load($nid);
+          if ($entity) {
+            // Now set the landing page subtheme to this tid
+            // (as the method for replacing taxonomy terms in
+            // lists has been changed in the D8 site).
+            $entity->set('field_subtheme', ['target_id' => $tid]);
+            $entity->set('moderation_state', 'published');
+            $entity->save();
           }
         }
       }
-      $this->logger->notice('Post migrate landing page processing completed.');
     }
+    $this->logger->notice('Post migrate landing page processing completed.');
   }
 
 }
