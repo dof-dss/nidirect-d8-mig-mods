@@ -122,6 +122,24 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
             }
             $this->logger->notice('Updated landing page node ' . $nid . ' with target id ' . $tid);
           }
+        } else {
+          // Special cases in here with no redirects.
+
+          // Special case for 'problem solving justice' which is
+          // broken on D7.
+          if ($nid == 10146) {
+            // See if new term has already been created.
+            $this->logger->notice('Looking for problem');
+            $term = $this->entityTypeManager->getStorage('taxonomy_term')->loadByProperties(['name' => 'Problem solving justice']);
+            if (empty($term)) {
+              $entity = $this->entityTypeManager->getStorage('taxonomy_term')->create(['vid' => 'site_themes',
+                'name' => 'Problem solving justice',
+                'parent' => 105]);
+              $entity->save();
+              $new_tid = $entity->get('tid');
+              //$this->logger->notice('New tid is ' . $new_tid);
+            }
+          }
         }
       }
       $this->logger->notice('Post migrate landing page processing completed.');
