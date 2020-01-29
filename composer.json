@@ -2,6 +2,7 @@
     "name": "dof-dss/nidirect-migrations",
     "description": "Drupal Migrate API modules for NI Direct",
     "type": "drupal-module",
+    "license": "MIT",
     "require": {
         "composer/installers": "^1.6"
     }
