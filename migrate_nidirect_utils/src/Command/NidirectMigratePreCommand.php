@@ -106,18 +106,6 @@ class NidirectMigratePreCommand extends MigrateCommand {
   }
 
   /**
-   * Update to lowercase traffic light rating values to match the option keys on the 8.x widget.
-   */
-  // phpcs:disable
-  protected function task_update_traffic_light_rating_values() {
-  // phpcs:enable
-    foreach (['fat_content', 'salt', 'sugar', 'saturates'] as $field_id) {
-      $this->drupal7DatabaseQuery("UPDATE field_data_field_recipe_${field_id} SET field_recipe_${field_id}_status = LCASE(field_recipe_${field_id}_status)");
-      $this->drupal7DatabaseQuery("UPDATE field_revision_field_recipe_${field_id} SET field_recipe_${field_id}_status = LCASE(field_recipe_${field_id}_status)");
-    }
-  }
-
-  /**
    * Fix Column 'title' cannot be null issues.
    */
   // phpcs:disable
