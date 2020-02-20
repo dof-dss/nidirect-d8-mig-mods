@@ -163,6 +163,15 @@ class NidirectMigratePreCommand extends MigrateCommand {
     $this->drupal7DatabaseQuery("DROP TABLE IF EXISTS field_data_field_recipe_image,field_revision_field_recipe_image");
   }
 
+  /**
+   * Remove recipe node and taxonomy path aliases.
+   */
+  // phpcs:disable
+  protected function task_remove_recipe_url_aliases() {
+  // phpcs:enable
+    $this->drupal7DatabaseQuery("DELETE FROM url_alias WHERE url_alias.alias LIKE 'recipes/%' OR url_alias.alias LIKE 'recipe-%'");
+  }
+
 
 
 
