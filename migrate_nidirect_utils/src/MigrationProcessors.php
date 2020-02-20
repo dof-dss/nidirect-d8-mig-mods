@@ -228,7 +228,6 @@ class MigrationProcessors {
       'nidirect_driving_instructor' => 'driving_instructor',
       'nidirect_gp_practice' => 'gp_practice',
       'nidirect_recipe' => 'recipe',
-      'nidirect_ub' => 'umbrella_body',
     ];
 
     if (array_key_exists($entity_type, $node_type_map)) {
@@ -249,8 +248,6 @@ class MigrationProcessors {
       'drive_instr_categories' => 'di_categories',
       'districts_in_northern_ireland' => 'districts_in_northern_ireland',
       'contact_categories' => 'nidirect_contact_categories',
-      'accessni_ub_sectors' => 'accessni_ub_sectors',
-      'accessni_ub_services' => 'accessni_ub_services',
       'site_themes' => 'site_topics',
     ];
 
