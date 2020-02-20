@@ -26,4 +26,3 @@ migration_dependencies:
     - node_nidirect_contact
     - node_page
     - node_publication
-    - node_recipe

@@ -227,7 +227,6 @@ class MigrationProcessors {
       'nidirect_contact' => 'contact',
       'nidirect_driving_instructor' => 'driving_instructor',
       'nidirect_gp_practice' => 'gp_practice',
-      'nidirect_recipe' => 'recipe',
     ];
 
     if (array_key_exists($entity_type, $node_type_map)) {
@@ -236,9 +235,6 @@ class MigrationProcessors {
 
     // Map the migration id's to the D7 vocabularies.
     $migration_vocabulary_ids = [
-      'recipe_special_diet' => 'nidirect_recipe_special_diet',
-      'recipe_ingredient' => 'nidirect_recipe_ingredient',
-      'recipe_course_types' => 'nidirect_recipe_course_types',
       'ni_postcodes' => 'ni_postcodes',
       'hc_symptoms' => 'hc_symptoms',
       'hc_info_sources' => 'hc_info_sources',

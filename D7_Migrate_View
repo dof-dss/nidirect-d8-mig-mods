@@ -70,7 +70,6 @@ $handler->display->display_options['filters']['type']['value'] = array(
   'nidirect_gp_practice' => 'nidirect_gp_practice',
   'nidirect_contact' => 'nidirect_contact',
   'nidirect_driving_instructor' => 'nidirect_driving_instructor',
-  'nidirect_recipe' => 'nidirect_recipe',
   'nidirect_ub' => 'nidirect_ub',
   'page' => 'page',
   'publication' => 'publication',
