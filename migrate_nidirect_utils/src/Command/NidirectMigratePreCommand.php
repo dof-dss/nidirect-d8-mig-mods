@@ -154,4 +154,17 @@ class NidirectMigratePreCommand extends MigrateCommand {
     $this->drupal7DatabaseQuery("DELETE file_managed FROM field_data_field_recipe_image INNER JOIN file_managed ON field_data_field_recipe_image.field_recipe_image_fid = file_managed.fid");
   }
 
+  /**
+   * Drop recipe image field tables.
+   */
+  // phpcs:disable
+  protected function task_drop_recipe_image_field_tables() {
+  // phpcs:enable
+    $this->drupal7DatabaseQuery("DROP TABLE IF EXISTS field_data_field_recipe_image,field_revision_field_recipe_image");
+  }
+
+
+
+
+
 }
