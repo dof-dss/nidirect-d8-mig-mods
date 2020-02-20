@@ -25,7 +25,6 @@ dependencies:
   - migrate_nidirect_node_page
   - migrate_nidirect_node_publication
   - migrate_nidirect_node_recipe
-  - migrate_nidirect_node_umbrella_body
   - migrate_nidirect_taxo
   - migrate_nidirect_user
   - migrate_nidirect_utils
