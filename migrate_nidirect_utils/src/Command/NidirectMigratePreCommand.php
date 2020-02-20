@@ -127,4 +127,13 @@ class NidirectMigratePreCommand extends MigrateCommand {
     $this->drupal7DatabaseQuery("UPDATE redirect SET status_code=301 WHERE status_code=0 OR status_code IS NULL");
   }
 
+  /**
+   * Remove file usage data related to recipe images.
+   */
+  // phpcs:disable
+  protected function task_remove_recipe_image_file_usage_data() {
+  // phpcs:enable
+    $this->drupal7DatabaseQuery("DELETE file_usage FROM field_data_field_recipe_image INNER JOIN file_usage ON field_data_field_recipe_image.field_recipe_image_fid = file_usage.fid");
+  }
+
 }
