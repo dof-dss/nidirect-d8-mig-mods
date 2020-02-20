@@ -106,18 +106,6 @@ class NidirectMigratePreCommand extends MigrateCommand {
   }
 
   /**
-   * Update to lowercase traffic light rating values to match the option keys on the 8.x widget.
-   */
-  // phpcs:disable
-  protected function task_update_traffic_light_rating_values() {
-  // phpcs:enable
-    foreach (['fat_content', 'salt', 'sugar', 'saturates'] as $field_id) {
-      $this->drupal7DatabaseQuery("UPDATE field_data_field_recipe_${field_id} SET field_recipe_${field_id}_status = LCASE(field_recipe_${field_id}_status)");
-      $this->drupal7DatabaseQuery("UPDATE field_revision_field_recipe_${field_id} SET field_recipe_${field_id}_status = LCASE(field_recipe_${field_id}_status)");
-    }
-  }
-
-  /**
    * Fix Column 'title' cannot be null issues.
    */
   // phpcs:disable
@@ -137,6 +125,78 @@ class NidirectMigratePreCommand extends MigrateCommand {
   protected function task_null_redirect_zero_state() {
   // phpcs:enable
     $this->drupal7DatabaseQuery("UPDATE redirect SET status_code=301 WHERE status_code=0 OR status_code IS NULL");
+  }
+
+  /**
+   * Remove file usage data related to recipe images.
+   */
+  // phpcs:disable
+  protected function task_remove_recipe_image_file_usage_data() {
+  // phpcs:enable
+    $this->drupal7DatabaseQuery("DELETE file_usage FROM field_data_field_recipe_image INNER JOIN file_usage ON field_data_field_recipe_image.field_recipe_image_fid = file_usage.fid");
+  }
+
+  /**
+   * Remove file metadata data related to recipe images.
+   */
+  // phpcs:disable
+  protected function task_remove_recipe_image_file_metadata() {
+  // phpcs:enable
+    $this->drupal7DatabaseQuery("DELETE file_metadata FROM field_data_field_recipe_image INNER JOIN file_metadata ON field_data_field_recipe_image.field_recipe_image_fid = file_metadata.fid");
+  }
+
+  /**
+   * Remove managed file data related to recipe images.
+   */
+  // phpcs:disable
+  protected function task_remove_recipe_image_managed_file_data() {
+  // phpcs:enable
+    $this->drupal7DatabaseQuery("DELETE file_managed FROM field_data_field_recipe_image INNER JOIN file_managed ON field_data_field_recipe_image.field_recipe_image_fid = file_managed.fid");
+  }
+
+  /**
+   * Drop recipe image field tables.
+   */
+  // phpcs:disable
+  protected function task_drop_recipe_image_field_tables() {
+  // phpcs:enable
+    $this->drupal7DatabaseQuery("DROP TABLE IF EXISTS field_data_field_recipe_image,field_revision_field_recipe_image");
+  }
+
+  /**
+   * Remove recipe node and taxonomy path aliases.
+   */
+  // phpcs:disable
+  protected function task_remove_recipe_url_aliases() {
+  // phpcs:enable
+    $this->drupal7DatabaseQuery("DELETE FROM url_alias WHERE url_alias.alias LIKE 'recipes/%' OR url_alias.alias LIKE 'recipe-%'");
+  }
+
+  /**
+   * Remove recipe node metatags.
+   */
+  // phpcs:disable
+  protected function task_remove_recipe_node_metatags() {
+  // phpcs:enable
+    $this->drupal7DatabaseQuery("DELETE FROM metatag INNER JOIN node ON node.nid = metatag.entity_id WHERE node.type = 'nidirect_recipe'");
+  }
+
+  /**
+   * Remove recipe node revisions.
+   */
+  // phpcs:disable
+  protected function task_remove_recipe_node_revisions() {
+  // phpcs:enable
+    $this->drupal7DatabaseQuery("DELETE FROM node_revision INNER JOIN node ON node.nid = node_revision.nid WHERE node.type = 'nidirect_recipe'");
+  }
+
+  /**
+   * Remove recipe nodes.
+   */
+  // phpcs:disable
+  protected function task_remove_recipe_nodes() {
+  // phpcs:enable
+    $this->drupal7DatabaseQuery("DELETE FROM node WHERE node.type = 'nidirect_recipe'");
   }
 
 }
