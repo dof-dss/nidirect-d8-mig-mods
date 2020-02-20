@@ -208,4 +208,13 @@ class NidirectMigratePreCommand extends MigrateCommand {
     $this->drupal7DatabaseQuery("DELETE FROM url_alias WHERE url_alias.alias LIKE 'accessni/%' OR url_alias.alias LIKE 'accessni-%'");
   }
 
+  /**
+   * Remove umbrella body node metatags.
+   */
+  // phpcs:disable
+  protected function task_remove_umbrella_body_node_metatags() {
+  // phpcs:enable
+    $this->drupal7DatabaseQuery("DELETE FROM metatag INNER JOIN node ON node.nid = metatag.entity_id WHERE node.type = 'nidirect_ub'");
+  }
+
 }
