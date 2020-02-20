@@ -136,4 +136,13 @@ class NidirectMigratePreCommand extends MigrateCommand {
     $this->drupal7DatabaseQuery("DELETE file_usage FROM field_data_field_recipe_image INNER JOIN file_usage ON field_data_field_recipe_image.field_recipe_image_fid = file_usage.fid");
   }
 
+  /**
+   * Remove file metadata data related to recipe images.
+   */
+  // phpcs:disable
+  protected function task_remove_recipe_image_file_metadata() {
+  // phpcs:enable
+    $this->drupal7DatabaseQuery("DELETE file_metadata FROM field_data_field_recipe_image INNER JOIN file_metadata ON field_data_field_recipe_image.field_recipe_image_fid = file_metadata.fid");
+  }
+
 }
