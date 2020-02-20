@@ -172,8 +172,13 @@ class NidirectMigratePreCommand extends MigrateCommand {
     $this->drupal7DatabaseQuery("DELETE FROM url_alias WHERE url_alias.alias LIKE 'recipes/%' OR url_alias.alias LIKE 'recipe-%'");
   }
 
-
-
-
+  /**
+   * Remove recipe node metatags.
+   */
+  // phpcs:disable
+  protected function task_remove_recipe_node_metatags() {
+  // phpcs:enable
+    $this->drupal7DatabaseQuery("DELETE FROM metatag INNER JOIN node ON node.nid = metatag.entity_id WHERE node.type = 'nidirect_recipe'");
+  }
 
 }
