@@ -190,6 +190,13 @@ class NidirectMigratePreCommand extends MigrateCommand {
     $this->drupal7DatabaseQuery("DELETE FROM node_revision INNER JOIN node ON node.nid = node_revision.nid WHERE node.type = 'nidirect_recipe'");
   }
 
-
+  /**
+   * Remove recipe nodes.
+   */
+  // phpcs:disable
+  protected function task_remove_recipe_nodes() {
+  // phpcs:enable
+    $this->drupal7DatabaseQuery("DELETE FROM node WHERE node.type = 'nidirect_recipe'");
+  }
 
 }
