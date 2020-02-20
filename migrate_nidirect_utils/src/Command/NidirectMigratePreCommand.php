@@ -199,4 +199,13 @@ class NidirectMigratePreCommand extends MigrateCommand {
     $this->drupal7DatabaseQuery("DELETE FROM node WHERE node.type = 'nidirect_recipe'");
   }
 
+  /**
+   * Remove umbrella body node and taxonomy path aliases.
+   */
+  // phpcs:disable
+  protected function task_remove_umbrella_body_url_aliases() {
+  // phpcs:enable
+    $this->drupal7DatabaseQuery("DELETE FROM url_alias WHERE url_alias.alias LIKE 'accessni/%' OR url_alias.alias LIKE 'accessni-%'");
+  }
+
 }
