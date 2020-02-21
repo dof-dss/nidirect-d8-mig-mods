@@ -40,7 +40,6 @@ process:
         - upgrade_d7_taxonomy_term_hc_condition_type
         - upgrade_d7_taxonomy_term_hc_body_system
         - upgrade_d7_taxonomy_term_hc_body_location
-        - upgrade_d7_taxonomy_term_districts_in_northern_ireland
         - upgrade_d7_taxonomy_term_contact_categories
         - upgrade_d7_taxonomy_term_site_themes
   parent:
@@ -58,7 +57,6 @@ destination:
 migration_dependencies:
   optional:
     - upgrade_d7_taxonomy_term_contact_categories
-    - upgrade_d7_taxonomy_term_districts_in_northern_ireland
     - upgrade_d7_taxonomy_term_drive_instr_categories
     - upgrade_d7_taxonomy_term_hc_body_location
     - upgrade_d7_taxonomy_term_hc_body_system
