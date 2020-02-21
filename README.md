@@ -10,7 +10,7 @@
 1. Ensure the Drupal migrate modules (`migrate, migrate_plus, migrate_tools`)
 are enabled.
 2. perform a *'git pull'* to ensure you have the latest commits.
-3. Enable the required NIDirect migration modules. 
+3. Enable the required NIDirect migration modules.
 4. Import the NIDirect Drupal 7 database into the Lando `drupal7db` container database.
 5. Add the NIDirect Drupal 7 files to `/imports/files/sites/default/files/`
 6. Ensure 'Migrate NIDirect Utils' is enabled and run `lando Drupal nidirect:migrate:pre` to preform site-uuid sync and pre-migration tasks on the D7 database.
@@ -38,7 +38,6 @@ then run `lando miip --group=<group name>` with the following:
 * migrate_nidirect_node_nidirect_contact
 * migrate_nidirect_node_page
 * migrate_nidirect_node_publication
-* migrate_nidirect_node_recipe
 * migrate_drupal_7_link
 
 then run the following individual migrations:
@@ -82,7 +81,7 @@ If you need to change this file, you will also need to rebuild your local appser
 
 ## NightWatchJS tests ##
 
-Import the included 'D7_Migrate_View' View into existing Drupal 7 NI Direct site and update the TEST_D7_URL env var to the URL of the site. 
+Import the included 'D7_Migrate_View' View into existing Drupal 7 NI Direct site and update the TEST_D7_URL env var to the URL of the site.
 This view contains XML data export displays for most of the migrated entities with paths specified as /migrate/<entity> (see 'before' hook in each test for full path).
 Each display will return a random entity but this can be overridden in the test to return a specific node by appending an ID to the end of the URL e.g. /migrate/recipe/5012
 

@@ -199,4 +199,40 @@ class NidirectMigratePreCommand extends MigrateCommand {
     $this->drupal7DatabaseQuery("DELETE FROM node WHERE node.type = 'nidirect_recipe'");
   }
 
+  /**
+   * Remove umbrella body node and taxonomy path aliases.
+   */
+  // phpcs:disable
+  protected function task_remove_umbrella_body_url_aliases() {
+  // phpcs:enable
+    $this->drupal7DatabaseQuery("DELETE FROM url_alias WHERE url_alias.alias LIKE 'accessni/%' OR url_alias.alias LIKE 'accessni-%'");
+  }
+
+  /**
+   * Remove umbrella body node metatags.
+   */
+  // phpcs:disable
+  protected function task_remove_umbrella_body_node_metatags() {
+  // phpcs:enable
+    $this->drupal7DatabaseQuery("DELETE FROM metatag INNER JOIN node ON node.nid = metatag.entity_id WHERE node.type = 'nidirect_ub'");
+  }
+
+  /**
+   * Remove umbrella body node revisions.
+   */
+  // phpcs:disable
+  protected function task_remove_umbrella_body_node_revisions() {
+  // phpcs:enable
+    $this->drupal7DatabaseQuery("DELETE FROM node_revision INNER JOIN node ON node.nid = node_revision.nid WHERE node.type = 'nidirect_ub'");
+  }
+
+  /**
+   * Remove umbrella body nodes.
+   */
+  // phpcs:disable
+  protected function task_remove_umbrella_body_nodes() {
+  // phpcs:enable
+    $this->drupal7DatabaseQuery("DELETE FROM node WHERE node.type = 'nidirect_ub'");
+  }
+
 }
