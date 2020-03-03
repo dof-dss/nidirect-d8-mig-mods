@@ -70,7 +70,26 @@ class NidirectMigratePostPublishStatusCommand extends ContainerAwareCommand {
         ->condition('vid', $vid)
         ->execute();
 
+      // The 'revision_translation_affected' field is poorly documented (and
+      // understood) in Drupal core, and is sometimes set to NULL after migrating
+      // content from Drupal 7. There is much discussion at
+      // https://www.drupal.org/project/drupal/issues/2746541 but after testing
+      // and investigation I am yet to find a case where it should not be set to '1'.
+      // Hence, we set it to '1' across the board to solve the problem of revisions
+      // not appearing on the revisions tab.
+      $query = $conn_drupal8->update('node_field_revision')
+        ->fields(['revision_translation_affected' => 1])
+        ->condition('nid', $row->nid)
+        ->execute();
+
       $query = $conn_drupal8->update('content_moderation_state_field_data')
+        ->fields(['moderation_state' => 'published'])
+        ->condition('content_entity_id', $row->nid)
+        ->condition('content_entity_revision_id', $vid)
+        ->execute();
+
+      // Make sure that we have a 'published' revision.
+      $query = $conn_drupal8->update('content_moderation_state_field_revision')
         ->fields(['moderation_state' => 'published'])
         ->condition('content_entity_id', $row->nid)
         ->condition('content_entity_revision_id', $vid)
