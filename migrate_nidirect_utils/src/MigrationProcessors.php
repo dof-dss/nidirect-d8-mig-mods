@@ -506,7 +506,7 @@ class MigrationProcessors {
       }
     }
 
-    if (count($nids_to_update > 0)) {
+    if (count($nids_to_update) > 0) {
       // Must flush all caches or the SQL insertion above will not take effect.
       drupal_flush_all_caches();
     }
