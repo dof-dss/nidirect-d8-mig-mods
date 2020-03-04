@@ -481,8 +481,24 @@ class MigrationProcessors {
         if ($node->hasField('field_next_audit_due')) {
           // Just set next audit date to today as will show in 'needs audit'
           // report if next audit date is today or earlier.
-          $node->set('field_next_audit_due', $today);
-          $node->save();
+          // Avoid creating a new revision here by updating the existing revision directly.
+          $vid = $this->dbConnDrupal8->query(
+            "SELECT vid FROM {node_field_data} WHERE nid = :nid", [':nid' => $nid]
+          )->fetchField();
+          $langcode = $this->dbConnDrupal8->query(
+            "SELECT langcode FROM {node} WHERE nid = :nid", [':nid' => $nid]
+          )->fetchField();
+          if (!empty($vid) && !empty($langcode)) {
+            $query = $this->dbConnDrupal8->insert('node__field_next_audit_due')
+              ->fields(['bundle' => $entity_type,
+                'deleted' => 0,
+                'entity_id' => $nid,
+                'revision_id' => $vid,
+                'langcode' => $langcode,
+                'delta' => 0,
+                'field_next_audit_due_value' => $today])
+              ->execute();
+          }
         }
       }
       else {
