@@ -79,11 +79,29 @@ class MigrationProcessors {
     // There are three tables that need an adjustment ranging
     // from node revisions to content moderation tracking tables.
     foreach ($migrate_nid_status as $row) {
+      // Get the D7 revision id.
+      $vid = $this->dbConnMigrate->query(
+        "SELECT vid FROM {node} WHERE nid = :nid", [':nid' => $row->nid]
+      )->fetchField();
+
       // Need to fetch the D8 revision ID for any node as it doesn't always
       // match the source db.
-      $vid = $this->dbConnDrupal8->query(
+      $d8_vid = $this->dbConnDrupal8->query(
         "SELECT vid FROM {node_field_data} WHERE nid = :nid", [':nid' => $row->nid]
       )->fetchField();
+
+      if ($vid != $db_vid) {
+        // make the D7 revision the current revision in D8.
+        $query = $this->dbConnDrupal8->update('node')
+          ->fields(['vid' => $vid])
+          ->condition('nid', $row->nid)
+          ->execute();
+
+        $query = $this->dbConnDrupal8->update('node_field_data')
+          ->fields(['vid' => $vid])
+          ->condition('nid', $row->nid)
+          ->execute();
+      }
 
       // The 'revision_translation_affected' field is poorly documented (and
       // understood) in Drupal core, and is sometimes set to NULL after migrating
