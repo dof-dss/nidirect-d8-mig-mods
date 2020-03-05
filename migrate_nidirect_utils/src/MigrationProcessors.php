@@ -53,6 +53,68 @@ class MigrationProcessors {
   }
 
   /**
+   * Updates the revisions for a given node type.
+   *
+   * @param string $node_type
+   *   The node type to process.
+   *
+   * @return string
+   *   Information/results of on the process.
+   */
+  public function RevisionStatus($node_type) {
+    // Find all out current node ids in the D8 site so we know what to look for.
+    $d8_nids = [];
+    $node_type = preg_replace('/revision_/', '', $node_type);
+    $query = $this->dbConnDrupal8->query("SELECT nid FROM {node} WHERE type = :node_type ORDER BY nid ASC", [':node_type' => $node_type]);
+    $d8_nids = $query->fetchAllAssoc('nid');
+
+    if (count($d8_nids) < 1) {
+      return 'No revision entities found for processing.';
+    }
+    // Load source node publish status fields.
+    $query = $this->dbConnMigrate->query("SELECT nid, status FROM {node} WHERE nid IN (:nids[]) ORDER BY nid ASC", [':nids[]' => array_keys($d8_nids)]);
+    $migrate_nid_status = $query->fetchAll();
+
+    // Sync our D8 node publish values with those from D7.
+    // There are three tables that need an adjustment ranging
+    // from node revisions to content moderation tracking tables.
+    foreach ($migrate_nid_status as $row) {
+      // Need to fetch the D8 revision ID for any node as it doesn't always
+      // match the source db.
+      $vid = $this->dbConnDrupal8->query(
+        "SELECT vid FROM {node_field_data} WHERE nid = :nid", [':nid' => $row->nid]
+      )->fetchField();
+
+      // The 'revision_translation_affected' field is poorly documented (and
+      // understood) in Drupal core, and is sometimes set to NULL after migrating
+      // content from Drupal 7. There is much discussion at
+      // https://www.drupal.org/project/drupal/issues/2746541 but after testing
+      // and investigation I am yet to find a case where it should not be set to '1'.
+      // Hence, we set it to '1' across the board to solve the problem of revisions
+      // not appearing on the revisions tab.
+      $query = $this->dbConnDrupal8->update('node_field_revision')
+        ->fields(['revision_translation_affected' => 1])
+        ->condition('nid', $row->nid)
+        ->execute();
+
+      $query = $this->dbConnDrupal8->update('content_moderation_state_field_data')
+        ->fields(['moderation_state' => 'published'])
+        ->condition('content_entity_id', $row->nid)
+        ->condition('content_entity_revision_id', $vid)
+        ->execute();
+
+      // Make sure that we have a 'published' revision.
+      $query = $this->dbConnDrupal8->update('content_moderation_state_field_revision')
+        ->fields(['moderation_state' => 'published'])
+        ->condition('content_entity_id', $row->nid)
+        ->condition('content_entity_revision_id', $vid)
+        ->execute();
+    }
+
+    return 'Updated revisions for ' . count($migrate_nid_status) . ' nodes.';
+  }
+
+  /**
    * Updates the publishing status of a given node type.
    *
    * @param string $node_type
@@ -95,31 +157,6 @@ class MigrationProcessors {
         ->fields(['status' => $row->status])
         ->condition('nid', $row->nid)
         ->condition('vid', $vid)
-        ->execute();
-
-      // The 'revision_translation_affected' field is poorly documented (and
-      // understood) in Drupal core, and is sometimes set to NULL after migrating
-      // content from Drupal 7. There is much discussion at
-      // https://www.drupal.org/project/drupal/issues/2746541 but after testing
-      // and investigation I am yet to find a case where it should not be set to '1'.
-      // Hence, we set it to '1' across the board to solve the problem of revisions
-      // not appearing on the revisions tab.
-      $query = $this->dbConnDrupal8->update('node_field_revision')
-        ->fields(['revision_translation_affected' => 1])
-        ->condition('nid', $row->nid)
-        ->execute();
-
-      $query = $this->dbConnDrupal8->update('content_moderation_state_field_data')
-        ->fields(['moderation_state' => 'published'])
-        ->condition('content_entity_id', $row->nid)
-        ->condition('content_entity_revision_id', $vid)
-        ->execute();
-
-      // Make sure that we have a 'published' revision.
-      $query = $this->dbConnDrupal8->update('content_moderation_state_field_revision')
-        ->fields(['moderation_state' => 'published'])
-        ->condition('content_entity_id', $row->nid)
-        ->condition('content_entity_revision_id', $vid)
         ->execute();
     }
 
