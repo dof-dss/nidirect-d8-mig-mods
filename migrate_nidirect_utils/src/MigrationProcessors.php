@@ -61,7 +61,7 @@ class MigrationProcessors {
    * @return string
    *   Information/results of on the process.
    */
-  public function RevisionStatus(string $node_type) {
+  public function revisionStatus(string $node_type) {
     // Find all out current node ids in the D8 site so we know what to look for.
     $d8_nids = [];
     $node_type = preg_replace('/revision_/', '', $node_type);
@@ -95,12 +95,13 @@ class MigrationProcessors {
       }
 
       // The 'revision_translation_affected' field is poorly documented (and
-      // understood) in Drupal core, and is sometimes set to NULL after migrating
+      // understood) in Drupal core and is sometimes set to NULL after migrating
       // content from Drupal 7. There is much discussion at
       // https://www.drupal.org/project/drupal/issues/2746541 but after testing
-      // and investigation I am yet to find a case where it should not be set to '1'.
-      // Hence, we set it to '1' across the board to solve the problem of revisions
-      // not appearing on the revisions tab.
+      // and investigation no cases have been found where it should
+      // not be set to '1'.
+      // Hence, we set it to '1' across the board to solve the problem of
+      // revisions not appearing on the revisions tab.
       $query = $this->dbConnDrupal8->update('node_field_revision')
         ->fields(['revision_translation_affected' => 1])
         ->condition('nid', $row->nid)
@@ -130,7 +131,7 @@ class MigrationProcessors {
    *   The node id.
    * @param int $vid
    *   The target revision id (from D7).
-   * @param int $nid
+   * @param int $d8_vid
    *   The current D8 revision id.
    *
    * @return string
@@ -148,9 +149,9 @@ class MigrationProcessors {
       )->fetchField();
       if (!empty($check_d7_vid)) {
         // Make the D7 revision the current revision in D8.
-        // N.B. This will only work in the 'one hit' migration scenario, it may cause problems
-        // if the migration runs again and in the meantime the editors have reverted to an older
-        // revision that also came from D7.
+        // N.B. This will only work in the 'one hit' migration scenario, it may
+        // cause problems if the migration runs again and in the meantime the
+        // editors have reverted to an older revision that also came from D7.
         $query = $this->dbConnDrupal8->update('node')
           ->fields(['vid' => $vid])
           ->condition('nid', $nid)
@@ -161,7 +162,8 @@ class MigrationProcessors {
           ->execute();
       }
       return $vid;
-    } else {
+    }
+    else {
       return $d8_vid;
     }
   }
@@ -472,7 +474,8 @@ class MigrationProcessors {
             'last_updated',
           ]);
           foreach ($flag_count_data as $row) {
-            // Check we haven't already got this present in the destination table.
+            // Check we haven't already got this present in the destination
+            // table.
             if (array_key_exists($row['entity_id'], $d8_flag_counts) == FALSE) {
               $query->values($row);
             }
@@ -570,7 +573,8 @@ class MigrationProcessors {
         if ($node->hasField('field_next_audit_due')) {
           // Just set next audit date to today as will show in 'needs audit'
           // report if next audit date is today or earlier.
-          // Avoid creating a new revision here by updating the existing revision directly.
+          // Avoid creating a new revision here by updating the existing
+          // revision directly.
           $vid = $this->dbConnDrupal8->query(
             "SELECT vid FROM {node_field_data} WHERE nid = :nid", [':nid' => $nid]
           )->fetchField();
@@ -579,13 +583,15 @@ class MigrationProcessors {
           )->fetchField();
           if (!empty($vid) && !empty($langcode)) {
             $query = $this->dbConnDrupal8->insert('node__field_next_audit_due')
-              ->fields(['bundle' => $entity_type,
+              ->fields([
+                'bundle' => $entity_type,
                 'deleted' => 0,
                 'entity_id' => $nid,
                 'revision_id' => $vid,
                 'langcode' => $langcode,
                 'delta' => 0,
-                'field_next_audit_due_value' => $today])
+                'field_next_audit_due_value' => $today,
+              ])
               ->execute();
           }
         }
