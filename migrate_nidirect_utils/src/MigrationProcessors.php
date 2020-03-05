@@ -61,7 +61,7 @@ class MigrationProcessors {
    * @return string
    *   Information/results of on the process.
    */
-  public function RevisionStatus($node_type) {
+  public function RevisionStatus(string $node_type) {
     // Find all out current node ids in the D8 site so we know what to look for.
     $d8_nids = [];
     $node_type = preg_replace('/revision_/', '', $node_type);
@@ -91,32 +91,7 @@ class MigrationProcessors {
       )->fetchField();
 
       if ($vid != $d8_vid) {
-        // Does this revision exist in D8 ?
-        $check_vid = $this->dbConnDrupal8->query(
-          "SELECT vid FROM {node_field_revision} WHERE nid = :nid AND vid = :vid", [':nid' => $row->nid, ':vid' => $vid]
-        )->fetchField();
-        if (!empty($check_vid)) {
-          // Does the current D8 revision exist in D7 ?
-          $check_d7_vid = $this->dbConnMigrate->query(
-            "SELECT vid FROM {node_revision} WHERE nid = :nid and vid = :vid", [':nid' => $row->nid, ':vid' => $d8_vid]
-          )->fetchField();
-          if (!empty($check_d7_vid)) {
-            // Make the D7 revision the current revision in D8.
-            // N.B. This will only work in the 'one hit' migration scenario, it may cause problems
-            // if the migration runs again and in the meantime the editors have reverted to an older
-            // revision that also came from D7.
-            $query = $this->dbConnDrupal8->update('node')
-              ->fields(['vid' => $vid])
-              ->condition('nid', $row->nid)
-              ->execute();
-            $query = $this->dbConnDrupal8->update('node_field_data')
-              ->fields(['vid' => $vid])
-              ->condition('nid', $row->nid)
-              ->execute();
-          }
-        } else {
-          $vid = $d8_vid;
-        }
+        $vid = $this->updateCurrentRevision($row->nid, $vid, $d8_vid);
       }
 
       // The 'revision_translation_affected' field is poorly documented (and
@@ -149,6 +124,49 @@ class MigrationProcessors {
   }
 
   /**
+   * Updates the current revision for the given node.
+   *
+   * @param int $nid
+   *   The node id.
+   * @param int $vid
+   *   The target revision id (from D7).
+   * @param int $nid
+   *   The current D8 revision id.
+   *
+   * @return string
+   *   Current revision id.
+   */
+  private function updateCurrentRevision(int $nid, int $vid, int $d8_vid) {
+    // Does this revision exist in D8 ?
+    $check_vid = $this->dbConnDrupal8->query(
+      "SELECT vid FROM {node_field_revision} WHERE nid = :nid AND vid = :vid", [':nid' => $nid, ':vid' => $vid]
+    )->fetchField();
+    if (!empty($check_vid)) {
+      // Does the current D8 revision exist in D7 ?
+      $check_d7_vid = $this->dbConnMigrate->query(
+        "SELECT vid FROM {node_revision} WHERE nid = :nid and vid = :vid", [':nid' => $nid, ':vid' => $d8_vid]
+      )->fetchField();
+      if (!empty($check_d7_vid)) {
+        // Make the D7 revision the current revision in D8.
+        // N.B. This will only work in the 'one hit' migration scenario, it may cause problems
+        // if the migration runs again and in the meantime the editors have reverted to an older
+        // revision that also came from D7.
+        $query = $this->dbConnDrupal8->update('node')
+          ->fields(['vid' => $vid])
+          ->condition('nid', $nid)
+          ->execute();
+        $query = $this->dbConnDrupal8->update('node_field_data')
+          ->fields(['vid' => $vid])
+          ->condition('nid', $nid)
+          ->execute();
+      }
+      return $vid;
+    } else {
+      return $d8_vid;
+    }
+  }
+
+  /**
    * Updates the publishing status of a given node type.
    *
    * @param string $node_type
@@ -157,7 +175,7 @@ class MigrationProcessors {
    * @return string
    *   Information/results of on the process.
    */
-  public function publishingStatus($node_type) {
+  public function publishingStatus(string $node_type) {
     // Find all out current node ids in the D8 site so we know what to look for.
     $d8_nids = [];
     $query = $this->dbConnDrupal8->query("SELECT nid FROM {node} WHERE type = :node_type ORDER BY nid ASC", [':node_type' => $node_type]);
