@@ -37,9 +37,10 @@ class NidirectMigratePostPublishStatusCommand extends ContainerAwareCommand {
   /**
    * {@inheritdoc}
    */
-  public function __construct(ModuleHandler $module_handler, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct() {
     $this->dbConnMigrate = Database::getConnection('default', 'migrate');
     $this->dbConnDrupal8 = Database::getConnection('default', 'default');
+    parent::__construct();
   }
 
   /**
