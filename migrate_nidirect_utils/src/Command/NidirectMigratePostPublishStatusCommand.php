@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Drupal\Console\Core\Command\ContainerAwareCommand;
 use Drupal\Core\Database\Database;
+use Drupal\Console\Annotations\DrupalCommand;
 
 /**
  * Class NidirectMigratePostPublishStatusCommand.
