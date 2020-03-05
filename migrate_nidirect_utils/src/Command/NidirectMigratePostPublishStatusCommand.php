@@ -54,7 +54,7 @@ class NidirectMigratePostPublishStatusCommand extends ContainerAwareCommand {
     // from node revisions to content moderation tracking tables.
     foreach ($migrate_nid_status as $row) {
       // Need to fetch the D8 revision ID for any node as it doesn't always match the source db.
-      $vid = $conn_drupal8->query(
+      $d8_vid = $conn_drupal8->query(
         "SELECT vid FROM {node_field_data} WHERE nid = :nid", [':nid' => $row->nid]
         )->fetchField();
 
@@ -67,8 +67,18 @@ class NidirectMigratePostPublishStatusCommand extends ContainerAwareCommand {
       $query = $conn_drupal8->update('node_field_revision')
         ->fields(['status' => $row->status])
         ->condition('nid', $row->nid)
-        ->condition('vid', $vid)
+        ->condition('vid', $d8_vid)
         ->execute();
+
+      // Get the D7 revision id.
+      $vid = $conn_migrate->query(
+        "SELECT vid FROM {node} WHERE nid = :nid", [':nid' => $row->nid]
+      )->fetchField();
+
+      // Update the current revision if necessary.
+      if ($vid != $d8_vid) {
+        $vid = $this->updateCurrentRevision($conn_migrate, $conn_drupal8, $row->nid, $vid, $d8_vid);
+      }
 
       // The 'revision_translation_affected' field is poorly documented (and
       // understood) in Drupal core, and is sometimes set to NULL after migrating
@@ -96,9 +106,54 @@ class NidirectMigratePostPublishStatusCommand extends ContainerAwareCommand {
         ->execute();
     }
 
-    $this->getIo()->info('Updated ' . count($migrate_nid_status) . ' records in node_field_data table.');
+    $this->getIo()->info('Updated revisions on ' . count($migrate_nid_status) . ' nodes.');
     $this->getIo()->info('Clearing all caches...');
     drupal_flush_all_caches();
   }
+
+  /**
+   * Updates the current revision for the given node.
+   *
+   * @param int $nid
+   *   The node id.
+   * @param int $vid
+   *   The target revision id (from D7).
+   * @param int $d8_vid
+   *   The current D8 revision id.
+   *
+   * @return string
+   *   Current revision id.
+   */
+  private function updateCurrentRevision($conn_migrate, $conn_drupal8, int $nid, int $vid, int $d8_vid) {
+    // Does this revision exist in D8 ?
+    $check_vid = $conn_drupal8->query(
+      "SELECT vid FROM {node_field_revision} WHERE nid = :nid AND vid = :vid", [':nid' => $nid, ':vid' => $vid]
+    )->fetchField();
+    if (!empty($check_vid)) {
+      // Does the current D8 revision exist in D7 ?
+      $check_d7_vid = $conn_migrate->query(
+        "SELECT vid FROM {node_revision} WHERE nid = :nid and vid = :vid", [':nid' => $nid, ':vid' => $d8_vid]
+      )->fetchField();
+      if (!empty($check_d7_vid)) {
+        // Make the D7 revision the current revision in D8.
+        // N.B. This will only work in the 'one hit' migration scenario, it may
+        // cause problems if the migration runs again and in the meantime the
+        // editors have reverted to an older revision that also came from D7.
+        $query = $conn_drupal8->update('node')
+          ->fields(['vid' => $vid])
+          ->condition('nid', $nid)
+          ->execute();
+        $query = $conn_drupal8->update('node_field_data')
+          ->fields(['vid' => $vid])
+          ->condition('nid', $nid)
+          ->execute();
+      }
+      return $vid;
+    }
+    else {
+      return $d8_vid;
+    }
+  }
+
 
 }
