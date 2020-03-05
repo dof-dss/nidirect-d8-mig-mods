@@ -78,9 +78,9 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     // Only process nodes, nothing else.
     if (substr($event_id, 0, 5) == 'node_') {
       $content_type = substr($event_id, 5);
-      $this->logger->notice($this->migrationProcessors->PublishingStatus($content_type));
+      $this->logger->notice($this->migrationProcessors->publishingStatus($content_type));
       if (preg_match('/revision_/', $content_type)) {
-        $this->logger->notice($this->migrationProcessors->RevisionStatus($content_type));
+        $this->logger->notice($this->migrationProcessors->revisionStatus($content_type));
       }
       $this->logger->notice($this->migrationProcessors->flags($content_type));
       $this->logger->notice($this->migrationProcessors->metatags());
