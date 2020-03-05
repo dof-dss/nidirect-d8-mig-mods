@@ -90,17 +90,24 @@ class MigrationProcessors {
         "SELECT vid FROM {node_field_data} WHERE nid = :nid", [':nid' => $row->nid]
       )->fetchField();
 
-      if ($vid != $db_vid) {
-        // make the D7 revision the current revision in D8.
-        $query = $this->dbConnDrupal8->update('node')
-          ->fields(['vid' => $vid])
-          ->condition('nid', $row->nid)
-          ->execute();
-
-        $query = $this->dbConnDrupal8->update('node_field_data')
-          ->fields(['vid' => $vid])
-          ->condition('nid', $row->nid)
-          ->execute();
+      if ($vid != $d8_vid) {
+        // Does this revision exist in D8 ?
+        $check_vid = $this->dbConnDrupal8->query(
+          "SELECT vid FROM {node_field_revision} WHERE nid = :nid AND vid = :vid", [':nid' => $row->nid, ':vid' => $vid]
+        )->fetchField();
+        if (!empty($check_vid) && ($check_vid == $vid)) {
+          // Make the D7 revision the current revision in D8.
+          $query = $this->dbConnDrupal8->update('node')
+            ->fields(['vid' => $vid])
+            ->condition('nid', $row->nid)
+            ->execute();
+          $query = $this->dbConnDrupal8->update('node_field_data')
+            ->fields(['vid' => $vid])
+            ->condition('nid', $row->nid)
+            ->execute();
+        } else {
+          $vid = $d8_vid;
+        }
       }
 
       // The 'revision_translation_affected' field is poorly documented (and
@@ -115,13 +122,13 @@ class MigrationProcessors {
         ->condition('nid', $row->nid)
         ->execute();
 
+      // Make sure that we have a 'published' revision.
       $query = $this->dbConnDrupal8->update('content_moderation_state_field_data')
         ->fields(['moderation_state' => 'published'])
         ->condition('content_entity_id', $row->nid)
         ->condition('content_entity_revision_id', $vid)
         ->execute();
 
-      // Make sure that we have a 'published' revision.
       $query = $this->dbConnDrupal8->update('content_moderation_state_field_revision')
         ->fields(['moderation_state' => 'published'])
         ->condition('content_entity_id', $row->nid)
