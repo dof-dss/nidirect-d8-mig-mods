@@ -90,6 +90,7 @@ class MigrationProcessors {
         "SELECT vid FROM {node_field_data} WHERE nid = :nid", [':nid' => $row->nid]
       )->fetchField();
 
+      // Update the current revision if necessary.
       if ($vid != $d8_vid) {
         $vid = $this->updateCurrentRevision($row->nid, $vid, $d8_vid);
       }
