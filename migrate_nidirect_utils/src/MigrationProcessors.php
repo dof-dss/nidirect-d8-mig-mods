@@ -95,16 +95,25 @@ class MigrationProcessors {
         $check_vid = $this->dbConnDrupal8->query(
           "SELECT vid FROM {node_field_revision} WHERE nid = :nid AND vid = :vid", [':nid' => $row->nid, ':vid' => $vid]
         )->fetchField();
-        if (!empty($check_vid) && ($check_vid == $vid)) {
-          // Make the D7 revision the current revision in D8.
-          $query = $this->dbConnDrupal8->update('node')
-            ->fields(['vid' => $vid])
-            ->condition('nid', $row->nid)
-            ->execute();
-          $query = $this->dbConnDrupal8->update('node_field_data')
-            ->fields(['vid' => $vid])
-            ->condition('nid', $row->nid)
-            ->execute();
+        if (!empty($check_vid)) {
+          // Does the current D8 revision exist in D7 ?
+          $check_d7_vid = $this->dbConnMigrate->query(
+            "SELECT vid FROM {node_revision} WHERE nid = :nid and vid = :vid", [':nid' => $row->nid, ':vid' => $d8_vid]
+          )->fetchField();
+          if (!empty($check_d7_vid)) {
+            // Make the D7 revision the current revision in D8.
+            // N.B. This will only work in the 'one hit' migration scenario, it may cause problems
+            // if the migration runs again and in the meantime the editors have reverted to an older
+            // revision that also came from D7.
+            $query = $this->dbConnDrupal8->update('node')
+              ->fields(['vid' => $vid])
+              ->condition('nid', $row->nid)
+              ->execute();
+            $query = $this->dbConnDrupal8->update('node_field_data')
+              ->fields(['vid' => $vid])
+              ->condition('nid', $row->nid)
+              ->execute();
+          }
         } else {
           $vid = $d8_vid;
         }
