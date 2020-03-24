@@ -79,6 +79,12 @@ class MigrationProcessors {
     // There are three tables that need an adjustment ranging
     // from node revisions to content moderation tracking tables.
     foreach ($migrate_nid_status as $row) {
+      // Update published status.
+      $query = $this->dbConnDrupal8->update('node_field_data')
+        ->fields(['status' => $row->status])
+        ->condition('nid', $row->nid)
+        ->execute();
+
       // Get the D7 revision id.
       $vid = $this->dbConnMigrate->query(
         "SELECT vid FROM {node} WHERE nid = :nid", [':nid' => $row->nid]
