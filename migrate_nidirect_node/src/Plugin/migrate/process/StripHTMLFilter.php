@@ -22,13 +22,13 @@ class StripHTMLFilter extends ProcessPluginBase {
     // Reason for writing this filter was that a formatted text field in
     // Drupal 7 (the 'summary' field) was being converted to a plain
     // text field in Drupal 8.
-
-    // Replace any html entities with their text representation (including quotes).
+    // Firstly, replace any html entities with their text
+    // representation (including quotes).
     $value['value'] = html_entity_decode($value['value'], ENT_QUOTES);
 
     // Remove any HTML tags.
     $value['value'] = strip_tags($value['value']);
-    
+
     return $value;
   }
 
