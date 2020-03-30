@@ -43,7 +43,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
   /**
    * Drupal\Core\Entity\Query\QueryInterface definition.
    *
-   * @var QueryInterface
+   * @var \Drupal\Core\Entity\Query\QueryInterface
    */
   protected $entityQuery;
 
