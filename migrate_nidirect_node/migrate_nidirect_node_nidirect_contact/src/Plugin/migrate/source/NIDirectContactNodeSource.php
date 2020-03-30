@@ -2,7 +2,7 @@
 
 namespace Drupal\migrate_nidirect_node_nidirect_contact\Plugin\migrate\source;
 
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\State\StateInterface;
@@ -32,7 +32,7 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, StateInterface $state, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, LoggerChannelFactory $logger) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, StateInterface $state, EntityTypeManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, LoggerChannelFactory $logger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $state, $entity_manager, $module_handler);
     $this->logger = $logger->get('NIDirectContactNodeSource');
   }
@@ -66,8 +66,8 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
     // If we don't have a lookup fetch the value for parsing.
     if (empty($telephone)) {
       $query = $this->getDatabase()->query('
-        SELECT field_contact_phone_value 
-        FROM {field_data_field_contact_phone} 
+        SELECT field_contact_phone_value
+        FROM {field_data_field_contact_phone}
         WHERE entity_id = :nid', [
           ':nid' => $nid,
         ]

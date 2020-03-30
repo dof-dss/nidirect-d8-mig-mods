@@ -29,16 +29,17 @@ jobs:
     docker:
       - image: circleci/php:7.3.14-apache-browsers
     steps:
+      - checkout:
+          path: /home/circleci/nidirect-d8-mig-mods
       - run:
             name: Add OS and PHP extensions
             command: |
+              sudo cp /home/circleci/nidirect-d8-mig-mods/.circleci/docker-php-circleci.ini /usr/local/etc/php/conf.d/
               sudo apt-get update
               sudo apt-get install -y libpng-dev
               sudo docker-php-ext-install gd
               composer global require hirak/prestissimo
       # RESTORE CACHE??
-      - checkout:
-          path: /home/circleci/nidirect-d8-mig-mods
       - run:
           name: Fetch latest Drupal version
           command: |
@@ -53,7 +54,7 @@ jobs:
           command: |
             cd ${CIRCLE_WORKING_DIRECTORY}
             composer require --dev mglaman/drupal-check --no-interaction --optimize-autoloader
-            composer require --dev phpstan/phpstan:0.11.17
+            composer require --dev phpstan/phpstan
       - run:
          name: Deprecated code check
          command: |

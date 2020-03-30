@@ -3,7 +3,7 @@
 namespace Drupal\migrate_nidirect_taxo\EventSubscriber;
 
 use Drupal\Core\Entity\EntityTypeManager;
-use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateImportEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -24,9 +24,9 @@ class PreMigrationSubscriber implements EventSubscriberInterface {
   protected $logger;
 
   /**
-   * Drupal\Core\Entity\Query\QueryFactory definition.
+   * Drupal\Core\Entity\Query\QueryInterface definition.
    *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
+   * @var \Drupal\Core\Entity\Query\QueryInterface
    */
   protected $entityQuery;
 
@@ -42,14 +42,11 @@ class PreMigrationSubscriber implements EventSubscriberInterface {
    *
    * @param \Drupal\Core\Logger\LoggerChannelFactory $logger
    *   Drupal logger.
-   * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query
-   *   Entity query.
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    *   Entity Type Manager.
    */
-  public function __construct(LoggerChannelFactory $logger, QueryFactory $entity_query, EntityTypeManager $entity_type_manager) {
+  public function __construct(LoggerChannelFactory $logger, EntityTypeManager $entity_type_manager) {
     $this->logger = $logger->get('migrate_nidirect_taxo');
-    $this->entityQuery = $entity_query;
     $this->entityTypeManager = $entity_type_manager;
   }
 
@@ -84,12 +81,13 @@ class PreMigrationSubscriber implements EventSubscriberInterface {
        */
 
       // Fetch all the taxonomy pathauto patterns.
-      $query = $this->entityQuery->get('pathauto_pattern');
+      $pathauto_storage = $this->entityTypeManager->getStorage('pathauto_pattern');
+      $query = $pathauto_storage->getQuery();
       $query->condition('id', 'term', 'STARTS_WITH');
       $query->condition('status', 1);
       $ids = $query->execute();
 
-      $patterns = $this->entityTypeManager->getStorage('pathauto_pattern')->loadMultiple($ids);
+      $patterns = $pathauto_storage->loadMultiple($ids);
 
       // Disable each pathauto pattern.
       foreach ($patterns as $pattern) {
