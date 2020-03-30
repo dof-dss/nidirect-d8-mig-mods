@@ -3,11 +3,11 @@
 namespace Drupal\migrate_nidirect_taxo\EventSubscriber;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateImportEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\Core\Logger\LoggerChannelFactory;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\pathauto\PathautoGenerator;
 use Drupal\migrate_nidirect_utils\MigrationProcessors;
@@ -41,9 +41,9 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
   protected $dbConnDrupal8;
 
   /**
-   * Drupal\Core\Entity\Query\QueryFactory definition.
+   * Drupal\Core\Entity\Query\QueryInterface definition.
    *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
+   * @var QueryInterface
    */
   protected $entityQuery;
 
@@ -73,8 +73,6 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
    *
    * @param \Drupal\Core\Logger\LoggerChannelFactory $logger
    *   Drupal logger.
-   * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query
-   *   Entity query.
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    *   Entity Type Manager.
    * @param \Drupal\pathauto\PathautoGenerator $pathauto_generator
@@ -84,13 +82,11 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
    */
   public function __construct(
     LoggerChannelFactory $logger,
-    QueryFactory $entity_query,
     EntityTypeManager $entity_type_manager,
     PathautoGenerator $pathauto_generator,
     MigrationProcessors $migration_processors
   ) {
     $this->logger = $logger->get('migrate_nidirect_taxo');
-    $this->entityQuery = $entity_query;
     $this->entityTypeManager = $entity_type_manager;
     $this->pathautoGenerator = $pathauto_generator;
     $this->migrationProcessors = $migration_processors;
@@ -163,12 +159,13 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       }
 
       // Fetch all the taxonomy pathauto patterns.
-      $query = $this->entityQuery->get('pathauto_pattern');
+      $pathauto_storage = $this->entityTypeManager->getStorage('pathauto_pattern');
+      $query = $pathauto_storage->getQuery();
       $query->condition('id', 'term', 'STARTS_WITH');
       $query->condition('status', '1', '<>');
       $ids = $query->execute();
 
-      $patterns = $this->entityTypeManager->getStorage('pathauto_pattern')->loadMultiple($ids);
+      $patterns = $pathauto_storage->loadMultiple($ids);
 
       // Enable each pathauto pattern.
       foreach ($patterns as $pattern) {
