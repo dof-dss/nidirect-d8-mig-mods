@@ -178,7 +178,7 @@ class NidirectMigratePreCommand extends MigrateCommand {
   // phpcs:disable
   protected function task_remove_recipe_node_metatags() {
   // phpcs:enable
-    $this->drupal7DatabaseQuery("DELETE FROM metatag INNER JOIN node ON node.nid = metatag.entity_id WHERE node.type = 'nidirect_recipe'");
+    $this->drupal7DatabaseQuery("DELETE m FROM metatag m INNER JOIN node n ON n.nid = m.entity_id WHERE n.type = 'nidirect_recipe'");
   }
 
   /**
@@ -187,7 +187,7 @@ class NidirectMigratePreCommand extends MigrateCommand {
   // phpcs:disable
   protected function task_remove_recipe_node_revisions() {
   // phpcs:enable
-    $this->drupal7DatabaseQuery("DELETE FROM node_revision INNER JOIN node ON node.nid = node_revision.nid WHERE node.type = 'nidirect_recipe'");
+    $this->drupal7DatabaseQuery("DELETE r FROM node_revision r INNER JOIN node n ON n.nid = r.nid WHERE n.type = 'nidirect_recipe'");
   }
 
   /**
@@ -214,7 +214,7 @@ class NidirectMigratePreCommand extends MigrateCommand {
   // phpcs:disable
   protected function task_remove_umbrella_body_node_metatags() {
   // phpcs:enable
-    $this->drupal7DatabaseQuery("DELETE FROM metatag INNER JOIN node ON node.nid = metatag.entity_id WHERE node.type = 'nidirect_ub'");
+    $this->drupal7DatabaseQuery("DELETE m FROM metatag m INNER JOIN node n ON n.nid = m.entity_id WHERE n.type = 'nidirect_ub'");
   }
 
   /**
@@ -223,7 +223,7 @@ class NidirectMigratePreCommand extends MigrateCommand {
   // phpcs:disable
   protected function task_remove_umbrella_body_node_revisions() {
   // phpcs:enable
-    $this->drupal7DatabaseQuery("DELETE FROM node_revision INNER JOIN node ON node.nid = node_revision.nid WHERE node.type = 'nidirect_ub'");
+    $this->drupal7DatabaseQuery("DELETE r FROM node_revision r INNER JOIN node n ON n.nid = r.nid WHERE n.type = 'nidirect_ub'");
   }
 
   /**
