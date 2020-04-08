@@ -33,7 +33,9 @@ class NidirectMigratePostContactChildrenCommand extends ContainerAwareCommand {
   protected function execute(InputInterface $input, OutputInterface $output) {
     $this->getIo()->info('Setting up contact children');
 
-    $node = Node::load($entity_id);
+    // Sort out 'Jobs & Benefits offices'.
+    $node = Node::load(2739);
+
 
     $this->getIo()->info($this->trans('commands.nidirect.migrate.post.contact_children.messages.success'));
   }
