@@ -41,3 +41,13 @@ services:
     arguments: []
     tags:
       - { name: drupal.command }
+  migrate_nidirect_utils.nidirect_migrate_post_contact_children:
+    class: Drupal\migrate_nidirect_utils\Command\NidirectMigratePostContactChildrenCommand
+    arguments: ['@migrate_nidirect_utils.nidirect_migrate_post_contact_children_generator']
+    tags:
+      - { name: drupal.command }
+  migrate_nidirect_utils.nidirect_migrate_post_contact_children_generator:
+    class: Drupal\migrate_nidirect_utils\Generator\NidirectMigratePostContactChildrenGenerator
+    arguments: []
+    tags:
+      - { name: drupal.generator }
