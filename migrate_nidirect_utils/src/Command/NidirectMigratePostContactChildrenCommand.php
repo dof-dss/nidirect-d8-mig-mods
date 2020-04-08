@@ -2,10 +2,12 @@
 
 namespace Drupal\migrate_nidirect_utils\Command;
 
+use Drupal\node\Entity\Node;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Drupal\Console\Core\Command\Command;
-use Drupal\Console\Core\Generator\GeneratorInterface;
+use Drupal\Console\Core\Command\ContainerAwareCommand;
+use Drupal\Console\Annotations\DrupalCommand;
+use Drupal\Core\Database\Database;
 
 /**
  * Class NidirectMigratePostContactChildrenCommand.
@@ -15,24 +17,7 @@ use Drupal\Console\Core\Generator\GeneratorInterface;
  *     extensionType="module"
  * )
  */
-class NidirectMigratePostContactChildrenCommand extends Command {
-
-  /**
-   * Drupal\Console\Core\Generator\GeneratorInterface definition.
-   *
-   * @var \Drupal\Console\Core\Generator\GeneratorInterface
-   */
-  protected $generator;
-
-
-  /**
-   * Constructs a new NidirectMigratePostContactChildrenCommand object.
-   */
-  public function __construct(GeneratorInterface $migrate_nidirect_utils_nidirect_migrate_post_contact_children_generator) {
-    $this->generator = $migrate_nidirect_utils_nidirect_migrate_post_contact_children_generator;
-    parent::__construct();
-  }
-
+class NidirectMigratePostContactChildrenCommand extends ContainerAwareCommand {
   /**
    * {@inheritdoc}
    */
@@ -45,18 +30,12 @@ class NidirectMigratePostContactChildrenCommand extends Command {
   /**
    * {@inheritdoc}
    */
-  protected function initialize(InputInterface $input, OutputInterface $output) {
-    parent::initialize($input, $output);
-    $this->getIo()->info('initialize');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $this->getIo()->info('execute');
+    $this->getIo()->info('Setting up contact children');
+
+    $node = Node::load($entity_id);
+
     $this->getIo()->info($this->trans('commands.nidirect.migrate.post.contact_children.messages.success'));
-    $this->generator->generate([]);
   }
 
 }
