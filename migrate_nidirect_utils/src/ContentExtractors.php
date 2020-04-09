@@ -22,7 +22,7 @@ class ContentExtractors {
 
     foreach($matches as $link) {
       $links[] = [
-        'uri' => $link[1],
+        'uri' => (strpos($link[1], '/') === 0 ? 'internal:' . $link[1] : $link[1]),
         'title' => $link[2],
         'options' => '',
       ];
