@@ -7,7 +7,7 @@ namespace Drupal\migrate_nidirect_utils;
  *
  * @package Drupal\migrate_nidirect_utils
  */
-class ContentExtractors {
+class ContentProcessors {
 
   public static function relatedLinks($content) {
 
@@ -30,4 +30,6 @@ class ContentExtractors {
 
     return $links;
   }
+
+
 }
