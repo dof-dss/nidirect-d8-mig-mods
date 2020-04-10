@@ -11,9 +11,15 @@ class ContentProcessors {
 
   public static function relatedLinks($content) {
 
-    // Extract everything after the 'More useful links'.
-    $links_markup = substr($content[0][0]['value'], strpos($content[0][0]['value'], '<h2>More useful links</h2>' ) + 26);
+    // Find the character index of the Useful links heading.
+    $links_header_position = strpos($content[0][0]['value'], '<h2>More useful links</h2>');
 
+    if ($links_header_position === FALSE) {
+      return;
+    }
+
+    // Extract everything after the 'More useful links'.
+    $links_markup = substr($content[0][0]['value'],  $links_header_position + 26);
     // Extract uri and text.
     $link_regex = '/<a href="(\S+?)".*?>\s*([^<]*)<\//m';
     preg_match_all($link_regex, $links_markup, $matches, PREG_SET_ORDER, 0);
@@ -24,12 +30,12 @@ class ContentProcessors {
       $links[] = [
         'uri' => (strpos($link[1], '/') === 0 ? 'internal:' . $link[1] : $link[1]),
         'title' => $link[2],
-        'options' => '',
+        'options' => [
+          'attributes' => [],
+        ],
       ];
     }
 
     return $links;
   }
-
-
 }
