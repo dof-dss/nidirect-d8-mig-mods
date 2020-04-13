@@ -55,6 +55,11 @@ process:
       source: field_additional_info
     -
       plugin: media_wysiwyg_filter
+    -
+      plugin: str_replace
+      regex: true
+      search: /(((<[a-zA-Z1-9]*>)+More useful links<\/\S*>.*)(<\/ul>))(.*)/mis
+      replace: ${5}
   field_additional_info/0/format:
     -
       plugin: static_map
@@ -97,6 +102,14 @@ process:
       source: field_top_level_theme
       process:
         target_id: tid
+  field_related_info:
+    -
+      plugin: callback
+      callable:
+        - '\Drupal\migrate_nidirect_utils\ContentProcessors'
+        - relatedLinks
+      source:
+        - field_additional_info
 migration_dependencies:
   required:
     - upgrade_d7_user
