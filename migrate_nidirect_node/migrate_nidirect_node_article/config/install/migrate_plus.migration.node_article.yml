@@ -39,6 +39,11 @@ process:
       source: body
     -
       plugin: media_wysiwyg_filter
+    -
+      plugin: str_replace
+      regex: true
+      search: /(((<[a-zA-Z1-9]*>)+More useful links<\/\S*>.*)(<\/ul>))(.*)/mis
+      replace: ${5}
   body/0/format:
     -
       plugin: static_map
