@@ -57,6 +57,11 @@ process:
       source: field_contact_additional_info
     -
       plugin: media_wysiwyg_filter
+    -
+      plugin: str_replace
+      regex: true
+      search: /(((<[a-zA-Z1-9]*>)+More useful links<\/\S*>.*)(<\/ul>))(.*)/mis
+      replace: ${5}
   field_contact_additional_info/0/format:
     -
       plugin: static_map
@@ -77,6 +82,14 @@ process:
       source: field_summary
     -
       plugin: strip_html_filter
+  field_related_info:
+    -
+      plugin: callback
+      callable:
+        - '\Drupal\migrate_nidirect_utils\ContentProcessors'
+        - relatedLinks
+      source:
+        - field_contact_additional_info
 destination:
   plugin: 'entity:node'
   default_bundle: contact
