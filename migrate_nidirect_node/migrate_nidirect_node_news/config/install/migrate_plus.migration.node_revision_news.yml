@@ -35,6 +35,11 @@ process:
       source: body
     -
       plugin: media_wysiwyg_filter
+    -
+      plugin: str_replace
+      regex: true
+      search: /(((<[a-zA-Z1-9]*>)+More useful links<\/\S*>.*)(<\/ul>))(.*)/mis
+      replace: ${5}
   body/0/format:
     -
       plugin: static_map
@@ -88,6 +93,14 @@ process:
         plain_text: plain_text
   field_teaser: field_teaser
   field_toc_enable: field_enable_toc
+  field_related_info:
+    -
+      plugin: callback
+      callable:
+        - '\Drupal\migrate_nidirect_utils\ContentProcessors'
+        - relatedLinks
+      source:
+        - body
 destination:
   plugin: 'entity_revision:node'
   default_bundle: news
