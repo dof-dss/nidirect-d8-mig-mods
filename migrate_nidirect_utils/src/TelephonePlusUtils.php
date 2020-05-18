@@ -192,4 +192,19 @@ class TelephonePlusUtils {
     return $telephone;
   }
 
+
+  /**
+   * Extract a suitable label based on the telephone number prefix/area code.
+   *
+   * @param string $input
+   *   A telephone number.
+   *
+   * @return string
+   *   A descriptive text label.
+   */
+  public static function createLabel($input) {
+    $input = ltrim($input ['+']);
+    $area_code = substr($input, 0, strpos($input, ' '));
+  }
+
 }
