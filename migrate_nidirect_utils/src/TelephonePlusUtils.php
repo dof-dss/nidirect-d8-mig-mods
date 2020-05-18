@@ -203,8 +203,33 @@ class TelephonePlusUtils {
    *   A descriptive text label.
    */
   public static function createLabel($input) {
-    $input = ltrim($input ['+']);
+    // Remove international dial code prefix.
+    $input = ltrim($input, '+');
+
+    // Extract the area code from the rest of the number.
     $area_code = substr($input, 0, strpos($input, ' '));
+
+    switch (substr($area_code, 0,2)) {
+      case '01':
+      case '02':
+      case '03':
+        return 'Phone';
+        break;
+
+      case '07':
+        return 'Mobile';
+        break;
+
+      case '08':
+        if (substr($area_code, 0,3) === '080') {
+          return 'Freephone';
+        }
+        break;
+
+      default:
+        return '';
+        break;
+    }
   }
 
 }
