@@ -73,7 +73,7 @@ class TelephonePlusUtils {
 
     if ($matches) {
       $telephone[] = [
-        'telephone_title' => '',
+        'telephone_title' => self::createLabel($matches[0][0]),
         'telephone_number' => $matches[0][0],
         'telephone_extension' => '',
         'telephone_supplementary' => '',
@@ -116,7 +116,7 @@ class TelephonePlusUtils {
 
     if ($matches) {
       $telephone[] = [
-        'telephone_title' => '',
+        'telephone_title' => self::createLabel($matches[0][2]),
         'telephone_number' => $matches[0][2],
         'telephone_extension' => '',
         'telephone_supplementary' => $matches[0][3],
@@ -131,7 +131,7 @@ class TelephonePlusUtils {
 
     if ($matches) {
       $telephone[] = [
-        'telephone_title' => '',
+        'telephone_title' => self::createLabel($matches[0][2]),
         'telephone_number' => $matches[0][2],
         'telephone_extension' => $matches[0][5],
         'telephone_supplementary' => '',
@@ -161,7 +161,7 @@ class TelephonePlusUtils {
 
     if ($matches) {
       $telephone[] = [
-        'telephone_title' => '',
+        'telephone_title' => self::createLabel($matches[0][2]),
         'telephone_number' => $matches[0][2],
         'telephone_extension' => $matches[0][5] ?? '',
         'telephone_supplementary' => '',
@@ -170,7 +170,7 @@ class TelephonePlusUtils {
       ];
 
       $telephone[] = [
-        'telephone_title' => '',
+        'telephone_title' => self::createLabel($matches[0][7]),
         'telephone_number' => $matches[0][7],
         'telephone_extension' => $matches[0][10] ?? '',
         'telephone_supplementary' => '',
@@ -224,6 +224,10 @@ class TelephonePlusUtils {
         if (substr($area_code, 0,3) === '080') {
           return 'Freephone';
         }
+        break;
+
+      case '44':
+        return 'If calling from outside the UK';
         break;
 
       default:
