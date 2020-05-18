@@ -192,7 +192,6 @@ class TelephonePlusUtils {
     return $telephone;
   }
 
-
   /**
    * Extract a suitable label based on the telephone number prefix/area code.
    *
@@ -209,30 +208,25 @@ class TelephonePlusUtils {
     // Extract the area code from the rest of the number.
     $area_code = substr($input, 0, strpos($input, ' '));
 
-    switch (substr($area_code, 0,2)) {
+    switch (substr($area_code, 0, 2)) {
       case '01':
       case '02':
       case '03':
         return 'Phone';
-        break;
 
       case '07':
         return 'Mobile';
-        break;
 
       case '08':
-        if (substr($area_code, 0,3) === '080') {
+        if (substr($area_code, 0, 3) === '080') {
           return 'Freephone';
         }
-        break;
 
       case '44':
         return 'If calling from outside the UK';
-        break;
 
       default:
         return '';
-        break;
     }
   }
 
