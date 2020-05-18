@@ -73,7 +73,7 @@ class TelephonePlusUtils {
 
     if ($matches) {
       $telephone[] = [
-        'telephone_title' => '',
+        'telephone_title' => self::createLabel($matches[0][0]),
         'telephone_number' => $matches[0][0],
         'telephone_extension' => '',
         'telephone_supplementary' => '',
@@ -116,7 +116,7 @@ class TelephonePlusUtils {
 
     if ($matches) {
       $telephone[] = [
-        'telephone_title' => '',
+        'telephone_title' => self::createLabel($matches[0][2]),
         'telephone_number' => $matches[0][2],
         'telephone_extension' => '',
         'telephone_supplementary' => $matches[0][3],
@@ -131,7 +131,7 @@ class TelephonePlusUtils {
 
     if ($matches) {
       $telephone[] = [
-        'telephone_title' => '',
+        'telephone_title' => self::createLabel($matches[0][2]),
         'telephone_number' => $matches[0][2],
         'telephone_extension' => $matches[0][5],
         'telephone_supplementary' => '',
@@ -161,7 +161,7 @@ class TelephonePlusUtils {
 
     if ($matches) {
       $telephone[] = [
-        'telephone_title' => '',
+        'telephone_title' => self::createLabel($matches[0][2]),
         'telephone_number' => $matches[0][2],
         'telephone_extension' => $matches[0][5] ?? '',
         'telephone_supplementary' => '',
@@ -170,7 +170,7 @@ class TelephonePlusUtils {
       ];
 
       $telephone[] = [
-        'telephone_title' => '',
+        'telephone_title' => self::createLabel($matches[0][7]),
         'telephone_number' => $matches[0][7],
         'telephone_extension' => $matches[0][10] ?? '',
         'telephone_supplementary' => '',
@@ -190,6 +190,44 @@ class TelephonePlusUtils {
     ];
 
     return $telephone;
+  }
+
+  /**
+   * Extract a suitable label based on the telephone number prefix/area code.
+   *
+   * @param string $input
+   *   A telephone number.
+   *
+   * @return string
+   *   A descriptive text label.
+   */
+  public static function createLabel($input) {
+    // Remove international dial code prefix.
+    $input = ltrim($input, '+');
+
+    // Extract the area code from the rest of the number.
+    $area_code = substr($input, 0, strpos($input, ' '));
+
+    switch (substr($area_code, 0, 2)) {
+      case '01':
+      case '02':
+      case '03':
+        return 'Phone';
+
+      case '07':
+        return 'Mobile';
+
+      case '08':
+        if (substr($area_code, 0, 3) === '080') {
+          return 'Freephone';
+        }
+
+      case '44':
+        return 'If calling from outside the UK';
+
+      default:
+        return '';
+    }
   }
 
 }
