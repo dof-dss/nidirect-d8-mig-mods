@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate_nidirect_file\Plugin\migrate\process;
 
+use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
@@ -48,27 +49,15 @@ class MediaWysiwygFilter extends ProcessPluginBase {
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $pattern = '/\[\[(?<tag_info>.+?"type":"media".+?)\]\]/s';
-    $replacement_template = <<<'TEMPLATE'
-<drupal-entity
-  data-embed-button="media"
-  data-entity-embed-display="view_mode:media.%s"
-  data-entity-type="media"
-  data-entity-id="%s"></drupal-entity>
-TEMPLATE;
     $messenger = $this->messenger();
     $nid = $row->getSourceProperty('nid');
-    $value['value'] = preg_replace_callback($pattern, function ($matches) use ($replacement_template, $messenger, $nid) {
+    $value['value'] = preg_replace_callback($pattern, function ($matches) use ($messenger, $nid) {
       $decoder = new JsonDecode(TRUE);
       try {
         $tag_info = $decoder->decode($matches['tag_info'], JsonEncoder::FORMAT);
-        // Convert any 'default' view modes to 'embed'.
-        $tag_info['view_mode'] = str_replace('default', 'embed', $tag_info['view_mode']);
-        return sprintf($replacement_template, $tag_info['view_mode'], $tag_info['fid']);
       }
       catch (NotEncodableValueException $e) {
-        // There was an error decoding the JSON. Remove code.
-        $messenger->addWarning(sprintf('The following media_wysiwyg token in node %d does not have valid JSON: %s',
-            $nid, $matches[0]));
+        $messenger->addWarning('Unable to extract JSON');
         return '';
       }
     }, $value['value']);
