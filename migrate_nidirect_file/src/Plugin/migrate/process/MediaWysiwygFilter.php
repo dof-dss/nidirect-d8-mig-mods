@@ -49,44 +49,59 @@ class MediaWysiwygFilter extends ProcessPluginBase {
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $pattern = '/\[\[(?<tag_info>.+?"type":"media".+?)\]\]/s';
+    $replacement_template = <<<'TEMPLATE'
+<drupal-media
+    data-align="center"
+    data-entity-type="media"
+    data-entity-uuid="%s"
+    data-view-mode="landscape_float_xp">
+</drupal-media>
+TEMPLATE;
     $messenger = $this->messenger();
     $nid = $row->getSourceProperty('nid');
-    $value['value'] = preg_replace_callback($pattern, function ($matches) use ($messenger, $nid) {
+    $value['value'] = preg_replace_callback($pattern, function ($matches) use ($replacement_template, $messenger, $nid) {
       $decoder = new JsonDecode(TRUE);
       try {
         $tag_info = $decoder->decode($matches['tag_info'], JsonEncoder::FORMAT);
-
-        // Perform lookup for managed files matching the D7 fid.
         $database = \Drupal::database();
         $query = $database->select('file_managed', 'f');
 
         $query->condition('f.fid', $tag_info['fid'], '=');
-        $query->fields('f', ['filename', 'filemime', 'uri']);
+        $query->fields('f', ['uuid', 'filename', 'filemime', 'uri']);
         $query->range(0, 1);
         $file = $query->execute()->fetchAssoc();
+
+        if ($media_table == 'media__field_media_') {
+          return;
+        }
 
         if (!empty($file)) {
           // Media table name prefix.
           $media_table = 'media__field_media_';
 
           // Determine the media file type to handle.
-          switch ($file['mimetype']) {
+          switch ($file['filemime']) {
             case 'image/png' :
             case 'image/jpeg' :
             case 'image/gif' :
               $media_table .= 'image';
-              $field_target_id = 'field_media_image_target_id';
+              $field_target_id = 'i.field_media_image_target_id';
               break;
             default:
               break;
           }
 
+          if ($media_table == 'media__field_media_') {
+            return;
+          }
         }
 
 
       }
       catch (NotEncodableValueException $e) {
-        $messenger->addWarning('Unable to extract JSON');
+        // There was an error decoding the JSON. Remove code.
+        $messenger->addWarning(sprintf('The following media_wysiwyg token in node %d does not have valid JSON: %s',
+          $nid, $matches[0]));
         return '';
       }
     }, $value['value']);
