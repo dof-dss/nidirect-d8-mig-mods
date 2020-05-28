@@ -55,6 +55,16 @@ class MediaWysiwygFilter extends ProcessPluginBase {
       $decoder = new JsonDecode(TRUE);
       try {
         $tag_info = $decoder->decode($matches['tag_info'], JsonEncoder::FORMAT);
+
+        // Perform lookup for managed files matching the D7 fid.
+        $database = \Drupal::database();
+        $query = $database->select('file_managed', 'f');
+
+        $query->condition('f.fid', $tag_info['fid'], '=');
+        $query->fields('f', ['filename', 'filemime', 'uri']);
+        $query->range(0, 1);
+        $file = $query->execute()->fetchAssoc();
+        
       }
       catch (NotEncodableValueException $e) {
         $messenger->addWarning('Unable to extract JSON');
