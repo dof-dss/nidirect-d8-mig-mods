@@ -64,7 +64,26 @@ class MediaWysiwygFilter extends ProcessPluginBase {
         $query->fields('f', ['filename', 'filemime', 'uri']);
         $query->range(0, 1);
         $file = $query->execute()->fetchAssoc();
-        
+
+        if (!empty($file)) {
+          // Media table name prefix.
+          $media_table = 'media__field_media_';
+
+          // Determine the media file type to handle.
+          switch ($file['mimetype']) {
+            case 'image/png' :
+            case 'image/jpeg' :
+            case 'image/gif' :
+              $media_table .= 'image';
+              $field_target_id = 'field_media_image_target_id';
+              break;
+            default:
+              break;
+          }
+
+        }
+
+
       }
       catch (NotEncodableValueException $e) {
         $messenger->addWarning('Unable to extract JSON');
