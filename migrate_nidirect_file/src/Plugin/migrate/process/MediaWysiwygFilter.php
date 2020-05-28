@@ -54,7 +54,7 @@ class MediaWysiwygFilter extends ProcessPluginBase {
     data-align="center"
     data-entity-type="media"
     data-entity-uuid="%s"
-    data-view-mode="landscape_float_xp">
+    data-view-mode="%s">
 </drupal-media>
 TEMPLATE;
     $messenger = $this->messenger();
@@ -94,6 +94,30 @@ TEMPLATE;
           if ($media_table == 'media__field_media_') {
             return;
           }
+
+          // Extract the base media entity uuid.
+          $query = \Drupal::database()->select('media', 'm');
+          $query->fields('m', ['uuid']);
+          $query->addField('i', 'entity_id');
+          $query->join($media_table, 'i', 'i.entity_id = m.mid');
+          $query->condition($field_target_id, $tag_info['fid'], '=');
+          $query->range(0, 1);
+          $media = $query->execute()->fetchAssoc();
+
+          $style_map = [
+            'inline' => 'landscape_float',
+            'inline-expandable' => 'landscape_float_xp',
+            'inline_xl' => 'landscape_full',
+            'inline_xl_expandable' => 'landscape_full_xp',
+          ];
+
+          if (array_key_exists($tag_info['attributes']['data-picture-mapping'], $style_map)) {
+            $image_style = $style_map[$tag_info['attributes']['data-picture-mapping']] ;
+          } else {
+            $image_style = 'landscape_float';
+          }
+
+          return sprintf($replacement_template, $media['uuid'], $image_style);
         }
 
 
