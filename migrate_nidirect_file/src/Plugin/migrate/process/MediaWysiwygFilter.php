@@ -11,6 +11,7 @@ use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Drupal\Core\Database\Connection;
+
 /**
  * Processes [[{"type":"media","fid":"1234",...}]] tokens in content.
  *
@@ -119,14 +120,16 @@ TEMPLATE;
 
           // Determine the media file type to handle.
           switch ($file['filemime']) {
-            case 'image/png' :
-            case 'image/jpeg' :
-            case 'image/gif' :
+            case 'image/png':
+            case 'image/jpeg':
+            case 'image/gif':
               $media_table .= 'image';
               $field_target_id = 'i.field_media_image_target_id';
               break;
+
             default:
               break;
+
           }
 
           if ($media_table == 'media__field_media_') {
@@ -158,13 +161,15 @@ TEMPLATE;
             ],
           ];
 
-          // Select the appropriate display orientation based on image dimensions.
+          // Select the appropriate display orientation based on the
+          // image dimensions.
           $orientation = ($media['width'] > $media['height']) ? 'landscape' : 'portrait';
 
           // Assign the image style to the embedded image.
           if (array_key_exists($tag_info['attributes']['data-picture-mapping'], $style_map)) {
-            $image_style = $style_map[$orientation][$tag_info['attributes']['data-picture-mapping']] ;
-          } else {
+            $image_style = $style_map[$orientation][$tag_info['attributes']['data-picture-mapping']];
+          }
+          else {
             $image_style = $style_map[$orientation][array_key_first($style_map)];
           }
 
@@ -172,15 +177,14 @@ TEMPLATE;
           return sprintf($replacement_template, $media['uuid'], $image_style);
         }
 
-
       }
       catch (NotEncodableValueException $e) {
         // There was an error decoding the JSON. Remove code.
         $messenger->addWarning(sprintf('The following media_wysiwyg token in node %d does not have valid JSON: %s',
           $nid, $matches[0]));
-        return '';
+        return NULL;
       }
-      return null;
+      return NULL;
     }, $value['value']);
 
     return $value;
