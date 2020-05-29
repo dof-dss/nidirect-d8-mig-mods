@@ -146,25 +146,27 @@ TEMPLATE;
           $query->range(0, 1);
           $media = $query->execute()->fetchAssoc();
 
-          // Select the appropriate display orientation based on image dimensions.
-          if ($media['width'] > $media['height']) {
-            $style_map = [
+          // Updated image formats when converting from D7 to D8 site.
+          $style_map = [
+            'landscape' => [
               'inline' => 'landscape_float',
               'inline-expandable' => 'landscape_float_xp',
               'inline_xl' => 'landscape_full_xp',
-            ];
-          } else {
-            $style_map = [
+            ],
+            'portrait' => [
               'inline' => 'portrait_float',
               'inline-expandable' => 'portrait_float_xp',
               'inline_xl' => 'portrait_full',
-            ];
-          }
+            ],
+          ];
+
+          // Select the appropriate display orientation based on image dimensions.
+          $orientation = ($media['width'] > $media['height']) ? 'landscape' : 'portrait';
 
           if (array_key_exists($tag_info['attributes']['data-picture-mapping'], $style_map)) {
-            $image_style = $style_map[$tag_info['attributes']['data-picture-mapping']] ;
+            $image_style = $style_map[$orientation][$tag_info['attributes']['data-picture-mapping']] ;
           } else {
-            $image_style = $style_map[array_key_first($style_map)];
+            $image_style = $style_map[$orientation][array_key_first($style_map)];
           }
 
           return sprintf($replacement_template, $media['uuid'], $image_style);
