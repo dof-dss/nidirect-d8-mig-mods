@@ -147,14 +147,13 @@ TEMPLATE;
           $style_map = [
             'inline' => 'landscape_float',
             'inline-expandable' => 'landscape_float_xp',
-            'inline_xl' => 'landscape_full',
-            'inline_xl_expandable' => 'landscape_full_xp',
+            'inline_xl' => 'landscape_full_xp',
           ];
 
           if (array_key_exists($tag_info['attributes']['data-picture-mapping'], $style_map)) {
             $image_style = $style_map[$tag_info['attributes']['data-picture-mapping']] ;
           } else {
-            $image_style = 'landscape_float';
+            $image_style = 'landscape_full_xp';
           }
 
           return sprintf($replacement_template, $media['uuid'], $image_style);
