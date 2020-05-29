@@ -139,21 +139,32 @@ TEMPLATE;
           $query = \Drupal::database()->select('media', 'm');
           $query->fields('m', ['uuid']);
           $query->addField('i', 'entity_id');
+          $query->addField('i', 'field_media_image_width', 'width');
+          $query->addField('i', 'field_media_image_height', 'height');
           $query->join($media_table, 'i', 'i.entity_id = m.mid');
           $query->condition($field_target_id, $tag_info['fid'], '=');
           $query->range(0, 1);
           $media = $query->execute()->fetchAssoc();
 
-          $style_map = [
-            'inline' => 'landscape_float',
-            'inline-expandable' => 'landscape_float_xp',
-            'inline_xl' => 'landscape_full_xp',
-          ];
+          // Select the appropriate display orientation based on image dimensions.
+          if ($media['width'] > $media['height']) {
+            $style_map = [
+              'inline' => 'landscape_float',
+              'inline-expandable' => 'landscape_float_xp',
+              'inline_xl' => 'landscape_full_xp',
+            ];
+          } else {
+            $style_map = [
+              'inline' => 'portrait_float',
+              'inline-expandable' => 'portrait_float_xp',
+              'inline_xl' => 'portrait_full',
+            ];
+          }
 
           if (array_key_exists($tag_info['attributes']['data-picture-mapping'], $style_map)) {
             $image_style = $style_map[$tag_info['attributes']['data-picture-mapping']] ;
           } else {
-            $image_style = 'landscape_full_xp';
+            $image_style = $style_map[array_key_first($style_map)];
           }
 
           return sprintf($replacement_template, $media['uuid'], $image_style);
