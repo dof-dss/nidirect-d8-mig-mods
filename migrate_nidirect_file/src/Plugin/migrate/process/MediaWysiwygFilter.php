@@ -2,7 +2,7 @@
 
 namespace Drupal\migrate_nidirect_file\Plugin\migrate\process;
 
-use Drupal\migrate\MigrateException;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
-
+use Drupal\Core\Database\Connection;
 /**
  * Processes [[{"type":"media","fid":"1234",...}]] tokens in content.
  *
@@ -43,33 +43,30 @@ use Symfony\Component\Serializer\Exception\NotEncodableValueException;
  *   id = "media_wysiwyg_filter"
  * )
  */
-class MediaWysiwygFilter extends ProcessPluginBase {
+class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The block_content entity storage handler.
+   * The database connection.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\Core\Database\Connection
    */
-  protected $dbConnection;
+  protected $connection;
 
   /**
-   * Constructs a BlockPluginId object.
+   * Constructs a UpdateFileToDocument process plugin instance.
    *
    * @param array $configuration
    *   The plugin configuration.
    * @param string $plugin_id
    *   The plugin ID.
-   * @param mixed $plugin_definition
+   * @param array $plugin_definition
    *   The plugin definition.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
-   *   The block content storage object.
-   * @param \Drupal\migrate\MigrateLookupInterface $migrate_lookup
-   *   The migrate lookup service.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   Database connection.
    */
-// @codingStandardsIgnoreLine
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, $db_connection) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, Connection $connection) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->dbConnection = $db_connection;
+    $this->connection = $connection;
   }
 
   /**
@@ -102,10 +99,11 @@ TEMPLATE;
     $value['value'] = preg_replace_callback($pattern, function ($matches) use ($replacement_template, $messenger, $nid) {
       $decoder = new JsonDecode(TRUE);
       try {
-        $tag_info = $decoder->decode($matches['tag_info'], JsonEncoder::FORMAT);
-        $database = \Drupal::database();
-        $query = $database->select('file_managed', 'f');
 
+        // Extract the D7 embedded media data.
+        $tag_info = $decoder->decode($matches['tag_info'], JsonEncoder::FORMAT);
+
+        $query = $this->connection->select('file_managed', 'f');
         $query->condition('f.fid', $tag_info['fid'], '=');
         $query->fields('f', ['uuid', 'filename', 'filemime', 'uri']);
         $query->range(0, 1);
@@ -136,7 +134,7 @@ TEMPLATE;
           }
 
           // Extract the base media entity uuid.
-          $query = \Drupal::database()->select('media', 'm');
+          $query = $this->connection->select('media', 'm');
           $query->fields('m', ['uuid']);
           $query->addField('i', 'entity_id');
           $query->addField('i', 'field_media_image_width', 'width');
@@ -163,12 +161,14 @@ TEMPLATE;
           // Select the appropriate display orientation based on image dimensions.
           $orientation = ($media['width'] > $media['height']) ? 'landscape' : 'portrait';
 
+          // Assign the image style to the embedded image.
           if (array_key_exists($tag_info['attributes']['data-picture-mapping'], $style_map)) {
             $image_style = $style_map[$orientation][$tag_info['attributes']['data-picture-mapping']] ;
           } else {
             $image_style = $style_map[$orientation][array_key_first($style_map)];
           }
 
+          // Update drupal-media template values.
           return sprintf($replacement_template, $media['uuid'], $image_style);
         }
 
@@ -180,6 +180,7 @@ TEMPLATE;
           $nid, $matches[0]));
         return '';
       }
+      return null;
     }, $value['value']);
 
     return $value;
