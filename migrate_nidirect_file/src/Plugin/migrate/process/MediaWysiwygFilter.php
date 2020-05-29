@@ -6,6 +6,7 @@ use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
@@ -43,6 +44,45 @@ use Symfony\Component\Serializer\Exception\NotEncodableValueException;
  * )
  */
 class MediaWysiwygFilter extends ProcessPluginBase {
+
+  /**
+   * The block_content entity storage handler.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $dbConnection;
+
+  /**
+   * Constructs a BlockPluginId object.
+   *
+   * @param array $configuration
+   *   The plugin configuration.
+   * @param string $plugin_id
+   *   The plugin ID.
+   * @param mixed $plugin_definition
+   *   The plugin definition.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The block content storage object.
+   * @param \Drupal\migrate\MigrateLookupInterface $migrate_lookup
+   *   The migrate lookup service.
+   */
+// @codingStandardsIgnoreLine
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, $db_connection) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->dbConnection = $db_connection;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('database')
+    );
+  }
 
   /**
    * {@inheritdoc}
