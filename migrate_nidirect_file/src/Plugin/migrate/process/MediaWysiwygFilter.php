@@ -94,10 +94,10 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
     $value['value'] = preg_replace_callback($pattern, function ($matches) use ($replacement_template, $messenger, $nid) {
       $decoder = new JsonDecode(TRUE);
       try {
-
         // Extract the D7 embedded media data.
         $tag_info = $decoder->decode($matches['tag_info'], JsonEncoder::FORMAT);
 
+        // Ensure we have a managed file for the embedded asset.
         $query = $this->connection->select('file_managed', 'f');
         $query->condition('f.fid', $tag_info['fid'], '=');
         $query->fields('f', ['uuid', 'filename', 'filemime', 'uri']);
@@ -114,6 +114,28 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
             default:
               break;
           }
+        } else {
+          // Search for oembed/remote video.
+          $query = $this->connection->select('media', 'm');
+          $query->condition('m.mid', $tag_info['fid'], '=');
+          $query->fields('m', ['uuid']);
+          $query->addField('o', 'bundle');
+          $query->join('media__field_media_oembed_video', 'o', 'o.entity_id = m.mid');
+          $query->range(0, 1);
+          $oembed = $query->execute()->fetchAssoc();
+
+          if ($oembed['bundle'] == 'remote_video') {
+            $replacement_template = <<<'TEMPLATE'
+                <drupal-media
+                    data-align="center"
+                    data-entity-type="media"
+                    data-entity-uuid="%s">
+                </drupal-media>
+              TEMPLATE;
+
+            return sprintf($replacement_template, $oembed['uuid']);
+          }
+
         }
       }
       catch (NotEncodableValueException $e) {
@@ -128,7 +150,7 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
     return $value;
   }
 
-  protected function genericMediaEmbed() {
+  protected function genericMediaEmbed($tag_info, $media_type) {
 
     $replacement_template = <<<'TEMPLATE'
         <drupal-media
@@ -137,7 +159,6 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
             data-entity-uuid="%s">
         </drupal-media>
     TEMPLATE;
-
 
   }
 
@@ -158,7 +179,6 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
     $query->addField('i', 'entity_id');
     $query->addField('i', 'field_media_image_width', 'width');
     $query->addField('i', 'field_media_image_height', 'height');
-
     $query->join('media__field_media_image', 'i', 'i.entity_id = m.mid');
     $query->condition('i.field_media_image_target_id', $tag_info['fid'], '=');
     $query->range(0, 1);
