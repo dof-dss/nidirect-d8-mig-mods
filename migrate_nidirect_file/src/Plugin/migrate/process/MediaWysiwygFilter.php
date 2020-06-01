@@ -105,17 +105,24 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
         $file = $query->execute()->fetchAssoc();
 
         if (!empty($file)) {
+
+          $tag_info['filemime'] = $file['filemime'];
+
           // Determine the media file type to handle.
           switch ($file['filemime']) {
             case 'image/png':
             case 'image/jpeg':
             case 'image/gif':
               return $this->imageMediaEmbed($tag_info);
+            case 'audio/mpeg':
+              $media_table = 'media__field_media_audio_file';
+              return $this->genericMediaEmbed($tag_info, $media_table);
             default:
-              break;
+             break;
           }
-        } else {
-          // Search for oembed/remote video.
+        }
+        else {
+          // Search for oembed/remote video which doesn't have a managed file entry.
           $query = $this->connection->select('media', 'm');
           $query->condition('m.mid', $tag_info['fid'], '=');
           $query->fields('m', ['uuid']);
@@ -150,7 +157,7 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
     return $value;
   }
 
-  protected function genericMediaEmbed($tag_info, $media_type) {
+  protected function genericMediaEmbed($tag_info, $media_table) {
 
     $replacement_template = <<<'TEMPLATE'
         <drupal-media
@@ -160,6 +167,17 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
         </drupal-media>
     TEMPLATE;
 
+    // Extract the base media entity uuid.
+    $query = $this->connection->select('media', 'm');
+    $query->fields('m', ['uuid']);
+    $query->addField('i', 'entity_id');
+    $query->join($media_table, 'i', 'i.entity_id = m.mid');
+    $query->condition('i' . $media_table, $tag_info['fid'], '=');
+    $query->range(0, 1);
+    $media = $query->execute()->fetchAssoc();
+
+    // Update drupal-media template values.
+    return sprintf($replacement_template, $media['uuid']);
   }
 
   protected function imageMediaEmbed($tag_info) {
