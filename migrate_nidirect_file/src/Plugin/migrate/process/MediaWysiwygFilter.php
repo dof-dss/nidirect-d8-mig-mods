@@ -9,7 +9,6 @@ use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Drupal\Core\Database\Connection;
 
 /**
@@ -25,12 +24,12 @@ use Drupal\Core\Database\Connection;
  * [[{"type":"media","fid":"1234",...}]]
  *
  * # To this
-<drupal-media
-  data-align="center"
-  data-entity-type="media"
-  data-entity-uuid="2fdf6f0c-ac41-4d24-a491-06417a2a6c80"
-  data-view-mode="landscape_float">
-</drupal-media>
+ * <drupal-media
+ *   data-align="center"
+ *   data-entity-type="media"
+ *   data-entity-uuid="2fdf6f0c-ac41-4d24-a491-06417a2a6c80"
+ *   data-view-mode="landscape_float">
+ * </drupal-media>
  * @endcode
  *
  * Usage:
@@ -105,25 +104,28 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
         $file = $query->execute()->fetchAssoc();
 
         if (!empty($file)) {
-
           $tag_info['filemime'] = $file['filemime'];
 
           // Determine the media file type to handle.
           switch (substr($file['filemime'], 0, strpos($file['filemime'], '/'))) {
             case 'image':
               return $this->imageMediaEmbed($tag_info);
+
             case 'audio':
               $media_table = 'media__field_media_audio_file';
               return $this->genericMediaEmbed($tag_info, $media_table);
+
             case 'application':
               $media_table = 'media__field_media_file';
               return $this->genericMediaEmbed($tag_info, $media_table);
+
             default:
-             break;
+              break;
           }
         }
         else {
-          // Search for oembed/remote video which doesn't have a managed file entry.
+          // Search for oembed/remote media which doesn't have a
+          // managed file entry.
           $query = $this->connection->select('media', 'm');
           $query->condition('m.mid', $tag_info['fid'], '=');
           $query->fields('m', ['uuid']);
@@ -132,14 +134,14 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
           $query->range(0, 1);
           $oembed = $query->execute()->fetchAssoc();
 
-          if ($oembed['bundle'] == 'remote_video') {
+          if ($oembed['bundle'] === 'remote_video') {
             $replacement_template = <<<'TEMPLATE'
-                <drupal-media
-                    data-align="center"
-                    data-entity-type="media"
-                    data-entity-uuid="%s">
-                </drupal-media>
-              TEMPLATE;
+<drupal-media
+data-align="center"
+data-entity-type="media"
+data-entity-uuid="%s">
+</drupal-media>
+TEMPLATE;
 
             return sprintf($replacement_template, $oembed['uuid']);
           }
@@ -158,15 +160,26 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
     return $value;
   }
 
-  protected function genericMediaEmbed($tag_info, $media_table) {
+  /**
+   * Creates a generic Drupal Media element.
+   *
+   * @param array $tag_info
+   *   D7 embedded media json array.
+   * @param string $media_table
+   *   The D8 media type table to query.
+   *
+   * @return string
+   *   A drupal-media element.
+   */
+  protected function genericMediaEmbed(array $tag_info, string $media_table) {
 
     $replacement_template = <<<'TEMPLATE'
-        <drupal-media
-            data-align="center"
-            data-entity-type="media"
-            data-entity-uuid="%s">
-        </drupal-media>
-    TEMPLATE;
+<drupal-media
+data-align="center"
+data-entity-type="media"
+data-entity-uuid="%s">
+</drupal-media>
+TEMPLATE;
 
     // Extract the base media entity uuid.
     $query = $this->connection->select('media', 'm');
@@ -181,16 +194,25 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
     return sprintf($replacement_template, $media['uuid']);
   }
 
-  protected function imageMediaEmbed($tag_info) {
+  /**
+   * Creates a Drupal Media image element.
+   *
+   * @param array $tag_info
+   *   D7 embedded media json array.
+   *
+   * @return string
+   *   A drupal-media element.
+   */
+  protected function imageMediaEmbed(array $tag_info) {
 
     $replacement_template = <<<'TEMPLATE'
-        <drupal-media
-            data-align="center"
-            data-entity-type="media"
-            data-entity-uuid="%s"
-            data-view-mode="%s">
-        </drupal-media>
-       TEMPLATE;
+<drupal-media
+data-align="center"
+data-entity-type="media"
+data-entity-uuid="%s"
+data-view-mode="%s">
+</drupal-media>
+TEMPLATE;
 
     // Extract the base media entity uuid.
     $query = $this->connection->select('media', 'm');
@@ -224,7 +246,8 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
     // Assign the image style to the embedded image.
     if (array_key_exists($tag_info['attributes']['data-picture-mapping'], $style_map)) {
       $image_style = $style_map[$orientation][$tag_info['attributes']['data-picture-mapping']];
-    } else {
+    }
+    else {
       $image_style = $style_map[$orientation][array_key_first($style_map)];
     }
 
@@ -233,4 +256,3 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
   }
 
 }
-
