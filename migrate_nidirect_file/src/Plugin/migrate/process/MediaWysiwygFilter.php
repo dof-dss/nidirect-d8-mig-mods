@@ -25,11 +25,12 @@ use Drupal\Core\Database\Connection;
  * [[{"type":"media","fid":"1234",...}]]
  *
  * # To this
- * <drupal-entity
- *   data-embed-button="media"
- *   data-entity-embed-display="view_mode:media.full"
- *   data-entity-type="media"
- *   data-entity-id="1234"></drupal-entity>
+<drupal-media
+  data-align="center"
+  data-entity-type="media"
+  data-entity-uuid="2fdf6f0c-ac41-4d24-a491-06417a2a6c80"
+  data-view-mode="landscape_float">
+</drupal-media>
  * @endcode
  *
  * Usage:
@@ -87,14 +88,7 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $pattern = '/\[\[(?<tag_info>.+?"type":"media".+?)\]\]/s';
-    $replacement_template = <<<'TEMPLATE'
-<drupal-media
-    data-align="center"
-    data-entity-type="media"
-    data-entity-uuid="%s"
-    data-view-mode="%s">
-</drupal-media>
-TEMPLATE;
+
     $messenger = $this->messenger();
     $nid = $row->getSourceProperty('nid');
     $value['value'] = preg_replace_callback($pattern, function ($matches) use ($replacement_template, $messenger, $nid) {
@@ -110,73 +104,17 @@ TEMPLATE;
         $query->range(0, 1);
         $file = $query->execute()->fetchAssoc();
 
-        if ($media_table == 'media__field_media_') {
-          return;
-        }
-
         if (!empty($file)) {
-          // Media table name prefix.
-          $media_table = 'media__field_media_';
-
           // Determine the media file type to handle.
           switch ($file['filemime']) {
             case 'image/png':
             case 'image/jpeg':
             case 'image/gif':
-              $media_table .= 'image';
-              $field_target_id = 'i.field_media_image_target_id';
-              break;
-
+              return $this->imageMediaEmbed($tag_info);
             default:
               break;
-
           }
-
-          if ($media_table == 'media__field_media_') {
-            return;
-          }
-
-          // Extract the base media entity uuid.
-          $query = $this->connection->select('media', 'm');
-          $query->fields('m', ['uuid']);
-          $query->addField('i', 'entity_id');
-          $query->addField('i', 'field_media_image_width', 'width');
-          $query->addField('i', 'field_media_image_height', 'height');
-          $query->join($media_table, 'i', 'i.entity_id = m.mid');
-          $query->condition($field_target_id, $tag_info['fid'], '=');
-          $query->range(0, 1);
-          $media = $query->execute()->fetchAssoc();
-
-          // Updated image formats when converting from D7 to D8 site.
-          $style_map = [
-            'landscape' => [
-              'inline' => 'landscape_float',
-              'inline-expandable' => 'landscape_float_xp',
-              'inline_xl' => 'landscape_full_xp',
-            ],
-            'portrait' => [
-              'inline' => 'portrait_float',
-              'inline-expandable' => 'portrait_float_xp',
-              'inline_xl' => 'portrait_full',
-            ],
-          ];
-
-          // Select the appropriate display orientation based on the
-          // image dimensions.
-          $orientation = ($media['width'] > $media['height']) ? 'landscape' : 'portrait';
-
-          // Assign the image style to the embedded image.
-          if (array_key_exists($tag_info['attributes']['data-picture-mapping'], $style_map)) {
-            $image_style = $style_map[$orientation][$tag_info['attributes']['data-picture-mapping']];
-          }
-          else {
-            $image_style = $style_map[$orientation][array_key_first($style_map)];
-          }
-
-          // Update drupal-media template values.
-          return sprintf($replacement_template, $media['uuid'], $image_style);
         }
-
       }
       catch (NotEncodableValueException $e) {
         // There was an error decoding the JSON. Remove code.
@@ -190,4 +128,70 @@ TEMPLATE;
     return $value;
   }
 
+  protected function genericMediaEmbed() {
+
+    $replacement_template = <<<'TEMPLATE'
+        <drupal-media
+            data-align="center"
+            data-entity-type="media"
+            data-entity-uuid="%s">
+        </drupal-media>
+    TEMPLATE;
+
+
+  }
+
+  protected function imageMediaEmbed($tag_info) {
+
+    $replacement_template = <<<'TEMPLATE'
+        <drupal-media
+            data-align="center"
+            data-entity-type="media"
+            data-entity-uuid="%s"
+            data-view-mode="%s">
+        </drupal-media>
+       TEMPLATE;
+
+    // Extract the base media entity uuid.
+    $query = $this->connection->select('media', 'm');
+    $query->fields('m', ['uuid']);
+    $query->addField('i', 'entity_id');
+    $query->addField('i', 'field_media_image_width', 'width');
+    $query->addField('i', 'field_media_image_height', 'height');
+
+    $query->join('media__field_media_image', 'i', 'i.entity_id = m.mid');
+    $query->condition('i.field_media_image_target_id', $tag_info['fid'], '=');
+    $query->range(0, 1);
+    $media = $query->execute()->fetchAssoc();
+
+    // Updated image formats when converting from D7 to D8 site.
+    $style_map = [
+      'landscape' => [
+        'inline' => 'landscape_float',
+        'inline-expandable' => 'landscape_float_xp',
+        'inline_xl' => 'landscape_full_xp',
+      ],
+      'portrait' => [
+        'inline' => 'portrait_float',
+        'inline-expandable' => 'portrait_float_xp',
+        'inline_xl' => 'portrait_full',
+      ],
+    ];
+
+    // Select the appropriate display orientation based on the
+    // image dimensions.
+    $orientation = ($media['width'] > $media['height']) ? 'landscape' : 'portrait';
+
+    // Assign the image style to the embedded image.
+    if (array_key_exists($tag_info['attributes']['data-picture-mapping'], $style_map)) {
+      $image_style = $style_map[$orientation][$tag_info['attributes']['data-picture-mapping']];
+    } else {
+      $image_style = $style_map[$orientation][array_key_first($style_map)];
+    }
+
+    // Update drupal-media template values.
+    return sprintf($replacement_template, $media['uuid'], $image_style);
+  }
+
 }
+
