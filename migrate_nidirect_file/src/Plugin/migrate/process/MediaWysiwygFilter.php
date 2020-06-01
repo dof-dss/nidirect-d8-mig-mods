@@ -109,13 +109,14 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
           $tag_info['filemime'] = $file['filemime'];
 
           // Determine the media file type to handle.
-          switch ($file['filemime']) {
-            case 'image/png':
-            case 'image/jpeg':
-            case 'image/gif':
+          switch (substr($file['filemime'], 0, strpos($file['filemime'], '/'))) {
+            case 'image':
               return $this->imageMediaEmbed($tag_info);
-            case 'audio/mpeg':
+            case 'audio':
               $media_table = 'media__field_media_audio_file';
+              return $this->genericMediaEmbed($tag_info, $media_table);
+            case 'application':
+              $media_table = 'media__field_media_file';
               return $this->genericMediaEmbed($tag_info, $media_table);
             default:
              break;
