@@ -63,7 +63,12 @@ process:
         title: title
         width: width
         height: height
-  field_theme_summary: field_summary
+  field_theme_summary:
+    -
+      plugin: get
+      source: field_summary
+    -
+      plugin: strip_html_filter
   field_teaser: field_teaser
   field_additional_info: field_additional_info
   field_banner_image:
