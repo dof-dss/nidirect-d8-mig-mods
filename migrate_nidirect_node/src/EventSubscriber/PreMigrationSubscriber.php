@@ -2,7 +2,6 @@
 
 namespace Drupal\migrate_nidirect_node\EventSubscriber;
 
-use Drupal\Core\Extension\ModuleInstaller;
 use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateImportEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -55,9 +54,9 @@ class PreMigrationSubscriber implements EventSubscriberInterface {
     if (substr($event_id, 0, 5) == 'node_') {
 
       // Truncate the table for the 'WhatLinksHere' module
-      //  during import to prevent duplicate SQL entry error.
+      // during import to prevent duplicate SQL entry error.
       $moduleHandler = \Drupal::service('module_handler');
-      if ($moduleHandler->moduleExists('whatlinkshere')){
+      if ($moduleHandler->moduleExists('whatlinkshere')) {
         \Drupal::database()->truncate('whatlinkshere')->execute();
         $this->logger->notice('Truncating \'WhatLinksHere\' table');
       }
