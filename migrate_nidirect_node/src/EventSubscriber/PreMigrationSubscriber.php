@@ -2,11 +2,11 @@
 
 namespace Drupal\migrate_nidirect_node\EventSubscriber;
 
+use Drupal\Core\Extension\ModuleInstaller;
 use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateImportEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\Core\Logger\LoggerChannelFactory;
-use Drupal\migrate_nidirect_utils\MigrationProcessors;
 
 /**
  * Class PreMigrationSubscriber.
@@ -23,23 +23,13 @@ class PreMigrationSubscriber implements EventSubscriberInterface {
   protected $logger;
 
   /**
-   * NodeMigrationProcessors definition.
-   *
-   * @var \Drupal\migrate_nidirect_utils\MigrationProcessors
-   */
-  protected $migrationProcessors;
-
-  /**
    * PostMigrationSubscriber constructor.
    *
    * @param \Drupal\Core\Logger\LoggerChannelFactory $logger
    *   Drupal logger.
-   * @param \Drupal\migrate_nidirect_utils\MigrationProcessors $migration_processors
-   *   Migration processors.
    */
-  public function __construct(LoggerChannelFactory $logger, MigrationProcessors $migration_processors) {
+  public function __construct(LoggerChannelFactory $logger) {
     $this->logger = $logger->get('migrate_nidirect_node');
-    $this->migrationProcessors = $migration_processors;
   }
 
   /**
@@ -64,6 +54,13 @@ class PreMigrationSubscriber implements EventSubscriberInterface {
     // Only process nodes, nothing else.
     if (substr($event_id, 0, 5) == 'node_') {
 
+      // Truncate the table for the 'WhatLinksHere' module
+      //  during import to prevent duplicate SQL entry error.
+      $moduleHandler = \Drupal::service('module_handler');
+      if ($moduleHandler->moduleExists('whatlinkshere')){
+        \Drupal::database()->truncate('whatlinkshere')->execute();
+        $this->logger->notice('Truncating \'WhatLinksHere\' table');
+      }
     }
   }
 
