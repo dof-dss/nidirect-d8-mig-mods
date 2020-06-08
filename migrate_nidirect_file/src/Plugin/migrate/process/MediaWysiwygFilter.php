@@ -92,6 +92,8 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
     $nid = $row->getSourceProperty('nid');
     $value['value'] = preg_replace_callback($pattern, function ($matches) use ($replacement_template, $messenger, $nid) {
       $decoder = new JsonDecode(TRUE);
+
+
       try {
         // Extract the D7 embedded media data.
         $tag_info = $decoder->decode($matches['tag_info'], JsonEncoder::FORMAT);
@@ -112,12 +114,12 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
               return $this->imageMediaEmbed($tag_info);
 
             case 'audio':
-              $media_table = 'media__field_media_audio_file';
-              return $this->genericMediaEmbed($tag_info, $media_table);
+              $media_type = 'audio_file';
+              return $this->genericMediaEmbed($tag_info, $media_type);
 
             case 'application':
-              $media_table = 'media__field_media_file';
-              return $this->genericMediaEmbed($tag_info, $media_table);
+              $media_type = 'file';
+              return $this->genericMediaEmbed($tag_info, $media_type);
 
             default:
               break;
@@ -165,13 +167,13 @@ TEMPLATE;
    *
    * @param array $tag_info
    *   D7 embedded media json array.
-   * @param string $media_table
-   *   The D8 media type table to query.
+   * @param string $media_type
+   *   The D8 media type table/field to query.
    *
    * @return string
    *   A drupal-media element.
    */
-  protected function genericMediaEmbed(array $tag_info, string $media_table) {
+  protected function genericMediaEmbed(array $tag_info, string $media_type) {
 
     $replacement_template = <<<'TEMPLATE'
 <drupal-media
@@ -185,8 +187,8 @@ TEMPLATE;
     $query = $this->connection->select('media', 'm');
     $query->fields('m', ['uuid']);
     $query->addField('i', 'entity_id');
-    $query->join($media_table, 'i', 'i.entity_id = m.mid');
-    $query->condition('i' . $media_table, $tag_info['fid'], '=');
+    $query->join("media__field_media_" . $media_type, 'i', 'i.entity_id = m.mid');
+    $query->condition('field_media_' . $media_type . '_target_id', $tag_info['fid'], '=');
     $query->range(0, 1);
     $media = $query->execute()->fetchAssoc();
 
