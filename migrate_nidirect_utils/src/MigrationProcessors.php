@@ -377,6 +377,7 @@ class MigrationProcessors {
       '5' => 'hide_theme',
       '6' => 'show_listing',
       '7' => 'promote_to_all_pages',
+      '8' => 'application_unavailable',
     ];
 
     $flag_id_expression = "CASE fid
@@ -385,6 +386,7 @@ class MigrationProcessors {
       WHEN 5 THEN 'hide_theme'
       WHEN 6 THEN 'show_listing'
       WHEN 7 THEN 'promote_to_all_pages'
+      WHEN 8 THEN 'application_unavailable'
      END";
 
     // Process each flag type individually.
