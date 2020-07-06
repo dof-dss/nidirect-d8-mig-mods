@@ -21,7 +21,7 @@ process:
     -
       plugin: default_value
       source: language
-      default_value: und
+      default_value: en
   title: title
   uid: node_uid
   status: status
