@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate_nidirect_utils\Command;
 
+use Drupal\Core\Database\Database;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Drupal\Console\Core\Command\ContainerAwareCommand;
@@ -19,6 +20,21 @@ use Symfony\Component\Yaml\Yaml;
 class NidirectMigratePostNodeLanguageCommand extends ContainerAwareCommand {
 
   /**
+   * Drupal 8 database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $dbConnDrupal8;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct() {
+    $this->dbConnDrupal8 = Database::getConnection('default', 'default');
+    parent::__construct();
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function configure() {
@@ -33,7 +49,24 @@ class NidirectMigratePostNodeLanguageCommand extends ContainerAwareCommand {
     $file_path = drupal_get_path('module', 'migrate_nidirect_utils') . '/data/node.langcodes.yml';
     $file_contents = file_get_contents($file_path);
     $ymldata = Yaml::parse($file_contents);
-    var_dump($ymldata);
+    $updated = 0;
+
+    // Iterate each language code and update the node and revision langcode.
+    foreach ($ymldata as $langcode => $nids) {
+
+      $updated += $this->dbConnDrupal8->update('node')
+        ->fields(['langcode' => $langcode])
+        ->condition('nid', $nids, 'IN')
+        ->execute();
+
+      $updated += $this->dbConnDrupal8->update('node_revision')
+        ->fields(['langcode' => $langcode])
+        ->condition('nid', $nids, 'IN')
+        ->execute();
+
+    }
+
+    $this->getIo()->info('Updated ' . $updated . ' node language values.');
   }
 
 }
