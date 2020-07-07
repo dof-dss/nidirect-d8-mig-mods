@@ -1,0 +1,6 @@
+description: 'Updated langcode for a defined list of nodes'
+options: {}
+arguments: {}
+messages:
+    success: 'Successfully updated language attribute for nodes.'
+    failure: 'Something went wrong updating the language attribute, please review the logs.'
