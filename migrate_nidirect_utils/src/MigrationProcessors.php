@@ -65,6 +65,9 @@ class MigrationProcessors {
     // Find all out current node ids in the D8 site so we know what to look for.
     $d8_nids = [];
     $node_type = preg_replace('/revision_/', '', $node_type);
+    if ($node_type == 'nidirect_contact') {
+      $node_type = 'contact';
+    }
     $query = $this->dbConnDrupal8->query("SELECT nid FROM {node} WHERE type = :node_type ORDER BY nid ASC", [':node_type' => $node_type]);
     $d8_nids = $query->fetchAllAssoc('nid');
 
