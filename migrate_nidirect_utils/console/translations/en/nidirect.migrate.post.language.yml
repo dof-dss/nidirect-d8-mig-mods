@@ -4,3 +4,4 @@ arguments: {}
 messages:
     success: 'Successfully updated language attribute for nodes.'
     failure: 'Something went wrong updating the language attribute, please review the logs.'
+    emptyFile: 'Language file not found or empty, check data/node.langcodes.yml'

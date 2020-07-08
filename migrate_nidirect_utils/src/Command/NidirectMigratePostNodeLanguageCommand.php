@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Drupal\Console\Core\Command\ContainerAwareCommand;
 use Drupal\Console\Annotations\DrupalCommand;
+use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -48,12 +49,24 @@ class NidirectMigratePostNodeLanguageCommand extends ContainerAwareCommand {
   protected function execute(InputInterface $input, OutputInterface $output) {
     $file_path = drupal_get_path('module', 'migrate_nidirect_utils') . '/data/node.langcodes.yml';
     $file_contents = file_get_contents($file_path);
-    $ymldata = Yaml::parse($file_contents);
+
+    if (empty($file_contents)) {
+      $this->getIo()->info($this->trans('commands.nidirect.migrate.post.language.messages.emptyFile'));
+      return -1;
+    }
+
+    try {
+      $language_data = Yaml::parse($file_contents);
+    }
+    catch (ParseException $exception) {
+      $this->getIo()->info('Unable to parse the YAML string: %s', $exception->getMessage());
+      return -1;
+    }
+
     $updated = 0;
 
     // Iterate each language code and update the node and revision langcode.
-    foreach ($ymldata as $langcode => $nids) {
-
+    foreach ($language_data as $langcode => $nids) {
       $updated += $this->dbConnDrupal8->update('node')
         ->fields(['langcode' => $langcode])
         ->condition('nid', $nids, 'IN')
@@ -63,7 +76,6 @@ class NidirectMigratePostNodeLanguageCommand extends ContainerAwareCommand {
         ->fields(['langcode' => $langcode])
         ->condition('nid', $nids, 'IN')
         ->execute();
-
     }
 
     $this->getIo()->info('Updated ' . $updated . ' node language values.');
