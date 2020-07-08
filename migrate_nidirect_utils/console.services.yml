@@ -41,3 +41,8 @@ services:
     arguments: []
     tags:
       - { name: drupal.command }
+  migrate_nidirect_utils.nidirect_migrate_post_node_language:
+    class: Drupal\migrate_nidirect_utils\Command\NidirectMigratePostNodeLanguageCommand
+    arguments: []
+    tags:
+      - { name: drupal.command }
