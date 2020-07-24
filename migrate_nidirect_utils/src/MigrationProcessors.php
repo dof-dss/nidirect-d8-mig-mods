@@ -117,18 +117,21 @@ class MigrationProcessors {
         ->condition('nid', $row->nid)
         ->execute();
 
-      // Make sure that we have a 'published' revision.
-      $query = $this->dbConnDrupal8->update('content_moderation_state_field_data')
-        ->fields(['moderation_state' => 'published'])
-        ->condition('content_entity_id', $row->nid)
-        ->condition('content_entity_revision_id', $vid)
-        ->execute();
+      if ($row->status == 1) {
+        // Make sure that we have a 'published' revision.
+        $query = $this->dbConnDrupal8->update('content_moderation_state_field_data')
+          ->fields(['moderation_state' => 'published'])
+          ->condition('content_entity_id', $row->nid)
+          ->condition('content_entity_revision_id', $vid)
+          ->execute();
 
-      $query = $this->dbConnDrupal8->update('content_moderation_state_field_revision')
-        ->fields(['moderation_state' => 'published'])
-        ->condition('content_entity_id', $row->nid)
-        ->condition('content_entity_revision_id', $vid)
-        ->execute();
+        $query = $this->dbConnDrupal8->update('content_moderation_state_field_revision')
+          ->fields(['moderation_state' => 'published'])
+          ->condition('content_entity_id', $row->nid)
+          ->condition('content_entity_revision_id', $vid)
+          ->execute();
+      }
+
     }
 
     return 'Updated revisions for ' . count($migrate_nid_status) . ' nodes.';

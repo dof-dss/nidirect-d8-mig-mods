@@ -132,18 +132,21 @@ class NidirectMigratePostPublishStatusCommand extends ContainerAwareCommand {
       ->condition('nid', $nid)
       ->execute();
 
-    // Make sure that we have a 'published' revision.
-    $query = $this->dbConnDrupal8->update('content_moderation_state_field_data')
-      ->fields(['moderation_state' => 'published'])
-      ->condition('content_entity_id', $nid)
-      ->condition('content_entity_revision_id', $vid)
-      ->execute();
+    if ($status == 1) {
+      // Make sure that we have a 'published' revision.
+      $query = $this->dbConnDrupal8->update('content_moderation_state_field_data')
+        ->fields(['moderation_state' => 'published'])
+        ->condition('content_entity_id', $nid)
+        ->condition('content_entity_revision_id', $vid)
+        ->execute();
 
-    $query = $this->dbConnDrupal8->update('content_moderation_state_field_revision')
-      ->fields(['moderation_state' => 'published'])
-      ->condition('content_entity_id', $nid)
-      ->condition('content_entity_revision_id', $vid)
-      ->execute();
+      $query = $this->dbConnDrupal8->update('content_moderation_state_field_revision')
+        ->fields(['moderation_state' => 'published'])
+        ->condition('content_entity_id', $nid)
+        ->condition('content_entity_revision_id', $vid)
+        ->execute();
+    }
+
   }
 
   /**
