@@ -2,8 +2,6 @@
 
 namespace Drupal\migrate_nidirect_utils\Command;
 
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Extension\ModuleHandler;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Drupal\Console\Core\Command\ContainerAwareCommand;
@@ -145,7 +143,8 @@ class NidirectMigratePostPublishStatusCommand extends ContainerAwareCommand {
         ->condition('content_entity_id', $nid)
         ->condition('content_entity_revision_id', $vid)
         ->execute();
-    } else {
+    }
+    else {
       // See if the moderation state on D7 was 'needs review'.
       $moderation_status = $this->dbConnMigrate->query("
       select state from {workbench_moderation_node_history} 
