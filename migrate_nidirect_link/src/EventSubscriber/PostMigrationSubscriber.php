@@ -73,6 +73,11 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
         $d7_path = $d7_alias->source;
         $d7_alias = $d7_alias->alias;
 
+        // Skip nidirect_gp node aliases; they aren't needed and can clash with new nodes in D8.
+        if (preg_match('|^services/gp-practices|', $d7_alias)) {
+          continue;
+        }
+
         // On D8, aliases and paths are prefixed with '/'.
         $d8_alias = '/' . $d7_alias;
         $d8_path = '/' . $d7_path;
