@@ -113,6 +113,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     $d7_landing_pages = $query->fetchAll();
     foreach ($d7_landing_pages as $d7_landing_page) {
       $nid = $d7_landing_page->nid;
+      $this->logger->notice('landingPageUpdate ' . $nid);
 
       // Now look to see if there is a redirect to this node
       // from a taxonomy term.
@@ -130,9 +131,11 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
             // Now set the landing page subtheme to this tid
             // (as the method for replacing taxonomy terms in
             // lists has been changed in the D8 site).
-            $entity->set('field_subtheme', ['target_id' => $tid]);
-            $entity->set('moderation_state', 'published');
-            $entity->save();
+            if ($entity->get('field_subtheme')->target_id != $tid) {
+              $entity->set('field_subtheme', ['target_id' => $tid]);
+              //$entity->set('moderation_state', 'published');
+              $entity->save();
+            }
           }
         }
       }
