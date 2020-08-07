@@ -18,6 +18,16 @@ source:
 process:
   source:
     -
+      plugin: skip_on_value
+      source: source
+      method: row
+      value:
+        - node/13638
+        - node/13639
+        - node/13640
+        - node/13641
+        - node/13642
+    -
       plugin: concat
       source:
         - constants/slash
