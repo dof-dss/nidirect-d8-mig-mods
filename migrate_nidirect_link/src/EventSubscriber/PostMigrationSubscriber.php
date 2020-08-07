@@ -32,11 +32,22 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
   protected $logger;
 
   /**
+   * List of aliases to skip.
+   *
+   * @var array
+   */
+  protected $skipItems;
+
+  /**
    * PostMigrationSubscriber constructor.
    */
   public function __construct(EntityTypeManagerInterface $entityTypeManager, LoggerChannelFactory $logger) {
     $this->entityTypeManager = $entityTypeManager;
     $this->logger = $logger->get('migrate_nidirect_link');
+
+    // Clashing aliases from D7 with new nodes in D8. NB: this list should be kept in sync with the skip_on_value
+    // plugin in drupal8/web/modules/migrate/nidirect-migrations/migrate_nidirect_link/config/install/migrate_plus.migration.upgrade_d7_url_alias.yml.
+    $this->skipItems = [13638, 13639, 13640, 13641, 13642];
   }
 
   /**
@@ -67,7 +78,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
 
       // Retrieve all aliases from D7.
       $query = $conn_migrate->query(
-        "select source, alias from {url_alias} where source not in ('node/13638', 'node/13639', 'node/13640', 'node/13641', 'node/13642')");
+        "select source, alias from {url_alias} where substr(source,6,length(source)) not in (" . implode(',', $this->skipItems) . ")");
       $d7_aliases = $query->fetchAll();
       foreach ($d7_aliases as $d7_alias) {
         $d7_path = $d7_alias->source;
