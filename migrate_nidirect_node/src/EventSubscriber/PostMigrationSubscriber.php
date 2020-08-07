@@ -93,7 +93,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     }
 
     // One off landing page updates.
-    if ($event_id == 'node_landing_page') {
+    if ($event_id == 'node_revision_landing_page') {
       $this->landingPageUpdates();
     }
   }
@@ -130,9 +130,11 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
             // Now set the landing page subtheme to this tid
             // (as the method for replacing taxonomy terms in
             // lists has been changed in the D8 site).
-            $entity->set('field_subtheme', ['target_id' => $tid]);
-            $entity->set('moderation_state', 'published');
-            $entity->save();
+            if ($entity->get('field_subtheme')->target_id != $tid) {
+              $entity->set('field_subtheme', ['target_id' => $tid]);
+              $entity->set('moderation_state', 'published');
+              $entity->save();
+            }
           }
         }
       }
