@@ -67,16 +67,11 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
 
       // Retrieve all aliases from D7.
       $query = $conn_migrate->query(
-        "select source, alias from {url_alias}");
+        "select source, alias from {url_alias} where source not in ('node/13638', 'node/13639', 'node/13640', 'node/13641', 'node/13642')");
       $d7_aliases = $query->fetchAll();
       foreach ($d7_aliases as $d7_alias) {
         $d7_path = $d7_alias->source;
         $d7_alias = $d7_alias->alias;
-
-        // Skip nidirect_gp node aliases; they aren't needed and can clash with new nodes in D8.
-        if (preg_match('|^services/gp-practices|', $d7_alias)) {
-          continue;
-        }
 
         // On D8, aliases and paths are prefixed with '/'.
         $d8_alias = '/' . $d7_alias;
