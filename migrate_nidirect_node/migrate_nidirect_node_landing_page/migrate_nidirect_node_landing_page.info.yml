@@ -1,7 +1,7 @@
 name: 'Migrate NIDirect - Node:Landing Pages'
 type: module
 description: 'Migrate NIDirect - Landing Page content type'
-core: 8.x
+core_version_requirement: ^8.8 || ^9
 package: 'Migrate NIDirect'
 dependencies:
   - drupal:migrate

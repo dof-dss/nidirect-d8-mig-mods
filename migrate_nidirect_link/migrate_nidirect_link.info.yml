@@ -1,7 +1,7 @@
 name: 'Migrate NIDirect - Link'
 type: module
 description: 'NIDirect migrations for links, redirects and menus'
-core: 8.x
+core_version_requirement: ^8.8 || ^9
 package: 'Migrate NIDirect'
 migration_dependencies:
  required: { }

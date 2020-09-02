@@ -1,7 +1,7 @@
 name: 'Migrate NIDirect - User'
 type: module
 description: 'NIDirect migrations for users, roles and permissions'
-core: 8.x
+core_version_requirement: ^8.8 || ^9
 package: 'Migrate NIDirect'
 migration_dependencies:
  required: { }
