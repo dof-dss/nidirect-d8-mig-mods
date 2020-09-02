@@ -1,7 +1,7 @@
 name: 'Migrate NIDirect - Node:GP'
 type: module
 description: 'NIDirect migration GP and GP Practice content types'
-core: 8.x
+core_version_requirement: ^8.8 || ^9
 package: 'Migrate NIDirect'
 migration_dependencies:
  required: { }

@@ -1,7 +1,7 @@
 name: 'Migrate NIDirect - Node'
 type: module
 description: 'NIDirect migration Node'
-core: 8.x
+core_version_requirement: ^8.8 || ^9
 package: 'Migrate NIDirect'
 migration_dependencies:
   required: { }
