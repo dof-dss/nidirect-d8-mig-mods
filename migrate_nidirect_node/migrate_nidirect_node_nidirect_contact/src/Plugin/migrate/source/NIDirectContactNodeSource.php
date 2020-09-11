@@ -65,6 +65,9 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
 
     // If we don't have a lookup fetch the value for parsing.
     if (empty($telephone)) {
+
+      $telephone = [];
+
       $query = $this->getDatabase()->query('
         SELECT field_contact_phone_value
         FROM {field_data_field_contact_phone}
@@ -76,10 +79,12 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
       $contact_value = $query->fetchField();
 
       if (!empty($contact_value)) {
-        $telephone = TelephonePlusUtils::parse($contact_value);
+        $contact_telephone = TelephonePlusUtils::parse($contact_value);
 
-        if ($telephone === FALSE) {
+        if ($contact_telephone === FALSE) {
           $this->logger->notice('Unable to process telephone data for nid: ' . $nid);
+        } else {
+          $telephone = $contact_telephone;
         }
       }
     }
@@ -128,7 +133,8 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
 
       if ($mobile === FALSE) {
         $this->logger->notice('Unable to process fax data for nid: ' . $nid);
-      } else {
+      }
+      else {
         // Add the entry if we have at least one number.
         if (!empty($mobile[0]['telephone_number'])) {
           // Ensure we always have a title for the entry.

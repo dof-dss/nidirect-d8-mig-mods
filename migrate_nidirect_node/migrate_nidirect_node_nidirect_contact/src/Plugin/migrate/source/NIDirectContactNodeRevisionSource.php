@@ -78,6 +78,9 @@ class NIDirectContactNodeRevisionSource extends NodeRevision implements Containe
 
     // If we don't have a lookup fetch the value for parsing.
     if (empty($telephone)) {
+
+      $telephone = [];
+
       $query = $this->getDatabase()->query('
         SELECT field_contact_phone_value
         FROM {field_revision_field_contact_phone}
@@ -86,70 +89,97 @@ class NIDirectContactNodeRevisionSource extends NodeRevision implements Containe
         ]
       );
 
-      $contact_details = $query->fetchField();
+      $contact_value = $query->fetchField();
 
-      $telephone = TelephonePlusUtils::parse($contact_details);
+      if (!empty($contact_value)) {
+        $contact_telephone = TelephonePlusUtils::parse($contact_value);
 
-      // Fetch fax line number.
-      $query = $this->getDatabase()->query('
+        if ($contact_telephone === FALSE) {
+          $this->logger->notice('Unable to process telephone data for nid: ' . $nid);
+        }
+        else {
+          $telephone = $contact_telephone;
+        }
+      }
+    }
+
+    // Fetch fax line number.
+    $query = $this->getDatabase()->query('
         SELECT field_contact_fax_value
         FROM {field_revision_field_contact_fax}
         WHERE revision_id = :vid', [
-          ':vid' => $vid,
-        ]
-      );
+        ':vid' => $vid,
+      ]
+    );
 
-      $fax = $query->fetchField();
+    $fax_value = $query->fetchField();
 
-      if (!empty($fax)) {
-        $telephone[] = [
-          'telephone_title' => 'Fax',
-          'telephone_number' => $fax,
-          'telephone_extension' => '',
-          'telephone_supplementary' => '',
-          'country_code' => 'GB',
-          'display_international_number' => '0',
-        ];
+    if (!empty($fax_value)) {
+      $fax = TelephonePlusUtils::parse($fax_value);
+
+      if ($fax === FALSE) {
+        $this->logger->notice('Unable to process fax data for nid: ' . $nid);
       }
+      else {
+        // Add the entry if we have at least one number.
+        if (!empty($fax[0]['telephone_number'])) {
+          // Ensure we always have a title for the entry.
+          if (empty($fax[0]['telephone_title'])) {
+            $fax[0]['telephone_title'] = 'Fax';
+          }
+          $telephone = array_merge($telephone, $fax);
+        }
+      }
+    }
 
-      // Fetch text/mobile phone number.
-      $query = $this->getDatabase()->query('
+    // Fetch text/mobile phone number.
+    $query = $this->getDatabase()->query('
         SELECT field_contact_sms_value
         FROM {field_revision_field_contact_sms}
         WHERE revision_id = :vid', [
-          ':vid' => $vid,
-        ]
-      );
+        ':vid' => $vid,
+      ]
+    );
 
-      $mobile = $query->fetchField();
+    $mobile_value = $query->fetchField();
 
-      if (!empty($mobile)) {
-        $telephone[] = [
-          'telephone_title' => 'Text',
-          'telephone_number' => $mobile,
-          'telephone_extension' => '',
-          'telephone_supplementary' => '',
-          'country_code' => 'GB',
-          'display_international_number' => '0',
-        ];
+    if (!empty($mobile_value)) {
+      $mobile = TelephonePlusUtils::parse($mobile_value);
+
+      if ($mobile === FALSE) {
+        $this->logger->notice('Unable to process fax data for nid: ' . $nid);
+      }
+      else {
+        // Add the entry if we have at least one number.
+        if (!empty($mobile[0]['telephone_number'])) {
+          // Ensure we always have a title for the entry.
+          if (empty($mobile[0]['telephone_title'])) {
+            $mobile[0]['telephone_title'] = 'Text number';
+          }
+          $telephone = array_merge($telephone, $mobile);
+        }
       }
     }
 
-    // Check if we have a node with no replacement telephone details.
-    $empty_telephone = TRUE;
-    foreach ($telephone as $entry) {
-      if (!empty($entry['telephone_number'])) {
-        $empty_telephone = FALSE;
-      }
-    }
+    // Check if we have any data from the existing fields and determine if
+    // we weren't able to process the numbers.
+    if (strlen($contact_value . $fax_value . $mobile_value) > 0) {
+      $telephone_processed = TRUE;
 
-    // Log any nodes with blank telephone info.
-    if ($empty_telephone) {
-      $this->logger->notice("Blank telephone details for NID: $nid and VID: $vid");
+      foreach ($telephone as $entry) {
+        if (empty($entry['telephone_number'])) {
+          $telephone_processed = FALSE;
+        }
+      }
+
+      // Log any nodes with blank telephone info.
+      if (!$telephone_processed) {
+        $this->logger->notice("Unable to process any telephone details for NID: $nid");
+      }
     }
 
     $row->setSourceProperty('telephone_number', $telephone);
     return parent::prepareRow($row);
-  }
 
+  }
 }
