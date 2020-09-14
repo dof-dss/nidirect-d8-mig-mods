@@ -3,7 +3,6 @@
 namespace Drupal\migrate_nidirect_taxo\EventSubscriber;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateImportEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -152,10 +151,15 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
         }
       }
 
-      $this->logger->notice('Updated @updated of @parents parent term targets.', ['@updated' => $updated, '@parents' => count($results)]);
+      $this->logger->notice('Updated @updated of @parents parent term targets.', [
+        '@updated' => $updated,
+        '@parents' => count($results),
+      ]);
 
       if (count($results) != $updated) {
-        $this->logger->warning('Failed to update for term entities: @failures', ['@failures' => implode(',', $failed_updates)]);
+        $this->logger->warning('Failed to update for term entities: @failures', [
+          '@failures' => implode(',', $failed_updates),
+        ]);
       }
 
       // Fetch all the taxonomy pathauto patterns.
@@ -179,7 +183,10 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       foreach ($terms as $term) {
         $result = $this->pathautoGenerator->updateEntityAlias($term, 'update', ['force']);
         if (!empty($result)) {
-          $this->logger->notice('Aliases created for top level (and child) terms: @term => @alias', ['@term' => $result['source'], '@alias' => $result['alias']]);
+          $this->logger->notice('Aliases created for top level (and child) terms: @term => @alias', [
+            '@term' => $result['source'],
+            '@alias' => $result['alias'],
+          ]);
         }
       }
 

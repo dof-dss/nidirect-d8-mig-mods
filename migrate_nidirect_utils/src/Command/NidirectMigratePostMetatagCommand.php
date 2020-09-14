@@ -6,11 +6,13 @@ use Drupal\node\Entity\Node;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Drupal\Console\Core\Command\ContainerAwareCommand;
+// @codingStandardsIgnoreStart
 use Drupal\Console\Annotations\DrupalCommand;
+// @codingStandardsIgnoreEnd
 use Drupal\Core\Database\Database;
 
 /**
- * Class NidirectMigratePostMetatagCommand.
+ * Post process migrated Metatags module data..
  *
  * @DrupalCommand (
  *     extension="migrate_nidirect_utils",
@@ -51,11 +53,11 @@ class NidirectMigratePostMetatagCommand extends ContainerAwareCommand {
 
     // Get a list of custom metatags from NIDirect (D7)
     // (only take the latest revision).
-    $query = $conn_migrate->query("select m1.entity_id, m1.data 
-        from {metatag} m1 
-        join (select max(revision_id) as revision_id, entity_id  
-              from {metatag} 
-              where data like 'a:1:_s:8:%' 
+    $query = $conn_migrate->query("select m1.entity_id, m1.data
+        from {metatag} m1
+        join (select max(revision_id) as revision_id, entity_id
+              from {metatag}
+              where data like 'a:1:_s:8:%'
               and entity_type = 'node' group by entity_id) m2
         on m1.entity_id = m2.entity_id
         and m1.revision_id = m2.revision_id");

@@ -3,7 +3,7 @@
 namespace Drupal\migrate_nidirect_utils;
 
 /**
- * Class TelephonePlusUtils.
+ * Provides methods for processing telephone numbers.
  *
  * @package Drupal\migrate_nidirect_utils
  */
@@ -62,8 +62,8 @@ class TelephonePlusUtils {
    * @param string $input
    *   String of contact information such as title, number, extension etc.
    *
-   * @return array
-   *   Array of telephone objects for insertion into Telephone Plus field.
+   * @return array|bool
+   *   Array of telephone objects or false if unable to parse.
    */
   public static function parse($input) {
 
@@ -180,16 +180,8 @@ class TelephonePlusUtils {
       return $telephone;
     }
 
-    $telephone[] = [
-      'telephone_title' => '',
-      'telephone_number' => '',
-      'telephone_extension' => '',
-      'telephone_supplementary' => '',
-      'country_code' => static::COUNTRY_CODE,
-      'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER,
-    ];
-
-    return $telephone;
+    // Return false if unable to parse the input string as a telephone number.
+    return FALSE;
   }
 
   /**

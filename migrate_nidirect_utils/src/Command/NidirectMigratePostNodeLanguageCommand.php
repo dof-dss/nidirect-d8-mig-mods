@@ -6,12 +6,14 @@ use Drupal\Core\Database\Database;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Drupal\Console\Core\Command\ContainerAwareCommand;
+// @codingStandardsIgnoreStart
 use Drupal\Console\Annotations\DrupalCommand;
+// @codingStandardsIgnoreEnd
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Class NidirectMigratePostNodeLanguageCommand.
+ * Post process migrated node language data.
  *
  * @DrupalCommand (
  *     extension="migrate_nidirect_utils",

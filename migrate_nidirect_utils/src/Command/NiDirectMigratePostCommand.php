@@ -5,11 +5,13 @@ namespace Drupal\migrate_nidirect_utils\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Drupal\Console\Core\Command\ContainerAwareCommand;
+// @codingStandardsIgnoreStart
 use Drupal\Console\Annotations\DrupalCommand;
+// @codingStandardsIgnoreEnd
 use Symfony\Component\Console\Input\ArrayInput;
 
 /**
- * Class NiDirectMigratePostCommand.
+ * Post processes a collection of migration commands.
  *
  * @DrupalCommand (
  *     extension="migrate_nidirect_utils",
@@ -29,7 +31,7 @@ class NiDirectMigratePostCommand extends ContainerAwareCommand {
     'nidirect:migrate:post:taxonomy',
     'nidirect:migrate:post:article',
     'nidirect:migrate:post:publish_status',
-    'nidirect:migrate:post:audit'
+    'nidirect:migrate:post:audit',
   ];
 
   /**

@@ -46,6 +46,7 @@ class MigrateCommand extends ContainerAwareCommand {
    *
    * @param string $name
    *   Function name.
+   *
    * @return string
    *   Prettified function name.
    */

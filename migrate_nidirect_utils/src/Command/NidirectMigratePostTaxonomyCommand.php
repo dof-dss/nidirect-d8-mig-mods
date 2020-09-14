@@ -5,11 +5,13 @@ namespace Drupal\migrate_nidirect_utils\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Drupal\Console\Core\Command\ContainerAwareCommand;
+// @codingStandardsIgnoreStart
 use Drupal\Console\Annotations\DrupalCommand;
+// @codingStandardsIgnoreEnd
 use Drupal\Core\Database\Database;
 
 /**
- * Class NidirectMigratePostTaxonomyCommand.
+ * Post process migrated Taxonomy module data..
  *
  * @DrupalCommand (
  *     extension="migrate_nidirect_utils",

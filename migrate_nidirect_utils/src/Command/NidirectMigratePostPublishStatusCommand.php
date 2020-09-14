@@ -6,10 +6,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Drupal\Console\Core\Command\ContainerAwareCommand;
 use Drupal\Core\Database\Database;
+// @codingStandardsIgnoreStart
 use Drupal\Console\Annotations\DrupalCommand;
+// @codingStandardsIgnoreEnd
 
 /**
- * Class NidirectMigratePostPublishStatusCommand.
+ * Post process published status for migrated entities.
  *
  * @DrupalCommand (
  *     extension="migrate_nidirect_utils",
@@ -147,7 +149,7 @@ class NidirectMigratePostPublishStatusCommand extends ContainerAwareCommand {
     else {
       // See if the moderation state on D7 was 'needs review'.
       $moderation_status = $this->dbConnMigrate->query("
-      select state from {workbench_moderation_node_history} 
+      select state from {workbench_moderation_node_history}
       where hid = (select max(hid) from {workbench_moderation_node_history} where nid = :nid)
         ", [':nid' => $nid])->fetchField();
       if ($moderation_status == 'needs_review') {
@@ -184,13 +186,17 @@ class NidirectMigratePostPublishStatusCommand extends ContainerAwareCommand {
   private function updateCurrentRevision(int $nid, int $vid, int $d8_vid) {
     // Does this revision exist in D8 ?
     $check_vid = $this->dbConnDrupal8->query(
-      "SELECT vid FROM {node_field_revision} WHERE nid = :nid AND vid = :vid", [':nid' => $nid, ':vid' => $vid]
-    )->fetchField();
+      "SELECT vid FROM {node_field_revision} WHERE nid = :nid AND vid = :vid", [
+        ':nid' => $nid,
+        ':vid' => $vid,
+      ])->fetchField();
     if (!empty($check_vid)) {
       // Does the current D8 revision exist in D7 ?
       $check_d7_vid = $this->dbConnMigrate->query(
-        "SELECT vid FROM {node_revision} WHERE nid = :nid and vid = :vid", [':nid' => $nid, ':vid' => $d8_vid]
-      )->fetchField();
+        "SELECT vid FROM {node_revision} WHERE nid = :nid and vid = :vid", [
+          ':nid' => $nid,
+          ':vid' => $d8_vid,
+        ])->fetchField();
       if (!empty($check_d7_vid)) {
         // Make the D7 revision the current revision in D8.
         // N.B. This will only work in the 'one hit' migration scenario, it may

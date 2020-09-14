@@ -65,6 +65,9 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
 
     // If we don't have a lookup fetch the value for parsing.
     if (empty($telephone)) {
+
+      $telephone = [];
+
       $query = $this->getDatabase()->query('
         SELECT field_contact_phone_value
         FROM {field_data_field_contact_phone}
@@ -74,7 +77,17 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
       );
 
       $contact_value = $query->fetchField();
-      $telephone = TelephonePlusUtils::parse($contact_value);
+
+      if (!empty($contact_value)) {
+        $contact_telephone = TelephonePlusUtils::parse($contact_value);
+
+        if ($contact_telephone === FALSE) {
+          $this->logger->notice('Unable to process telephone data for nid: ' . $nid);
+        }
+        else {
+          $telephone = $contact_telephone;
+        }
+      }
     }
 
     // Fetch fax line number.
@@ -87,16 +100,23 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
     );
 
     $fax_value = $query->fetchField();
-    $fax = TelephonePlusUtils::parse($fax_value);
 
-    // Add the entry if we have at least one number.
-    if (!empty($fax[0]['telephone_number'])) {
-      // Ensure we always have a title for the entry.
-      if (empty($fax[0]['telephone_title'])) {
-        $fax[0]['telephone_title'] = 'Fax';
+    if (!empty($fax_value)) {
+      $fax = TelephonePlusUtils::parse($fax_value);
+
+      if ($fax === FALSE) {
+        $this->logger->notice('Unable to process fax data for nid: ' . $nid);
       }
-
-      $telephone = array_merge($telephone, $fax);
+      else {
+        // Add the entry if we have at least one number.
+        if (!empty($fax[0]['telephone_number'])) {
+          // Ensure we always have a title for the entry.
+          if (empty($fax[0]['telephone_title'])) {
+            $fax[0]['telephone_title'] = 'Fax';
+          }
+          $telephone = array_merge($telephone, $fax);
+        }
+      }
     }
 
     // Fetch text/mobile phone number.
@@ -109,16 +129,23 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
     );
 
     $mobile_value = $query->fetchField();
-    $mobile = TelephonePlusUtils::parse($mobile_value);
 
-    // Add the entry if we have at least one number.
-    if (!empty($mobile[0]['telephone_number'])) {
-      // Ensure we always have a title for the entry.
-      if (empty($mobile[0]['telephone_title'])) {
-        $mobile[0]['telephone_title'] = 'Text number';
+    if (!empty($mobile_value)) {
+      $mobile = TelephonePlusUtils::parse($mobile_value);
+
+      if ($mobile === FALSE) {
+        $this->logger->notice('Unable to process fax data for nid: ' . $nid);
       }
-
-      $telephone = array_merge($telephone, $mobile);
+      else {
+        // Add the entry if we have at least one number.
+        if (!empty($mobile[0]['telephone_number'])) {
+          // Ensure we always have a title for the entry.
+          if (empty($mobile[0]['telephone_title'])) {
+            $mobile[0]['telephone_title'] = 'Text number';
+          }
+          $telephone = array_merge($telephone, $mobile);
+        }
+      }
     }
 
     // Check if we have any data from the existing fields and determine if
@@ -133,7 +160,7 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
 
       // Log any nodes with blank telephone info.
       if (!$telephone_processed) {
-        $this->logger->notice("Unable to process telephone details for NID: $nid");
+        $this->logger->notice("Unable to process any telephone details for NID: $nid");
       }
     }
 

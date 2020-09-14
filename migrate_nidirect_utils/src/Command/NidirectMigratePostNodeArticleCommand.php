@@ -5,10 +5,12 @@ namespace Drupal\migrate_nidirect_utils\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Drupal\Console\Core\Command\ContainerAwareCommand;
+// @codingStandardsIgnoreStart
 use Drupal\Console\Annotations\DrupalCommand;
+// @codingStandardsIgnoreEnd
 
 /**
- * Class NidirectMigratePostNodeArticleCommand.
+ * Post process migrated article entity data..
  *
  * @DrupalCommand (
  *     extension="migrate_nidirect_utils",

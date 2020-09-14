@@ -8,7 +8,7 @@ use Drupal\node\Entity\Node;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
- * Class MigrationProcessors.
+ * A collection of methods for processing migrations.
  *
  * @package Drupal\migrate_nidirect_utils
  */
@@ -134,7 +134,7 @@ class MigrationProcessors {
       else {
         // See if the moderation state on D7 was 'needs review'.
         $moderation_status = $this->dbConnMigrate->query("
-        select state from {workbench_moderation_node_history} 
+        select state from {workbench_moderation_node_history}
         where hid = (select max(hid) from {workbench_moderation_node_history} where nid = :nid)
           ", [':nid' => $row->nid])->fetchField();
         if ($moderation_status == 'needs_review') {
@@ -175,13 +175,17 @@ class MigrationProcessors {
   private function updateCurrentRevision(int $nid, int $vid, int $d8_vid) {
     // Does this revision exist in D8 ?
     $check_vid = $this->dbConnDrupal8->query(
-      "SELECT vid FROM {node_field_revision} WHERE nid = :nid AND vid = :vid", [':nid' => $nid, ':vid' => $vid]
-    )->fetchField();
+      "SELECT vid FROM {node_field_revision} WHERE nid = :nid AND vid = :vid", [
+        ':nid' => $nid,
+        ':vid' => $vid,
+      ])->fetchField();
     if (!empty($check_vid)) {
       // Does the current D8 revision exist in D7 ?
       $check_d7_vid = $this->dbConnMigrate->query(
-        "SELECT vid FROM {node_revision} WHERE nid = :nid and vid = :vid", [':nid' => $nid, ':vid' => $d8_vid]
-      )->fetchField();
+        "SELECT vid FROM {node_revision} WHERE nid = :nid and vid = :vid", [
+          ':nid' => $nid,
+          ':vid' => $d8_vid,
+        ])->fetchField();
       if (!empty($check_d7_vid)) {
         // Make the D7 revision the current revision in D8.
         // N.B. This will only work in the 'one hit' migration scenario, it may
@@ -445,7 +449,12 @@ class MigrationProcessors {
         $query->join('node', 'n', 'f.entity_id = n.nid');
       }
       $query->addExpression($flag_id_expression, 'flag_id');
-      $query->fields('f', ['entity_type', 'entity_id', 'count', 'last_updated']);
+      $query->fields('f', [
+        'entity_type',
+        'entity_id',
+        'count',
+        'last_updated',
+      ]);
       $query->condition('f.fid', $flag_id);
       if ($entity_base == 'taxonomy') {
         $query->condition('v.machine_name', $entity_type);
