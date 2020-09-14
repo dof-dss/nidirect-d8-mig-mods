@@ -83,7 +83,8 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
 
         if ($contact_telephone === FALSE) {
           $this->logger->notice('Unable to process telephone data for nid: ' . $nid);
-        } else {
+        }
+        else {
           $telephone = $contact_telephone;
         }
       }
@@ -105,7 +106,8 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
 
       if ($fax === FALSE) {
         $this->logger->notice('Unable to process fax data for nid: ' . $nid);
-      } else {
+      }
+      else {
         // Add the entry if we have at least one number.
         if (!empty($fax[0]['telephone_number'])) {
           // Ensure we always have a title for the entry.

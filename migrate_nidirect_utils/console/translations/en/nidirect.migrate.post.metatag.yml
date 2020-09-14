@@ -4,4 +4,3 @@ arguments: {}
 messages:
     success: '🎉 Fixed metatag migration issues.'
     failure: '😭 Unable to fix metatag migration issues, please review the logs.'
-    

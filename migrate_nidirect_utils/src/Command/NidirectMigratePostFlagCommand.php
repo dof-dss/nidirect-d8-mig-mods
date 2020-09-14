@@ -2,11 +2,12 @@
 
 namespace Drupal\migrate_nidirect_utils\Command;
 
-use Drupal\node\Entity\Node;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Drupal\Console\Core\Command\ContainerAwareCommand;
+// @codingStandardsIgnoreStart
 use Drupal\Console\Annotations\DrupalCommand;
+// @codingStandardsIgnoreEnd
 use Drupal\Core\Database\Database;
 
 /**
@@ -102,7 +103,8 @@ class NidirectMigratePostFlagCommand extends ContainerAwareCommand {
     ");
     $flagging_results = $query->fetchAll();
 
-    // Begin converting/altering result set arrays to then upsert into destination db.
+    // Begin converting/altering result set arrays to then upsert
+    // into destination db.
     $flag_count_data = [];
     $flagging_data = [];
 
@@ -125,7 +127,7 @@ class NidirectMigratePostFlagCommand extends ContainerAwareCommand {
       'entity_type',
       'entity_id',
       'count',
-      'last_updated'
+      'last_updated',
     ]);
     foreach ($flag_count_data as $row) {
       $query->values($row);
@@ -144,7 +146,7 @@ class NidirectMigratePostFlagCommand extends ContainerAwareCommand {
       'global',
       'uid',
       'session_id',
-      'created'
+      'created',
     ]);
     foreach ($flagging_data as $row) {
       $query->values($row);

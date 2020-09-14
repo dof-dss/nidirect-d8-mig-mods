@@ -6,7 +6,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Drupal\Console\Core\Command\ContainerAwareCommand;
 use Drupal\Core\Database\Database;
+// @codingStandardsIgnoreStart
 use Drupal\Console\Annotations\DrupalCommand;
+// @codingStandardsIgnoreEnd
 
 /**
  * Class NidirectMigratePostPublishStatusCommand.
@@ -147,7 +149,7 @@ class NidirectMigratePostPublishStatusCommand extends ContainerAwareCommand {
     else {
       // See if the moderation state on D7 was 'needs review'.
       $moderation_status = $this->dbConnMigrate->query("
-      select state from {workbench_moderation_node_history} 
+      select state from {workbench_moderation_node_history}
       where hid = (select max(hid) from {workbench_moderation_node_history} where nid = :nid)
         ", [':nid' => $nid])->fetchField();
       if ($moderation_status == 'needs_review') {

@@ -45,8 +45,9 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     $this->entityTypeManager = $entityTypeManager;
     $this->logger = $logger->get('migrate_nidirect_link');
 
-    // Clashing aliases from D7 with new nodes in D8. NB: this list should be kept in sync with the skip_on_value
-    // plugin in drupal8/web/modules/migrate/nidirect-migrations/migrate_nidirect_link/config/install/migrate_plus.migration.upgrade_d7_url_alias.yml.
+    // Clashing aliases from D7 with new nodes in D8. NB: this list should be
+    // kept in sync with the skip_on_value plugin in
+    // drupal8/web/modules/migrate/nidirect-migrations/migrate_nidirect_link/config/install/migrate_plus.migration.upgrade_d7_url_alias.yml.
     $this->skipItems = [13638, 13639, 13640, 13641, 13642];
   }
 

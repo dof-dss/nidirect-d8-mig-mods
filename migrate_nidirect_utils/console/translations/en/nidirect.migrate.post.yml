@@ -4,4 +4,3 @@ arguments: {}
 messages:
     success: 'Succesfully executed all post migration tasks.'
     failure: 'There were issues encountered when executing post migration tasks.'
-    

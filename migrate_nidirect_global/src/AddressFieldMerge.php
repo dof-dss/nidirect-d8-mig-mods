@@ -5,12 +5,14 @@ namespace Drupal\migrate_nidirect_global;
 /**
  * Class AddressFieldMerge.
  *
- *  Gathers arbitary address fragments and assembles into array that AddressField
- * migrate process plugin can understand and work with.
+ * Gathers arbitary address fragments and assembles into array
+ * that AddressField migrate process plugin can understand and work with.
  */
 class AddressFieldMerge {
 
   /**
+   * Transform to adddressfield array.
+   *
    * Take an array of address fragments (opinionated) and
    * return a structured addressfield plugin array.
    *
@@ -24,6 +26,7 @@ class AddressFieldMerge {
    *   - Town/city.
    *   - Postal code.
    *   - Country code.
+   *
    * @return array
    *   Array of keyed data for use with the addressfield process plugin.
    */

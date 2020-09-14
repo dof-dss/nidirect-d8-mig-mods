@@ -2,10 +2,9 @@
 
 namespace Drupal\migrate_nidirect_utils\Command;
 
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Drupal\Console\Core\Command\ContainerAwareCommand;
+// @codingStandardsIgnoreStart
 use Drupal\Console\Annotations\DrupalCommand;
+// @codingStandardsIgnoreEnd
 use Drupal\Core\Database\Database;
 use Symfony\Component\Yaml\Yaml;
 use Drupal\migrate_nidirect_utils\MigrateCommand;
@@ -63,13 +62,15 @@ class NidirectMigratePreCommand extends MigrateCommand {
   }
 
   /**
-   * Removes shortcuts from the default shortcut set to prevent errors
-   * during configuration import.
+   * Removes shortcuts from the default shortcut set.
+   *
+   * Remove to prevent errors during configuration import.
    */
   // phpcs:disable
   public function task_remove_default_shortcuts() {
   // phpcs:enable
-    // Remove the installed default admin shortcuts which trip up config sync import.
+    // Remove the installed default admin shortcuts which trip up config
+    // sync import.
     $query = \Drupal::entityTypeManager()->getStorage('shortcut')->getQuery();
     $nids = $query->condition('shortcut_set', 'default')->execute();
     $shortcuts = \Drupal::entityTypeManager()->getStorage("shortcut")->loadMultiple($nids);
@@ -82,7 +83,9 @@ class NidirectMigratePreCommand extends MigrateCommand {
   }
 
   /**
-   * Update the current site UUID to use the config/sync site UUID or we won't
+   * Update the current site UUID.
+   *
+   * Update to use the config/sync site UUID or we won't
    * be able to import configuration.
    */
   // phpcs:disable
@@ -91,8 +94,8 @@ class NidirectMigratePreCommand extends MigrateCommand {
     global $config_directories;
     $site_config = Yaml::parse(file_get_contents($config_directories['sync'] . '/system.site.yml'));
 
-    // Config imports will fail if the exported Site UUID doesn't match the current
-    // Site UUID.
+    // Config imports will fail if the exported Site UUID doesn't match the
+    // current Site UUID.
     if ($site_config) {
       $site_uuid_sync = $site_config['uuid'];
 
@@ -119,6 +122,7 @@ class NidirectMigratePreCommand extends MigrateCommand {
 
   /**
    * Fix issue with zero status redirect imports to Drupal 8.
+   *
    * Credit to Jaime Contreras.
    */
   // phpcs:disable

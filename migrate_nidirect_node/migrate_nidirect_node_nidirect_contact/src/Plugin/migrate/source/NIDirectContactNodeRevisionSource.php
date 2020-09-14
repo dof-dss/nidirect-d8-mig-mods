@@ -105,9 +105,9 @@ class NIDirectContactNodeRevisionSource extends NodeRevision implements Containe
 
     // Fetch fax line number.
     $query = $this->getDatabase()->query('
-        SELECT field_contact_fax_value
-        FROM {field_revision_field_contact_fax}
-        WHERE revision_id = :vid', [
+      SELECT field_contact_fax_value
+      FROM {field_revision_field_contact_fax}
+      WHERE revision_id = :vid', [
         ':vid' => $vid,
       ]
     );
@@ -134,9 +134,9 @@ class NIDirectContactNodeRevisionSource extends NodeRevision implements Containe
 
     // Fetch text/mobile phone number.
     $query = $this->getDatabase()->query('
-        SELECT field_contact_sms_value
-        FROM {field_revision_field_contact_sms}
-        WHERE revision_id = :vid', [
+      SELECT field_contact_sms_value
+      FROM {field_revision_field_contact_sms}
+      WHERE revision_id = :vid', [
         ':vid' => $vid,
       ]
     );
@@ -182,4 +182,5 @@ class NIDirectContactNodeRevisionSource extends NodeRevision implements Containe
     return parent::prepareRow($row);
 
   }
+
 }

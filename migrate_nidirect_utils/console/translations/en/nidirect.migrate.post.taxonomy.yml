@@ -4,4 +4,3 @@ arguments: {}
 messages:
     success: '🎉 Fixed taxonomy migration issues.'
     failure: '😭 Unable to fix taxonomy migration issues, please review the logs.'
-    

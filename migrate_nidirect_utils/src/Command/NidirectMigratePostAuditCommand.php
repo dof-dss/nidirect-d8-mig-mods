@@ -6,7 +6,9 @@ use Drupal\Core\Queue\QueueFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Drupal\Console\Core\Command\ContainerAwareCommand;
+// @codingStandardsIgnoreStart
 use Drupal\Console\Annotations\DrupalCommand;
+// @codingStandardsIgnoreEnd
 use Drupal\Core\Database\Database;
 
 /**
@@ -61,8 +63,8 @@ class NidirectMigratePostAuditCommand extends ContainerAwareCommand {
 
     // Select content flagged with 'content_audit' from D7.
     $query = $conn_migrate->query(
-          "SELECT 
-              f.entity_id 
+          "SELECT
+              f.entity_id
             FROM flagging f
             JOIN node n
             ON f.entity_id = n.nid
@@ -73,8 +75,8 @@ class NidirectMigratePostAuditCommand extends ContainerAwareCommand {
 
     // Select nids already set for audit.
     $query = $conn_drupal8->query(
-          "SELECT entity_id 
-            FROM node__field_next_audit_due 
+          "SELECT entity_id
+            FROM node__field_next_audit_due
             WHERE field_next_audit_due_value is not null"
       );
     $already_set_results = $query->fetchAll();
