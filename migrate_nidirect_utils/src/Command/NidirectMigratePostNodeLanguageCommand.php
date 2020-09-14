@@ -13,7 +13,7 @@ use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Class NidirectMigratePostNodeLanguageCommand.
+ * Post process migrated node language data.
  *
  * @DrupalCommand (
  *     extension="migrate_nidirect_utils",

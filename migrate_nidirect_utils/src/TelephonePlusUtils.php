@@ -3,7 +3,7 @@
 namespace Drupal\migrate_nidirect_utils;
 
 /**
- * Class TelephonePlusUtils.
+ * Provides methods for processing telephone numbers.
  *
  * @package Drupal\migrate_nidirect_utils
  */

@@ -10,7 +10,7 @@ use Drupal\Console\Annotations\DrupalCommand;
 // @codingStandardsIgnoreEnd
 
 /**
- * Class NidirectMigratePostNodeArticleCommand.
+ * Post process migrated article entity data..
  *
  * @DrupalCommand (
  *     extension="migrate_nidirect_utils",

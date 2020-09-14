@@ -11,7 +11,7 @@ use Drupal\Console\Annotations\DrupalCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 
 /**
- * Class NiDirectMigratePostCommand.
+ * Post processes a collection of migration commands.
  *
  * @DrupalCommand (
  *     extension="migrate_nidirect_utils",

@@ -12,7 +12,7 @@ use Drupal\Console\Annotations\DrupalCommand;
 use Drupal\Core\Database\Database;
 
 /**
- * Class NidirectMigratePostAuditCommand.
+ * Post process migrated Audit module data..
  *
  * @DrupalCommand (
  *     extension="migrate_nidirect_utils",

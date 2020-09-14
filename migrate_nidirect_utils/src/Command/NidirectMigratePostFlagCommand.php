@@ -11,7 +11,7 @@ use Drupal\Console\Annotations\DrupalCommand;
 use Drupal\Core\Database\Database;
 
 /**
- * Class NidirectMigratePostFlagCommand.
+ * Post process migrated Flag module data.
  *
  * @DrupalCommand (
  *     extension="migrate_nidirect_utils",

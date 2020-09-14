@@ -11,7 +11,7 @@ use Drupal\Console\Annotations\DrupalCommand;
 use Drupal\Core\Database\Database;
 
 /**
- * Class NidirectMigratePostTaxonomyCommand.
+ * Post process migrated Taxonomy module data..
  *
  * @DrupalCommand (
  *     extension="migrate_nidirect_utils",

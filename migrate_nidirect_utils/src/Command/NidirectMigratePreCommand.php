@@ -10,7 +10,7 @@ use Symfony\Component\Yaml\Yaml;
 use Drupal\migrate_nidirect_utils\MigrateCommand;
 
 /**
- * Class NidirectMigratePreCommand.
+ * Processes the database prior to migration.
  *
  * @DrupalCommand (
  *     extension="migrate_nidirect_utils",

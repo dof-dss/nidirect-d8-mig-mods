@@ -12,7 +12,7 @@ use Drupal\Console\Annotations\DrupalCommand;
 use Drupal\Core\Database\Database;
 
 /**
- * Class NidirectMigratePostMetatagCommand.
+ * Post process migrated Metatags module data..
  *
  * @DrupalCommand (
  *     extension="migrate_nidirect_utils",
