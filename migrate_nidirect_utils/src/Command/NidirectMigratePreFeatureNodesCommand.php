@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 // @codingStandardsIgnoreEnd
 /**
- * Processes the database prior to migration.
+ * Removes existing feature + featured_content_list nodes ahead of content import.
  *
  * @DrupalCommand (
  *     extension="migrate_nidirect_utils",
