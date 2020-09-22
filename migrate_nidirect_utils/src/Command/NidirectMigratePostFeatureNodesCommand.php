@@ -27,6 +27,9 @@ class NidirectMigratePostFeatureNodesCommand extends ContainerAwareCommand {
       ->setDescription("Post migration: Recreates feature + featured_content_list nodes after migration.");
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function execute(InputInterface $input, OutputInterface $output) {
     $this->task_create_feature_nodes();
     $this->task_create_feature_content_list_nodes();

@@ -27,6 +27,9 @@ class NidirectMigratePreFeatureNodesCommand extends ContainerAwareCommand {
       ->setDescription("Pre migration setup: removes feature and FCL nodes");
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function execute(InputInterface $input, OutputInterface $output) {
     $this->getIo()->info('Removing existing feature and featured_content_list nodes before migration.');
     $this->task_remove_feature_fcl_nodes();
