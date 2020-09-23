@@ -20,6 +20,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class NidirectMigratePostFeatureNodesCommand extends ContainerAwareCommand {
 
+  /**
+   * A collection of featured content data.
+   * @var array
+   */
   protected $featureContent = [];
 
   /**
@@ -107,7 +111,7 @@ class NidirectMigratePostFeatureNodesCommand extends ContainerAwareCommand {
       'features' => [
         ['target_id' => $this->getFeatureByTitle('Wear a face covering to help reduce spread of COVID-19')],
         ['target_id' => $this->getFeatureByTitle('Universal Credit')],
-        ['target_id' => $this->getFeatureByTitle( 'Coronavirus (COVID-19)')],
+        ['target_id' => $this->getFeatureByTitle('Coronavirus (COVID-19)')],
       ],
       'tag' => 1338,
     ];
@@ -133,7 +137,7 @@ class NidirectMigratePostFeatureNodesCommand extends ContainerAwareCommand {
    * Fetches the node id of a feature node from a given title.
    *
    * @param string $title
-   *   Feature node title
+   *   Feature node title.
    * @return int
    *   The node id.
    */
