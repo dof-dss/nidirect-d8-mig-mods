@@ -53,7 +53,7 @@ class NidirectMigratePostFeatureNodesCommand extends ContainerAwareCommand {
     $this->featureContent[] = [
       'title' => 'Wear a face covering to help reduce spread of COVID-19',
       'teaser' => 'Wear a face covering to help reduce spread of COVID-19 - they are now mandatory in certain indoor settings',
-      'uri' => 'internal:/node/7680',
+      'uri' => 'internal:/node/13662',
       'media_id' => 8939,
     ];
     $this->featureContent[] = [
