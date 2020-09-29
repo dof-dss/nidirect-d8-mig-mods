@@ -66,8 +66,24 @@ process:
         target_id: tid
   webform:
     -
-      plugin: webform_links
+      plugin: static_map
+      bypass: true
       source: tnid
+      map:
+        7285: debt_management_enquiry
+        9720: taxi_driver_theory_practice_1
+        2843: site_feedback
+        4683: proni-submit-an-enquiry
+        4810: contact_the_make_the_call_team
+        12696: contact_the_make_the_call_team
+        7285: debt_management_enquiry
+        9720: taxi_driver_theory_practice_1
+        9721: taxi_driver_theory_practice_2
+        9722: taxi_driver_theory_practice_3
+        9723: taxi_driver_theory_practice_4
+        9898: state_pension_online_feedback
+        10030: ready_for_universal_credit
+        12537: your_comments
 destination:
   plugin: 'entity:node'
   default_bundle: webform
