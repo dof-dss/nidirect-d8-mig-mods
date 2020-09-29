@@ -1,0 +1,12 @@
+name: 'Migrate NIDirect - Node:Webform'
+type: module
+description: 'Migrate NIDirect - Webform content type'
+core_version_requirement: ^8.8 || ^9
+package: 'Migrate NIDirect'
+migration_dependencies:
+  required: { }
+dependencies:
+  - drupal:migrate
+  - drupal:migrate_plus
+  - drupal:migrate_tools
+  - drupal:migrate_drupal
