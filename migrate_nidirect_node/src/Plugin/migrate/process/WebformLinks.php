@@ -22,9 +22,22 @@ class WebformLinks extends ProcessPluginBase {
     // Reason for writing this filter was that a Drupal 7 webform link
     // cannot be converted to a Drupal 8 webform link.
     // We need to map by nid.
-    $nid = $value;
-
-    return 'taxi_driver_theory_practice_1';
+    $result = NULL;
+    switch ($value) {
+      case 9720:
+        $result = 'taxi_driver_theory_practice_1';
+        break;
+      case 9721:
+        $result = 'taxi_driver_theory_practice_2';
+        break;
+      case 9722:
+        $result = 'taxi_driver_theory_practice_3';
+        break;
+      case 9723:
+        $result = 'taxi_driver_theory_practice_4';
+        break;
+    }
+    return $result;
   }
 
 }
