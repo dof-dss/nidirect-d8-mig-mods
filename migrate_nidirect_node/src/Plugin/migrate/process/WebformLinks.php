@@ -24,6 +24,19 @@ class WebformLinks extends ProcessPluginBase {
     // We need to map by nid.
     $result = NULL;
     switch ($value) {
+      case 2843:
+        $result = 'site_feedback';
+        break;
+      case 4683:
+        $result = 'proni-submit-an-enquiry';
+        break;
+      case 4810:
+      case 12696:
+        $result = 'contact_the_make_the_call_team';
+        break;
+      case 7285:
+        $result = 'debt_management_enquiry';
+        break;
       case 9720:
         $result = 'taxi_driver_theory_practice_1';
         break;
@@ -35,6 +48,15 @@ class WebformLinks extends ProcessPluginBase {
         break;
       case 9723:
         $result = 'taxi_driver_theory_practice_4';
+        break;
+      case 9898:
+        $result = 'state_pension_online_feedback';
+        break;
+      case 10030:
+        $result = 'ready_for_universal_credit';
+        break;
+      case 12537:
+        $result = 'your_comments';
         break;
     }
     return $result;
