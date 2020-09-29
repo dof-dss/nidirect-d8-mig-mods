@@ -64,6 +64,10 @@ process:
       source: field_top_level_theme
       process:
         target_id: tid
+  webform:
+    -
+      plugin: webform_links
+      source: tnid
 destination:
   plugin: 'entity:node'
   default_bundle: webform
