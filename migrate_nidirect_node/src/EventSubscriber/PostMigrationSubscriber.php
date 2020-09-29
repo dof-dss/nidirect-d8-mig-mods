@@ -90,6 +90,11 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
         $this->logger->notice('Processing audit data for ' . $content_type);
         $this->logger->notice($this->migrationProcessors->audit($content_type));
       }
+
+      // Special processing for webforms.
+      if ($content_type == 'article') {
+        $this->logger->notice($this->migrationProcessors->webforms());
+      }
     }
 
     // One off landing page updates.

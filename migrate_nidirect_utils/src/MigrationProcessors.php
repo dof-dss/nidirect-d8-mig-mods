@@ -660,4 +660,51 @@ class MigrationProcessors {
     }
   }
 
+  /**
+   * Import articles that contain webforms.
+   *
+   * Replaces any references to webform nodes with
+   * direct references to the webform.
+   */
+  public function webforms() {
+    $output = '';
+    $updated = 0;
+
+    // Get a list of articles in D7 that contain
+    // webform links.
+    $d7_webform_nids = $this->dbConnMigrate->query("
+      SELECT f.entity_id
+      FROM field_data_body f
+      WHERE f.body_value like '%10726%'
+      AND f.deleted = 0
+    ")->fetchCol(0);
+
+    foreach ($d7_webform_nids as $nid) {
+      // Load up the D8 node.
+      $node = $this->nodeStorage->load($nid);
+      if ($node instanceof Node) {
+        $output .= '*** FOUND ONE ***';
+        $body = $node->body->value;
+        $body = str_replace("/node/10726", "/webform/year_10_subject_choices_quiz", $body);
+        $node->body->value = $body;
+        $output .= '*** New body text is ' . $body . '***';
+        $node->save();
+        $updated++;
+      }
+      else {
+        $error_nids[] = $nid;
+      }
+    }
+
+    if ($updated > 0) {
+      $output .= 'Updated ' . $updated . ' articles with webform links.';
+    }
+    else {
+      $output .= 'No articles with webform links updated.';
+    }
+
+    return $output;
+  }
+
+
 }
