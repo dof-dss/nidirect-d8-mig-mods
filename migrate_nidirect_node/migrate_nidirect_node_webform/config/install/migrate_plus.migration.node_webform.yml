@@ -38,6 +38,8 @@ process:
       source: body
     -
       plugin: media_wysiwyg_filter
+    -
+      plugin: strip_html_summary_filter
   body/0/format:
     -
       plugin: static_map
