@@ -72,12 +72,9 @@ process:
       bypass: true
       source: tnid
       map:
-        7285: debt_management_enquiry
-        9720: taxi_driver_theory_practice_1
         2843: site_feedback
         4683: proni_submit_an_enquiry
         4810: contact_the_make_the_call_team
-        12696: contact_the_make_the_call_team
         7285: debt_management_enquiry
         9720: taxi_driver_theory_practice_1
         9721: taxi_driver_theory_practice_2
@@ -85,7 +82,9 @@ process:
         9723: taxi_driver_theory_practice_4
         9898: state_pension_online_feedback
         10030: ready_for_universal_credit
+        10726: year_10_subject_choices_quiz
         12537: your_comments
+        12696: contact_the_make_the_call_team
 destination:
   plugin: 'entity:node'
   default_bundle: webform
