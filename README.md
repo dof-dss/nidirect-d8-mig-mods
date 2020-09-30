@@ -41,6 +41,7 @@ then run `lando miip --group=<group name>` with the following:
 * migrate_nidirect_node_nidirect_contact
 * migrate_nidirect_node_page
 * migrate_nidirect_node_publication
+* migrate_nidirect_node_webform
 * migrate_drupal_7_link
 
 then run the following individual migrations:
