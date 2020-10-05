@@ -1,0 +1,96 @@
+langcode: en
+status: true
+dependencies: {  }
+id: node_webform
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: alterFieldInstanceMigration
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_nidirect_node_webform
+label: 'Nodes (Webform)'
+source:
+  plugin: d7_node
+  node_type: webform
+process:
+  nid: tnid
+  vid: vid
+  langcode:
+    -
+      plugin: default_value
+      source: language
+      default_value: en
+  title: title
+  uid: node_uid
+  status: status
+  created: created
+  changed: changed
+  promote: promote
+  sticky: sticky
+  revision_uid: revision_uid
+  revision_log: log
+  revision_timestamp: timestamp
+  comment_node_webform/0/status: comment
+  body:
+    -
+      plugin: get
+      source: body
+    -
+      plugin: media_wysiwyg_filter
+    -
+      plugin: strip_html_summary_filter
+  body/0/format:
+    -
+      plugin: static_map
+      bypass: true
+      source: body/0/format
+      map:
+        filtered_html: basic_html
+        filtered_html_with_no_images: basic_html
+        filtered_html_with_templates: basic_html
+        filtered_html_with_tokens: basic_html
+        html_for_admins: full_html
+        paste_format: plain_text
+        plain_text: plain_text
+  field_subtheme:
+    -
+      plugin: sub_process
+      source: field_subtheme
+      process:
+        target_id: tid
+  field_teaser: field_teaser
+  field_top_level_theme:
+    -
+      plugin: sub_process
+      source: field_top_level_theme
+      process:
+        target_id: tid
+  webform:
+    -
+      plugin: static_map
+      bypass: true
+      source: tnid
+      map:
+        2843: site_feedback
+        4683: proni_submit_an_enquiry
+        4810: contact_the_make_the_call_team
+        7285: debt_management_enquiry
+        9720: taxi_driver_theory_practice_1
+        9721: taxi_driver_theory_practice_2
+        9722: taxi_driver_theory_practice_3
+        9723: taxi_driver_theory_practice_4
+        9898: state_pension_online_feedback
+        10030: ready_for_universal_credit
+        10726: year_10_subject_choices_quiz
+        12537: your_comments
+        12696: contact_the_make_the_call_team
+destination:
+  plugin: 'entity:node'
+  default_bundle: webform
+migration_dependencies:
+  required:
+    - upgrade_d7_user
+    - upgrade_d7_comment_field_instance
+    - upgrade_d7_taxonomy_term_site_themes
+    - upgrade_d7_file_image

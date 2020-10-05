@@ -24,6 +24,7 @@ dependencies:
   - migrate_nidirect_node_nidirect_contact
   - migrate_nidirect_node_page
   - migrate_nidirect_node_publication
+  - migrate_nidirect_node_webform
   - migrate_nidirect_taxo
   - migrate_nidirect_user
   - migrate_nidirect_utils
