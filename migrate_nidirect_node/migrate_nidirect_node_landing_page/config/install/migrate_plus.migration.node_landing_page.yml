@@ -32,46 +32,12 @@ process:
   revision_log: log
   revision_timestamp: timestamp
   comment_node_landing_page/0/status: comment
-  body:
-    -
-      plugin: get
-      source: body
-    -
-      plugin: media_wysiwyg_filter
-  body/0/format:
-    -
-      plugin: static_map
-      bypass: true
-      source: body/0/format
-      map:
-        filtered_html: basic_html
-        filtered_html_with_no_images: basic_html
-        filtered_html_with_templates: basic_html
-        filtered_html_with_tokens: basic_html
-        html_for_admins: full_html
-        paste_format: plain_text
-        plain_text: plain_text
-  field_banner_image:
-    - plugin: sub_process
-      source: field_banner_image
-      process:
-        target_id:
-          plugin: migration_lookup
-          migration:
-            - upgrade_d7_file_image
-          source: fid
   field_subtheme:
     -
       plugin: sub_process
       source: field_subtheme
       process:
         target_id: tid
-  field_summary:
-    -
-      plugin: get
-      source: field_summary
-    -
-      plugin: strip_html_filter
   field_teaser: field_teaser
   field_top_level_theme:
     -
@@ -80,15 +46,6 @@ process:
       process:
         target_id: tid
   field_enable_title: field_enable_title
-  field_banner_image_overlay:
-    - plugin: sub_process
-      source: field_banner_image_overlay
-      process:
-        target_id:
-          plugin: migration_lookup
-          migration:
-            - upgrade_d7_file_image
-          source: fid
 destination:
   plugin: 'entity:node'
   default_bundle: landing_page
