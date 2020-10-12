@@ -109,6 +109,15 @@ class NidirectMigratePreCommand extends MigrateCommand {
   }
 
   /**
+   * Fix Health Condition revision with broken JSON contents.
+   */
+  // phpcs:disable
+  protected function task_remove_broken_health_condition_revision() {
+    // phpcs:enable
+    $this->drupal7DatabaseQuery("DELETE FROM node_revision WHERE nid=10748 AND vid=71939");
+  }
+
+  /**
    * Fix Column 'title' cannot be null issues.
    */
   // phpcs:disable
