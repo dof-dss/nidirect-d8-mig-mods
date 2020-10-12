@@ -53,8 +53,7 @@ jobs:
           name: Fetch drupal-check and any dependencies
           command: |
             cd ${CIRCLE_WORKING_DIRECTORY}
-            composer require --dev mglaman/drupal-check --no-interaction --optimize-autoloader
-            composer require --dev phpstan/phpstan
+            composer require --dev mglaman/drupal-check --prefer-dist --no-interaction --optimize-autoloader
       - run:
          name: Deprecated code check
          command: |
