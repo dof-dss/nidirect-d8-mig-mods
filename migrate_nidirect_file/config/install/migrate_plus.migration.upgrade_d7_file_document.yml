@@ -34,7 +34,7 @@ process:
   status: status
   created: timestamp
   changed: timestamp
-  field_media_file_1/target_id: fid
+  field_media_file/target_id: fid
   field_media_doc_file_language: field_file_language
   field_media_doc_file_title: field_file_title
 destination:
