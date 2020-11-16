@@ -10,5 +10,12 @@
     "issues": "https://www.drupal.org/project/issues/migrate_nidirect_utils",
     "source": "http://cgit.drupalcode.org/migrate_nidirect_utils"
   },
-  "require": { }
+  "require": { },
+  "extra": {
+    "drush": {
+      "services": {
+        "drush.services.yml": "^10"
+      }
+    }
+  }
 }
