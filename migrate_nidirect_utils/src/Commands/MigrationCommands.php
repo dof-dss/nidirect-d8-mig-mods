@@ -43,6 +43,23 @@ class MigrationCommands extends DrushCommands {
    * @aliases mig-prep
    */
   public function prepare() {
+
+    $migrate_tasks = [];
+    $class_methods = get_class_methods($this);
+
+    $migrate_tasks = array_filter($class_methods, function ($key) {
+      return substr($key, 0, 8) === "prepare_";
+    });
+
+    if (($total_tasks = count($migrate_tasks)) > 1) {
+      foreach ($migrate_tasks as $task) {
+        $this->$task();
+      }
+    }
+    else {
+      $this->logger()->notice('No migration preparation commands found');
+    }
+
     $this->logger()->success(dt('Site ready for migrations'));
   }
 
