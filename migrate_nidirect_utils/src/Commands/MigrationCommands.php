@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate_nidirect_utils\Commands;
 
+use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
 use Drupal\Core\Database\Database;
 use Drush\Commands\DrushCommands;
 use Symfony\Component\Yaml\Yaml;
@@ -64,7 +65,7 @@ class MigrationCommands extends DrushCommands {
   }
 
   /**
-   * Displays the migration status.
+   *
    *
    * @command nidirect-migrate:status
    *
@@ -72,6 +73,7 @@ class MigrationCommands extends DrushCommands {
    */
   public function status() {
   }
+
 
   /**
    * A simple migrate database query wrapper.
@@ -290,6 +292,21 @@ class MigrationCommands extends DrushCommands {
   {
     // phpcs:enable
     $this->drupal7DatabaseQuery("DELETE FROM node WHERE node.type = 'nidirect_ub'");
+  }
+
+  protected function prepare_update_contact_links() {
+    // Update 'Central Appointments Unit' revision URL's to full path.
+    $this->drupal7DatabaseQuery("UPDATE field_revision_field_contact_additional_info
+    SET field_contact_additional_info_value = REGEXP_REPLACE(field_contact_additional_info_value, 'public-appointment-vacancies-64059.htm', 'https://www.nidirect.gov.uk/articles/public-appointment-vacancies')
+    WHERE entity_id = 439");
+
+    $this->drupal7DatabaseQuery("UPDATE field_revision_field_contact_additional_info
+    SET field_contact_additional_info_value = REGEXP_REPLACE(field_contact_additional_info_value, 'becoming-a-public-appointee-66246.htm', 'https://www.nidirect.gov.uk/articles/public-appointments-explained#toc-1')
+    WHERE entity_id = 439");
+
+    $this->drupal7DatabaseQuery("UPDATE field_revision_field_contact_additional_info
+    SET field_contact_additional_info_value = REGEXP_REPLACE(field_contact_additional_info_value, 'public-appointments-explained-20147.htm', 'https://www.nidirect.gov.uk/articles/public-appointments-explained')
+    WHERE entity_id = 439");
   }
 
 
