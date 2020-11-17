@@ -307,6 +307,17 @@ class MigrationCommands extends DrushCommands {
     $this->drupal7DatabaseQuery("UPDATE field_revision_field_contact_additional_info
     SET field_contact_additional_info_value = REGEXP_REPLACE(field_contact_additional_info_value, 'public-appointments-explained-20147.htm', 'https://www.nidirect.gov.uk/articles/public-appointments-explained')
     WHERE entity_id = 439");
+
+    // Update 'Womens aid' URL to full path.
+    $this->drupal7DatabaseQuery("UPDATE field_data_field_contact_additional_info
+    SET field_contact_additional_info_value = REGEXP_REPLACE(field_contact_additional_info_value, 'womens-aid-federation-northern-ireland-18776.htm', 'https://www.nidirect.gov.uk/contacts/contacts-az/womens-aid-federation-northern-ireland-head-office')
+    WHERE entity_id = 522");
+
+    // Update 'Womens aid' revision URL to full path.
+    $this->drupal7DatabaseQuery("UPDATE field_revision_field_contact_additional_info
+    SET field_contact_additional_info_value = REGEXP_REPLACE(field_contact_additional_info_value, 'womens-aid-federation-northern-ireland-18776.htm', 'https://www.nidirect.gov.uk/contacts/contacts-az/womens-aid-federation-northern-ireland-head-office')
+    WHERE entity_id = 522");
+
   }
 
 
