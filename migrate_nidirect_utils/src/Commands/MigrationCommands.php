@@ -3,6 +3,7 @@
 namespace Drupal\migrate_nidirect_utils\Commands;
 
 use Drupal\Core\Database\Database;
+use Drupal\node\Entity\Node;
 use Drush\Commands\DrushCommands;
 use Symfony\Component\Yaml\Yaml;
 
@@ -40,7 +41,7 @@ class MigrationCommands extends DrushCommands {
     parent::__construct();
     $this->connMigrate = Database::getConnection('default', 'migrate');
     $this->connDefault = Database::getConnection('default', 'default');
-    $this->entityTypeManager = Drupal::entityTypeManager();
+    $this->entityTypeManager = \Drupal::entityTypeManager();
   }
 
   /**
@@ -165,6 +166,62 @@ class MigrationCommands extends DrushCommands {
         $this->io()->write("<comment>$bundle content deleted</comment>", TRUE);
       }
       $this->contentPurge();
+    }
+  }
+
+  /**
+   * Prepares the site for migrations of Drupal 7 content.
+   *
+   * @command nidirect-migrate:create-featured
+   *
+   * @aliases mig-feat
+   */
+  public function createFeatureContent() {
+    $featured_nodes = [];
+    $featured_content[] = [
+      'title' => 'Wear a face covering to help reduce spread of COVID-19',
+      'teaser' => 'Wear a face covering to help reduce spread of COVID-19 - they are now mandatory in certain indoor settings',
+      'uri' => 'internal:/node/13662',
+      'media_id' => 8939,
+    ];
+    $featured_content[] = [
+      'title' => 'Coronavirus (COVID-19)',
+      'teaser' => 'Updates and advice about coronavirus (COVID-19), including information about government services',
+      'uri' => 'internal:/node/13394',
+      'media_id' => 8786,
+    ];
+    $featured_content[] = [
+      'title' => 'Universal Credit',
+      'teaser' => 'Find out all you need to need to know to make a Universal Credit claim',
+      'uri' => 'internal:/node/12849',
+      'media_id' => 7283,
+    ];
+
+    foreach ($featured_content as &$featured) {
+      $storage = $this->entityTypeManager->getStorage('node');
+      $result =  $entities = $storage->loadByProperties(["type" => "feature", "title" => $featured['title']]);
+
+      if (empty($result)) {
+        $node = Node::create([
+          'type' => 'feature',
+          'langcode' => 'en',
+          'moderation_state' => 'published',
+          'status' => 1,
+          'uid' => 1,
+          'title' => $featured['title'],
+          'field_teaser' => $featured['teaser'],
+          'field_link_url' => [
+            'uri' => $featured['uri'],
+          ],
+          'field_photo' => [
+            'target_id' => $featured['media_id'],
+          ],
+        ]);
+        $node->save();
+        $featured['nid'] = $node->id();
+      } else {
+        $featured['nid'] = current($result)->id();
+      }
     }
   }
 
