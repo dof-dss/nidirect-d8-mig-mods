@@ -324,7 +324,20 @@ class MigrationCommands extends DrushCommands {
     $this->drupal7DatabaseQuery("UPDATE field_revision_field_contact_additional_info
     SET field_contact_additional_info_value = REGEXP_REPLACE(field_contact_additional_info_value, 'womens-aid-federation-northern-ireland-18776.htm', 'https://www.nidirect.gov.uk/contacts/contacts-az/womens-aid-federation-northern-ireland-head-office')
     WHERE entity_id = 522");
-
   }
+
+  /**
+   * Purge the D8 site of all feature and featured content list nodes.
+   */
+  protected function prepare_remove_feature_fcl_nodes() {
+    // phpcs:enable
+    $storage = \Drupal::entityTypeManager()->getStorage('node');
+    foreach (['featured_content_list', 'feature'] as $type) {
+      $entities = $storage->loadByProperties(['type' => $type]);
+      $storage->delete($entities);
+    }
+  }
+
+
 
 }
