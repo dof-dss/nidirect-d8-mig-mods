@@ -2,8 +2,10 @@
 
 namespace Drupal\migrate_nidirect_utils\Commands;
 
+use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
 use Drupal\Core\Database\Database;
 use Drush\Commands\DrushCommands;
+use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -63,15 +65,74 @@ class MigrationCommands extends DrushCommands {
   }
 
   /**
-   * Intentionally blank function.
+   * Remove select content from the site.
    *
-   * @command nidirect-migrate:status
+   * @command nidirect-migrate:content-purge
    *
-   * @aliases mig-stat
+   * @aliases mig-purge
    */
-  public function status() {
-    // Single drush commands in will fall under the Global group,
-    // this blank function has been added to create a nidirect group.
+  public function contentPurge() {
+    $content_types = [
+      'application'                     => 'node',
+      'article'                         => 'node',
+      'contact'                         => 'node',
+      'driving_instructor'              => 'node',
+      'embargoed_publication'           => 'node',
+      'external_link'                   => 'node',
+      'gp_practice'                     => 'node',
+      'health_condition'                => 'node',
+      'health_condition_alternative'    => 'node',
+      'link'                            => 'node',
+      'news'                            => 'node',
+      'page'                            => 'node',
+      'publication'                     => 'node',
+      'gp'                              => 'gp',
+      'drive_instr_categories'          => 'taxonomy_term',
+      'hc_body_location'                => 'taxonomy_term',
+      'hc_body_system'                  => 'taxonomy_term',
+      'hc_condition_type'               => 'taxonomy_term',
+      'hc_info_sources'                 => 'taxonomy_term',
+      'hc_symptoms'                     => 'taxonomy_term',
+      'contact_categories'              => 'taxonomy_term',
+      'ni_postcodes'                    => 'taxonomy_term',
+      'site_themes'                     => 'taxonomy_term',
+    ];//
+
+    $index = 1;
+    foreach ($content_types as $bundle => $entity) {
+
+      $storage = \Drupal::entityTypeManager()->getStorage($entity);
+
+      if ($entity == 'taxonomy_term') {
+        $entities = $storage->loadByProperties(["vid" => $bundle]);
+      } elseif ($entity !== $bundle) {
+        $entities = $storage->loadByProperties(["type" => $bundle]);
+      } else {
+        $entities = $storage->loadMultiple();
+      }
+
+      $rows[] = [
+        'id' => $index,
+        'entity' => $entity,
+        'bundle' => $bundle,
+        'total' => count($entities),
+      ];
+
+      $index++;
+    }
+
+    $this->io()->table(['Index', 'Entity', 'Bundle', 'Total'], $rows);
+    $result = $this->io()->ask('Which content type do you want to examine? 0 to exit.', NULL, function ($number) use ($index) {
+      return (int) $number;
+    });
+
+    if ($result == 0) {
+      return;
+    } else {
+      $this->contentPurge();
+    }
+
+    $this->writeln($result);
   }
 
   /**
