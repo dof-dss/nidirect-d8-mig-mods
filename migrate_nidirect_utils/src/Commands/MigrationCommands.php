@@ -70,7 +70,9 @@ class MigrationCommands extends DrushCommands {
    * @aliases mig-purge
    */
   public function contentPurge() {
-
+    $type_manager = \Drupal::entityTypeManager();
+    $bundle_index = 1;
+    // List of bundles the user is allowed to delete content from.
     $content_types = [
       'application'                     => 'node',
       'article'                         => 'node',
@@ -97,10 +99,9 @@ class MigrationCommands extends DrushCommands {
       'site_themes'                     => 'taxonomy_term',
     ];
 
-    $index = 1;
+    // Display each bundle and the content count.
     foreach ($content_types as $bundle => $entity) {
-
-      $storage = \Drupal::entityTypeManager()->getStorage($entity);
+      $storage = $type_manager->getStorage($entity);
 
       if ($entity == 'taxonomy_term') {
         $entities = $storage->loadByProperties(["vid" => $bundle]);
@@ -113,29 +114,25 @@ class MigrationCommands extends DrushCommands {
       }
 
       $rows[] = [
-        'id' => $index,
+        'id' => $bundle_index++,
         'entity' => $entity,
         'bundle' => $bundle,
         'total' => count($entities),
       ];
-
-      $index++;
     }
-
     $this->io()->table(['Index', 'Entity', 'Bundle', 'Total'], $rows);
-    $result = $this->io()->ask('Which content type do you want to examine? 0 to exit', NULL, function ($number) use ($index, $content_types) {
-      return (int) $number;
+
+    $result = $this->io()->ask('What content do want to delete? 0 to exit', NULL, function ($input) use ($bundle_index, $content_types) {
+      return (int) $input;
     });
 
-    if ($result == 0) {
-      return;
-    }
-    else {
+    if ($result !== 0) {
+      // decrement to get the true array index, bundle and entity type.
       $result--;
       $bundle = array_keys($content_types)[$result];
       $entity = $content_types[$bundle];
 
-      $storage = \Drupal::entityTypeManager()->getStorage($entity);
+      $storage = $type_manager->getStorage($entity);
 
       if ($entity === 'taxonomy_term') {
         $entities = $storage->loadByProperties(["vid" => $bundle]);
