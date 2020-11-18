@@ -177,7 +177,8 @@ class MigrationCommands extends DrushCommands {
    * @aliases mig-feat
    */
   public function createFeatureContent() {
-    $featured_nodes = [];
+
+    // Featured Content node creation.
     $featured_content[] = [
       'title' => 'Wear a face covering to help reduce spread of COVID-19',
       'teaser' => 'Wear a face covering to help reduce spread of COVID-19 - they are now mandatory in certain indoor settings',
@@ -199,7 +200,7 @@ class MigrationCommands extends DrushCommands {
 
     foreach ($featured_content as &$featured) {
       $storage = $this->entityTypeManager->getStorage('node');
-      $result =  $entities = $storage->loadByProperties(["type" => "feature", "title" => $featured['title']]);
+      $result = $storage->loadByProperties(["type" => "feature", "title" => $featured['title']]);
 
       if (empty($result)) {
         $node = Node::create([
@@ -221,6 +222,52 @@ class MigrationCommands extends DrushCommands {
         $featured['nid'] = $node->id();
       } else {
         $featured['nid'] = current($result)->id();
+      }
+    }
+
+    // Featured Content List item creation.
+    $fcl_content[] = [
+      'title' => 'News: featured content',
+      'features' => [
+        7366,
+        7479,
+      ],
+      'tag' => 1344,
+    ];
+    $fcl_content[] = [
+      'title' => 'Homepage: featured content',
+      'features' => [
+        ['target_id' => $featured_content[0]['nid']],
+        ['target_id' => $featured_content[2]['nid']],
+        ['target_id' => $featured_content[1]['nid']],
+      ],
+      'tag' => 1338,
+    ];
+
+    foreach ($fcl_content as $fcl) {
+      $storage = $this->entityTypeManager->getStorage('node');
+      $result = $storage->loadByProperties(["type" => "featured_content_list", "title" => $fcl['title']]);
+
+      if (empty($result)) {
+        $node = Node::create([
+          'type' => 'featured_content_list',
+          'langcode' => 'en',
+          'moderation_state' => 'published',
+          'status' => 1,
+          'uid' => 1,
+          'title' => $fcl['title'],
+          'field_featured_content' => $fcl['features'],
+          'field_tags' => $fcl['tag'],
+        ]);
+        $node->save();
+      }
+      else {
+        // Ensure the existing homepage featured is pointing at the right nodes.
+        if ($fcl['title'] === 'Homepage: featured content') {
+          $node = current($result);
+          $node->field_featured_content->setValue($fcl['features']);
+          $node->save();
+        }
       }
     }
   }
