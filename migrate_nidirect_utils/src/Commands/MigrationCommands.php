@@ -122,13 +122,28 @@ class MigrationCommands extends DrushCommands {
     }
 
     $this->io()->table(['Index', 'Entity', 'Bundle', 'Total'], $rows);
-    $result = $this->io()->ask('Which content type do you want to examine? 0 to exit.', NULL, function ($number) use ($index) {
+    $result = $this->io()->ask('Which content type do you want to examine? 0 to exit', NULL, function ($number) use ($index, $content_types) {
       return (int) $number;
     });
 
     if ($result == 0) {
       return;
     } else {
+      $result--;
+      $bundle = array_keys($content_types)[$result];
+      $entity = $content_types[$bundle];
+
+      $storage = \Drupal::entityTypeManager()->getStorage($entity);
+
+      if ($entity === 'taxonomy_term') {
+        $entities = $storage->loadByProperties(["vid" => $bundle]);
+      } elseif ($entity !== $bundle) {
+        $entities = $storage->loadByProperties(["type" => $bundle]);
+      } else {
+        $entities = $storage->loadMultiple();
+      }
+
+      $storage->delete($entities);
       $this->contentPurge();
     }
 
