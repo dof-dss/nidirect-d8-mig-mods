@@ -2,10 +2,8 @@
 
 namespace Drupal\migrate_nidirect_utils\Commands;
 
-use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
 use Drupal\Core\Database\Database;
 use Drush\Commands\DrushCommands;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -72,6 +70,7 @@ class MigrationCommands extends DrushCommands {
    * @aliases mig-purge
    */
   public function contentPurge() {
+
     $content_types = [
       'application'                     => 'node',
       'article'                         => 'node',
@@ -96,7 +95,7 @@ class MigrationCommands extends DrushCommands {
       'contact_categories'              => 'taxonomy_term',
       'ni_postcodes'                    => 'taxonomy_term',
       'site_themes'                     => 'taxonomy_term',
-    ];//
+    ];
 
     $index = 1;
     foreach ($content_types as $bundle => $entity) {
@@ -105,9 +104,11 @@ class MigrationCommands extends DrushCommands {
 
       if ($entity == 'taxonomy_term') {
         $entities = $storage->loadByProperties(["vid" => $bundle]);
-      } elseif ($entity !== $bundle) {
+      }
+      elseif ($entity !== $bundle) {
         $entities = $storage->loadByProperties(["type" => $bundle]);
-      } else {
+      }
+      else {
         $entities = $storage->loadMultiple();
       }
 
@@ -128,7 +129,8 @@ class MigrationCommands extends DrushCommands {
 
     if ($result == 0) {
       return;
-    } else {
+    }
+    else {
       $result--;
       $bundle = array_keys($content_types)[$result];
       $entity = $content_types[$bundle];
@@ -137,17 +139,20 @@ class MigrationCommands extends DrushCommands {
 
       if ($entity === 'taxonomy_term') {
         $entities = $storage->loadByProperties(["vid" => $bundle]);
-      } elseif ($entity !== $bundle) {
+      }
+      elseif ($entity !== $bundle) {
         $entities = $storage->loadByProperties(["type" => $bundle]);
-      } else {
+      }
+      else {
         $entities = $storage->loadMultiple();
       }
 
-      $storage->delete($entities);
+      if ($this->io()->confirm("Are you sure you want to delete all $bundle content", TRUE)) {
+        $storage->delete($entities);
+        $this->io()->write("<comment>$bundle content deleted</comment>", TRUE);
+      }
       $this->contentPurge();
     }
-
-    $this->writeln($result);
   }
 
   /**
