@@ -123,6 +123,14 @@ class MigrationCommands extends DrushCommands {
     $this->io()->table(['Index', 'Entity', 'Bundle', 'Total'], $rows);
 
     $result = $this->io()->ask('What content do want to delete? 0 to exit', NULL, function ($input) use ($bundle_index, $content_types) {
+      if (!is_numeric($input)) {
+        throw new \RuntimeException('You must type an Index number.');
+      }
+
+      if ($input < 0 || $input > $bundle_index) {
+        throw new \RuntimeException("Number outside of range of the Index ($bundle_index)");
+      }
+
       return (int) $input;
     });
 
