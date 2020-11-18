@@ -2,7 +2,6 @@
 
 namespace Drupal\migrate_nidirect_utils\Commands;
 
-use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
 use Drupal\Core\Database\Database;
 use Drush\Commands\DrushCommands;
 use Symfony\Component\Yaml\Yaml;
@@ -28,7 +27,6 @@ class MigrationCommands extends DrushCommands {
 
   /**
    * Class constructor.
-   *
    */
   public function __construct() {
     parent::__construct();
@@ -65,15 +63,16 @@ class MigrationCommands extends DrushCommands {
   }
 
   /**
-   *
+   * Intentionally blank function.
    *
    * @command nidirect-migrate:status
    *
    * @aliases mig-stat
    */
   public function status() {
+    // Single drush commands in will fall under the Global group,
+    // this blank function has been added to create a nidirect group.
   }
-
 
   /**
    * A simple migrate database query wrapper.
@@ -87,7 +86,10 @@ class MigrationCommands extends DrushCommands {
   }
 
   /**
-   *  --== Migration Prepare tasks ==--
+   * Migration Prepare tasks.
+   *
+   * Tasks prefixed with prepare_ will be automatically called by
+   * the prepare() function.
    */
 
   /**
@@ -294,7 +296,12 @@ class MigrationCommands extends DrushCommands {
     $this->drupal7DatabaseQuery("DELETE FROM node WHERE node.type = 'nidirect_ub'");
   }
 
+  /**
+   * Fix issues with contact links.
+   */
+  // phpcs:disable
   protected function prepare_update_contact_links() {
+    // phpcs:enable
     // Update 'Central Appointments Unit' revision URL's to full path.
     $this->drupal7DatabaseQuery("UPDATE field_revision_field_contact_additional_info
     SET field_contact_additional_info_value = REGEXP_REPLACE(field_contact_additional_info_value, 'public-appointment-vacancies-64059.htm', 'https://www.nidirect.gov.uk/articles/public-appointment-vacancies')
@@ -319,6 +326,5 @@ class MigrationCommands extends DrushCommands {
     WHERE entity_id = 522");
 
   }
-
 
 }
