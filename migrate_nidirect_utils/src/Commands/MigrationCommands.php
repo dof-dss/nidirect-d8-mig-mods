@@ -135,7 +135,7 @@ class MigrationCommands extends DrushCommands {
     });
 
     if ($result !== 0) {
-      // decrement to get the true array index, bundle and entity type.
+      // Decrement to get the true array index, bundle and entity type.
       $result--;
       $bundle = array_keys($content_types)[$result];
       $entity = $content_types[$bundle];
