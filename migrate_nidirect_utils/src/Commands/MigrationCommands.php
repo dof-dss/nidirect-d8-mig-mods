@@ -26,12 +26,21 @@ class MigrationCommands extends DrushCommands {
   protected $connMigrate;
 
   /**
+   * Core EntityTypeManager instance.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+
+  /**
    * Class constructor.
    */
   public function __construct() {
     parent::__construct();
     $this->connMigrate = Database::getConnection('default', 'migrate');
     $this->connDefault = Database::getConnection('default', 'default');
+    $this->entityTypeManager = Drupal::entityTypeManager();
   }
 
   /**
@@ -70,7 +79,6 @@ class MigrationCommands extends DrushCommands {
    * @aliases mig-purge
    */
   public function contentPurge() {
-    $type_manager = \Drupal::entityTypeManager();
     $bundle_index = 1;
     // List of bundles the user is allowed to delete content from.
     $content_types = [
@@ -101,7 +109,7 @@ class MigrationCommands extends DrushCommands {
 
     // Display each bundle and the content count.
     foreach ($content_types as $bundle => $entity) {
-      $storage = $type_manager->getStorage($entity);
+      $storage = $this->entityTypeManager->getStorage($entity);
 
       if ($entity == 'taxonomy_term') {
         $entities = $storage->loadByProperties(["vid" => $bundle]);
@@ -140,7 +148,7 @@ class MigrationCommands extends DrushCommands {
       $bundle = array_keys($content_types)[$result];
       $entity = $content_types[$bundle];
 
-      $storage = $type_manager->getStorage($entity);
+      $storage = $this->entityTypeManager->getStorage($entity);
 
       if ($entity === 'taxonomy_term') {
         $entities = $storage->loadByProperties(["vid" => $bundle]);
