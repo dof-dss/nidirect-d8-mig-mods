@@ -8,24 +8,24 @@
 
 ## Running migrations
 
-1. Ensure the Drupal migrate modules (`migrate, migrate_plus, migrate_tools`)
+1. If you need to remove existing content on the site, use the command
+  `lando drush mig-purge`
+2. Ensure the Drupal migrate modules (`migrate, migrate_plus, migrate_tools`)
 are enabled.
-2. perform a *'git pull'* to ensure you have the latest commits.
-3. Enable the required NIDirect migration modules.
-4. Import the NIDirect Drupal 7 database into the Lando `drupal7db` database.
-5. Add the NIDirect Drupal 7 files to `/imports/files/sites/default/files/`
-6. Ensure 'Migrate NIDirect Utils' is enabled and run
-  `lando Drupal nidirect:migrate:pre` to preform site-uuid sync and
+3. perform a *'git pull'* to ensure you have the latest commits.
+4. Enable the required NIDirect migration modules.
+5. Import the NIDirect Drupal 7 database into the Lando `drupal7db` database.
+6. Add the NIDirect Drupal 7 files to `/imports/files/sites/default/files/`
+7. Ensure 'Migrate NIDirect Utils' is enabled and run
+  `lando drush mig-prep` to preform site-uuid sync and
    pre-migration tasks on the D7 database.
-7. Import the site configuration using 'drush cim'.
-8. Use `lando mist` to display the migration status
-9. Use `lando miip --group=<group name>` or `lando miip <individual migration>`
+8. Import the site configuration using 'drush cim'.
+9. Use `lando mist` to display the migration status
+10. Use `lando miip --group=<group name>` or `lando miip <individual migration>`
 
 ## Migration order
 
-2. Run `lando drupal nidirect:migrate:pre`,
-
-then run `lando miip --group=<group name>` with the following:
+Run `lando miip --group=<group name>` with the following:
 * migrate_drupal_7_user
 * migrate_drupal_7_file
 * migrate_drupal_7_taxo
@@ -47,9 +47,6 @@ then run `lando miip --group=<group name>` with the following:
 then run the following individual migrations:
 lando miip node_contact
 lando miip nidirect_book
-
-finally, publish migrated content by running:
-lando drupal nidirect:migrate:post:publish_status
 
 ## Running tests
 

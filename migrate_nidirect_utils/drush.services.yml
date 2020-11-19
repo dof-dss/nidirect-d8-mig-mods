@@ -1,0 +1,5 @@
+services:
+  nidirect-migrate.commands:
+    class: \Drupal\migrate_nidirect_utils\Commands\MigrationCommands
+    tags:
+      - { name: drush.command }

@@ -22,6 +22,7 @@ class NidirectMigratePostFeatureNodesCommand extends ContainerAwareCommand {
 
   /**
    * A collection of featured content data.
+   *
    * @var array
    */
   protected $featureContent = [];
@@ -138,6 +139,7 @@ class NidirectMigratePostFeatureNodesCommand extends ContainerAwareCommand {
    *
    * @param string $title
    *   Feature node title.
+   *
    * @return int
    *   The node id.
    */

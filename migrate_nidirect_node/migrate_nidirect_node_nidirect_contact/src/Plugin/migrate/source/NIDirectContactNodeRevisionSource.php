@@ -18,6 +18,7 @@ use Drupal\Core\Logger\LoggerChannelFactory;
  *
  * @MigrateSource(
  *   id = "nidirect_contact_node_revision_source",
+ *   source_module = "node"
  * )
  */
 class NIDirectContactNodeRevisionSource extends NodeRevision implements ContainerFactoryPluginInterface {

@@ -10,6 +10,10 @@ migration_tags:
   - 'Drupal 7'
   - Content
 migration_group: migrate_drupal_7_taxo
+migration_tags:
+  - 'Drupal 7'
+  - Content
+  - NIDirect
 label: 'Taxonomy terms (Health Conditions - information sources)'
 source:
   plugin: d7_taxonomy_term

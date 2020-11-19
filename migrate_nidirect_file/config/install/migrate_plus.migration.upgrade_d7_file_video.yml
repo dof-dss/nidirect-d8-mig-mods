@@ -7,7 +7,9 @@ class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldInstanceMigration
 cck_plugin_method: null
 migration_tags:
-  - Custom
+  - 'Drupal 7'
+  - Content
+  - NIDirect
 migration_group: migrate_drupal_7_file
 label: 'Public files'
 source:

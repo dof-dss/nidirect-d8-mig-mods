@@ -7,6 +7,10 @@ class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldFormatterMigration
 cck_plugin_method: null
 migration_group: migrate_nidirect_node_gp_practice
+migration_tags:
+  - 'Drupal 7'
+  - Content
+  - NIDirect
 source:
   plugin: phone_field_revision_node_source
   node_type: nidirect_gp_practice

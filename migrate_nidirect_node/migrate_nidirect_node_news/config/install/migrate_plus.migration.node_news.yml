@@ -3,6 +3,10 @@ label: 'News content type nodes'
 status: true
 dependencies: {  }
 migration_group: migrate_nidirect_node_news
+migration_tags:
+  - 'Drupal 7'
+  - Content
+  - NIDirect
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldInstanceMigration
 source:

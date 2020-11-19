@@ -10,7 +10,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 // @codingStandardsIgnoreEnd
 /**
- * Removes existing feature + featured_content_list nodes ahead of content import.
+ * Cleanup featured content.
+ *
+ * Removes existing feature + featured_content_list nodes ahead of
+ * content import.
  *
  * @DrupalCommand (
  *     extension="migrate_nidirect_utils",
