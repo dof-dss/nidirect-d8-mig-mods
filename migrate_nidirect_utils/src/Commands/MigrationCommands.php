@@ -33,7 +33,6 @@ class MigrationCommands extends DrushCommands {
    */
   protected $entityTypeManager;
 
-
   /**
    * Class constructor.
    */
@@ -200,7 +199,10 @@ class MigrationCommands extends DrushCommands {
 
     foreach ($featured_content as &$featured) {
       $storage = $this->entityTypeManager->getStorage('node');
-      $result = $storage->loadByProperties(["type" => "feature", "title" => $featured['title']]);
+      $result = $storage->loadByProperties([
+        "type" => "feature",
+        "title" => $featured['title'],
+      ]);
 
       if (empty($result)) {
         $node = Node::create([
@@ -220,7 +222,8 @@ class MigrationCommands extends DrushCommands {
         ]);
         $node->save();
         $featured['nid'] = $node->id();
-      } else {
+      }
+      else {
         $featured['nid'] = current($result)->id();
       }
     }
@@ -246,7 +249,10 @@ class MigrationCommands extends DrushCommands {
 
     foreach ($fcl_content as $fcl) {
       $storage = $this->entityTypeManager->getStorage('node');
-      $result = $storage->loadByProperties(["type" => "featured_content_list", "title" => $fcl['title']]);
+      $result = $storage->loadByProperties([
+        "type" => "featured_content_list",
+        "title" => $fcl['title'],
+      ]);
 
       if (empty($result)) {
         $node = Node::create([
