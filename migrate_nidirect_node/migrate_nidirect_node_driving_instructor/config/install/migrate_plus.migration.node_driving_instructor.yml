@@ -6,6 +6,10 @@ class: Drupal\migrate\Plugin\Migration
 field_plugin_method: alterFieldInstanceMigration
 cck_plugin_method: null
 migration_group: migrate_nidirect_node_driving_instructor
+migration_tags:
+  - 'Drupal 7'
+  - Content
+  - NIDirect
 label: 'Nodes (Nidirect driving instructor)'
 source:
   plugin: driving_instructor_node_source

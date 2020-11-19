@@ -18,6 +18,7 @@ use Drupal\Core\Logger\LoggerChannelFactory;
  *
  * @MigrateSource(
  *   id = "nidirect_contact_node_source",
+ *   source_module = "node"
  * )
  */
 class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginInterface {

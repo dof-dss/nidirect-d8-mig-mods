@@ -1,4 +1,4 @@
-uuid: 36b1f2a8-ae69-4cdb-917e-34680a84d9f8
+quuid: 36b1f2a8-ae69-4cdb-917e-34680a84d9f8
 langcode: en
 status: true
 dependencies: {  }
@@ -9,6 +9,7 @@ cck_plugin_method: null
 migration_tags:
   - 'Drupal 7'
   - Content
+  - NIDirect
 migration_group: migrate_drupal_7_file
 label: 'Public files'
 source:

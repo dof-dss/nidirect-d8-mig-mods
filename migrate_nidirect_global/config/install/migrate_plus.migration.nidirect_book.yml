@@ -1,6 +1,10 @@
 id: nidirect_book
 label: 'NI Direct Book'
 migration_group: migrate_drupal_7_global
+migration_tags:
+  - 'Drupal 7'
+  - Content
+  - NIDirect
 source:
   plugin: book
 process:

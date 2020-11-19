@@ -10,6 +10,10 @@ migration_tags:
   - 'Drupal 7'
   - Content
 migration_group: migrate_nidirect_node_health_condition
+migration_tags:
+  - 'Drupal 7'
+  - Content
+  - NIDirect
 label: 'Nodes (Health condition)'
 source:
   plugin: d7_node
