@@ -73,7 +73,6 @@ $handler->display->display_options['filters']['type']['value'] = array(
   'nidirect_ub' => 'nidirect_ub',
   'page' => 'page',
   'publication' => 'publication',
-  'webform' => 'webform',
 );
 /* Filter criterion: Content: Published */
 $handler->display->display_options['filters']['status']['id'] = 'status';
