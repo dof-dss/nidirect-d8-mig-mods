@@ -41,6 +41,13 @@ process:
       plugin: get
       source: body
     -
+      plugin: filter_absolute_links
+      replace_urls:
+        http://nidirect.gov.uk
+        http://www.nidirect.gov.uk
+        https://nidirect.gov.uk
+        https://www.nidirect.gov.uk
+    -
       plugin: media_wysiwyg_filter
   body/0/format:
     -
