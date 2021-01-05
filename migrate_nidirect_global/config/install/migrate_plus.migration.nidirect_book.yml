@@ -8,14 +8,26 @@ migration_tags:
 source:
   plugin: book
 process:
-  nid: nid
-  book/bid: bid
-  book/weight: weight
-  book/pid: bid
-  book/has_children: has_children
-  book/depth: 0
-  p1: bid
-  p2: nid
+  nid:
+    -
+      plugin: get
+      source: nid
+  book/bid:
+    -
+      plugin: get
+      source: bid
+  book/weight:
+    -
+      plugin: get
+      source: weight
+  book/pid:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: plid
+    -
+      plugin: migration_lookup
+      migration: nidirect_book
 destination:
   plugin: book
 migration_dependencies:
