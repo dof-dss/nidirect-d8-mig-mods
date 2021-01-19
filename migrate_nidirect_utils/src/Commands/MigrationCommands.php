@@ -169,116 +169,6 @@ class MigrationCommands extends DrushCommands {
   }
 
   /**
-   * Prepares the site for migrations of Drupal 7 content.
-   *
-   * @command nidirect-migrate:create-featured
-   *
-   * @aliases mig-feat
-   */
-  public function createFeatureContent() {
-
-    // Featured Content node creation.
-    $featured_content[] = [
-      'title' => 'Wear a face covering to help reduce spread of COVID-19',
-      'teaser' => 'Wear a face covering to help reduce spread of COVID-19 - they are now mandatory in certain indoor settings',
-      'uri' => 'internal:/node/13662',
-      'media_id' => 8939,
-    ];
-    $featured_content[] = [
-      'title' => 'Coronavirus (COVID-19)',
-      'teaser' => 'Updates and advice about coronavirus (COVID-19), including information about government services',
-      'uri' => 'internal:/node/13394',
-      'media_id' => 8786,
-    ];
-    $featured_content[] = [
-      'title' => 'Universal Credit',
-      'teaser' => 'Find out all you need to need to know to make a Universal Credit claim',
-      'uri' => 'internal:/node/12849',
-      'media_id' => 7283,
-    ];
-
-    foreach ($featured_content as &$featured) {
-      $storage = $this->entityTypeManager->getStorage('node');
-      $result = $storage->loadByProperties([
-        "type" => "feature",
-        "title" => $featured['title'],
-      ]);
-
-      if (empty($result)) {
-        $node = Node::create([
-          'type' => 'feature',
-          'langcode' => 'en',
-          'moderation_state' => 'published',
-          'status' => 1,
-          'uid' => 1,
-          'title' => $featured['title'],
-          'field_teaser' => $featured['teaser'],
-          'field_link_url' => [
-            'uri' => $featured['uri'],
-          ],
-          'field_photo' => [
-            'target_id' => $featured['media_id'],
-          ],
-        ]);
-        $node->save();
-        $featured['nid'] = $node->id();
-      }
-      else {
-        $featured['nid'] = current($result)->id();
-      }
-    }
-
-    // Featured Content List item creation.
-    $fcl_content[] = [
-      'title' => 'News: featured content',
-      'features' => [
-        7366,
-        7479,
-      ],
-      'tag' => 1344,
-    ];
-    $fcl_content[] = [
-      'title' => 'Homepage: featured content',
-      'features' => [
-        ['target_id' => $featured_content[0]['nid']],
-        ['target_id' => $featured_content[2]['nid']],
-        ['target_id' => $featured_content[1]['nid']],
-      ],
-      'tag' => 1338,
-    ];
-
-    foreach ($fcl_content as $fcl) {
-      $storage = $this->entityTypeManager->getStorage('node');
-      $result = $storage->loadByProperties([
-        "type" => "featured_content_list",
-        "title" => $fcl['title'],
-      ]);
-
-      if (empty($result)) {
-        $node = Node::create([
-          'type' => 'featured_content_list',
-          'langcode' => 'en',
-          'moderation_state' => 'published',
-          'status' => 1,
-          'uid' => 1,
-          'title' => $fcl['title'],
-          'field_featured_content' => $fcl['features'],
-          'field_tags' => $fcl['tag'],
-        ]);
-        $node->save();
-      }
-      else {
-        // Ensure the existing homepage featured is pointing at the right nodes.
-        if ($fcl['title'] === 'Homepage: featured content') {
-          $node = current($result);
-          $node->field_featured_content->setValue($fcl['features']);
-          $node->save();
-        }
-      }
-    }
-  }
-
-  /**
    * A simple migrate database query wrapper.
    *
    * @param string $query
@@ -475,17 +365,6 @@ class MigrationCommands extends DrushCommands {
     $this->drupal7DatabaseQuery("UPDATE field_revision_field_contact_additional_info
     SET field_contact_additional_info_value = REGEXP_REPLACE(field_contact_additional_info_value, 'womens-aid-federation-northern-ireland-18776.htm', 'https://www.nidirect.gov.uk/contacts/contacts-az/womens-aid-federation-northern-ireland-head-office')
     WHERE entity_id = 522");
-  }
-
-  /**
-   * Purge the D8 site of all feature and featured content list nodes.
-   */
-  protected function prepareRemoveFeatureFclNodes() {
-    $storage = \Drupal::entityTypeManager()->getStorage('node');
-    foreach (['featured_content_list', 'feature'] as $type) {
-      $entities = $storage->loadByProperties(['type' => $type]);
-      $storage->delete($entities);
-    }
   }
 
 }

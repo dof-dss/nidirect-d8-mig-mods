@@ -60,6 +60,18 @@ class PreMigrationSubscriber implements EventSubscriberInterface {
         \Drupal::database()->truncate('whatlinkshere')->execute();
         $this->logger->notice('Truncating \'WhatLinksHere\' table');
       }
+
+      $storage = \Drupal::entityTypeManager()->getStorage('node');
+      foreach (['featured_content_list', 'feature'] as $type) {
+        $entities = $storage->loadByProperties(['type' => $type]);
+        $storage->delete($entities);
+        // Set semaphore value to FALSE so we know that we can safely recreate these nodes
+        // in the onMigratePostImport event.
+        \Drupal::state()->set('migrate_nidirect_node_semaphore', FALSE);
+        $this->logger->notice('Cleared semaphore for migrate_nidirect_node');
+      }
+
+      $this->logger->notice('Purged Feature and Featured Content List (FCL) nodes and set semaphore value');
     }
   }
 
