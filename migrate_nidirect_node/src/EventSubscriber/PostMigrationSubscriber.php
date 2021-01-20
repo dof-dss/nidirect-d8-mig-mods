@@ -6,6 +6,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateImportEvent;
+use Drupal\node\Entity\Node;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\migrate_nidirect_utils\MigrationProcessors;
@@ -39,6 +40,13 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
   protected $entityTypeManager;
 
   /**
+   * A collection of featured content data.
+   *
+   * @var array
+   */
+  protected $featureContent;
+
+  /**
    * PostMigrationSubscriber constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -54,6 +62,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     $this->logger = $logger->get('migrate_nidirect_node');
     $this->migrationProcessors = $migration_processors;
     $this->entityTypeManager = $entity_type_manager;
+    $this->featureContent = [];
   }
 
   /**
@@ -77,6 +86,19 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
 
     // Only process nodes, nothing else.
     if (substr($event_id, 0, 5) == 'node_') {
+      if (!empty(\Drupal::state()->get('migrate_nidirect_node_semaphore'))) {
+        return;
+      }
+
+      // Set a semaphore value; this migrate event seems to be triggered multiple times
+      // which can give unexpected results.
+      \Drupal::state()->set('migrate_nidirect_node_semaphore', TRUE);
+      $this->logger->notice('Set semaphore variable for migrate_nidirect_node');
+      // Recreate feature/FCL nodes (D8 only) to avoid clash with high water mark on D7 content.
+      $this->logger->notice('Handling FCL/feature nodes...');
+      $this->recreateFeatureNodes();
+      $this->recreateFeaturedContentListNodes();
+
       $content_type = substr($event_id, 5);
       $this->logger->notice($this->migrationProcessors->publishingStatus($content_type));
       if (preg_match('/revision_/', $content_type)) {
@@ -96,6 +118,102 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     if ($event_id == 'node_revision_landing_page') {
       $this->landingPageUpdates();
     }
+  }
+
+  /**
+   * Post-migrate recreate feature nodes.
+   */
+  protected function recreateFeatureNodes() {
+    $this->featureContent[] = [
+      'title' => 'Wear a face covering to help reduce spread of COVID-19',
+      'teaser' => 'Wear a face covering to help reduce spread of COVID-19 - they are now mandatory in certain indoor settings',
+      'uri' => 'internal:/node/13662',
+      'media_id' => 8939,
+    ];
+    $this->featureContent[] = [
+      'title' => 'Coronavirus (COVID-19)',
+      'teaser' => 'Updates and advice about coronavirus (COVID-19), including information about government services',
+      'uri' => 'internal:/node/13394',
+      'media_id' => 8786,
+    ];
+    $this->featureContent[] = [
+      'title' => 'Universal Credit',
+      'teaser' => 'Find out all you need to need to know to make a Universal Credit claim',
+      'uri' => 'internal:/node/12849',
+      'media_id' => 7283,
+    ];
+
+    foreach ($this->featureContent as &$feature) {
+      $node = Node::create([
+        'type' => 'feature',
+        'langcode' => 'en',
+        'moderation_state' => 'published',
+        'status' => 1,
+        'uid' => 1,
+        'title' => $feature['title'],
+        'field_teaser' => $feature['teaser'],
+        'field_link_url' => [
+          'uri' => $feature['uri'],
+        ],
+        'field_photo' => [
+          'target_id' => $feature['media_id'],
+        ],
+      ]);
+      $node->save();
+      $feature['nid'] = $node->id();
+
+      $this->logger->notice("Created feature node with title '" . $feature['title'] . "'");
+    }
+  }
+
+  /**
+   * Post-migrate recreate feature nodes.
+   */
+  protected function recreateFeaturedContentListNodes() {
+    $fcl_content[] = [
+      'title' => 'Homepage: featured content',
+      'features' => [
+        ['target_id' => $this->getFeatureByTitle('Wear a face covering to help reduce spread of COVID-19')],
+        ['target_id' => $this->getFeatureByTitle('Universal Credit')],
+        ['target_id' => $this->getFeatureByTitle('Coronavirus (COVID-19)')],
+      ],
+      'tag' => 1338,
+    ];
+
+    foreach ($fcl_content as $fcl) {
+      $node = Node::create([
+        'type' => 'featured_content_list',
+        'langcode' => 'en',
+        'moderation_state' => 'published',
+        'status' => 1,
+        'uid' => 1,
+        'title' => $fcl['title'],
+        'field_featured_content' => $fcl['features'],
+        'field_tags' => $fcl['tag'],
+      ]);
+
+      $node->save();
+      $this->logger->notice("Created featured content list node with title '" . $fcl['title'] . "'");
+    }
+  }
+
+  /**
+   * Fetches the node id of a feature node from a given title.
+   *
+   * @param string $title
+   *   Feature node title.
+   *
+   * @return int
+   *   The node id.
+   */
+  protected function getFeatureByTitle(string $title) {
+    foreach ($this->featureContent as $feature) {
+      if ($title === $feature['title']) {
+        return (int) $feature['nid'];
+      }
+    }
+
+    return 0;
   }
 
   /**
