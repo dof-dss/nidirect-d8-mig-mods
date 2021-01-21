@@ -125,7 +125,12 @@ class NIDirectContactNodeRevisionSource extends NodeRevision implements Containe
         // Add the entry if we have at least one number.
         if (!empty($fax[0]['telephone_number'])) {
           // Ensure we always have a title for the entry.
-          if (empty($fax[0]['telephone_title'])) {
+          // If the fax field has no text mixed in with the number the
+          // TelephonePlusUtils parser will not determine a title and resort
+          // to trying to pinpoint the number 'type' by way of the dialing
+          // prefix. For fax number this can be misinterpreted as 'Phone', in
+          // that case we will replace it with 'Fax'.
+          if (empty($fax[0]['telephone_title']) || $fax[0]['telephone_title'] === 'Phone') {
             $fax[0]['telephone_title'] = 'Fax';
           }
           $telephone = array_merge($telephone, $fax);
