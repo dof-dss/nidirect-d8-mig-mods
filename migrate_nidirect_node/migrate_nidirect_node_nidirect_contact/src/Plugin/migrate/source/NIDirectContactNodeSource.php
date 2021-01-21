@@ -86,6 +86,11 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
           $this->logger->notice('Unable to process telephone data for nid: ' . $nid);
         }
         else {
+          // Set the default title to 'Phone'.
+          if (empty($contact_telephone[0]['telephone_title'])) {
+            $contact_telephone[0]['telephone_title'] = 'Phone';
+          }
+
           $telephone = $contact_telephone;
         }
       }
