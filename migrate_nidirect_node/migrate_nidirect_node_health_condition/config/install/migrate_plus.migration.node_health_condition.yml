@@ -102,7 +102,7 @@ process:
           migration:
             - upgrade_d7_file_image
           source: fid
-  field_site_topics:
+  field_site_themes:
     -
       plugin: sub_process
       source: field_site_topics
