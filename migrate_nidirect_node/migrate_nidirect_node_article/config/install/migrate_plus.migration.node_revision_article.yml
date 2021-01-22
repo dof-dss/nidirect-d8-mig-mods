@@ -73,7 +73,7 @@ process:
     -
       plugin: get
       source: field_enable_toc
-  field_site_topics:
+  field_site_themes:
     -
       plugin: sub_process
       source: field_site_topics

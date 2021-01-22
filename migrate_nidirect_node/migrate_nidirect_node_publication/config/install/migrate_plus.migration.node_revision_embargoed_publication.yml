@@ -78,7 +78,7 @@ process:
         target_id: fid
         display: display
         description: description
-  field_site_topics:
+  field_site_themes:
     -
       plugin: sub_process
       source: field_site_topics
