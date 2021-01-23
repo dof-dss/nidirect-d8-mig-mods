@@ -94,6 +94,11 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       // which can give unexpected results.
       \Drupal::state()->set('migrate_nidirect_node_semaphore', TRUE);
       $this->logger->notice('Set semaphore variable for migrate_nidirect_node');
+
+      // Populate the denormalised table that tracks nodes and term ids
+      // as this isn't handled by the migrate plugins.
+      $this->processTaxonomyIndexTable();
+
       // Recreate feature/FCL nodes (D8 only) to avoid clash with high water mark on D7 content.
       $this->logger->notice('Handling FCL/feature nodes...');
       $this->recreateFeatureNodes();
@@ -258,6 +263,42 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       }
     }
     $this->logger->notice('Post migrate landing page processing completed.');
+  }
+
+  /**
+   * Function to repopulate the taxonomy_index table that
+   * the migrate process plugins do not appear to do or trigger
+   * code in core to do either. This denormalised table is required
+   * for key queries around taxonomy term (with depth) filters in views.
+   */
+  protected function processTaxonomyIndexTable() {
+    $this->logger->notice('Post migrate: Update taxonomy_index table with subtheme values.');
+
+    $conn_drupal8 = Database::getConnection('default', 'default');
+    // Truncate the taxonomy_index table so it's clean to repopulate.
+    $conn_drupal8->query("TRUNCATE taxonomy_index")->execute();
+    $this->logger->notice('... truncated the taxonomy_index table...');
+
+    // Populate the table with node and term ids from the topics/themes data
+    // we have already migrated. INSERT IGNORE is used due to an unusual key
+    // clash that is only triggered when running from Drupal migrate; the end
+    // result has the correct row count.
+    $conn_drupal8->query("INSERT IGNORE INTO {taxonomy_index} (nid, tid, status, sticky, created)
+      SELECT
+      n.nid,
+      ttd.tid,
+      nfd.status,
+      nfd.sticky,
+      nfd.created
+      FROM {node} n
+      JOIN {node_field_data} nfd on n.nid = nfd.nid
+      JOIN {node__field_subtheme} nfs on nfs.entity_id = n.nid
+      JOIN {taxonomy_term_data} ttd on ttd.tid = nfs.field_subtheme_target_id
+      WHERE ttd.vid = 'site_themes'")->execute();
+
+    $this->logger->notice('... inserted node and term id values for theme data...');
+
+    $this->logger->notice('... done.');
   }
 
 }
