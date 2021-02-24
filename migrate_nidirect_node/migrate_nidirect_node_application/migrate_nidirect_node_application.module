@@ -16,11 +16,17 @@ function migrate_nidirect_node_application_migrate_node_application_prepare_row(
 
   // Add a title to the body field.
   $body_field = $row->getSourceProperty('body');
-  $body_field[0]['value'] = '<h2>Before you start</h2>' . $body_field[0]['value'];
-  $row->setSourceProperty('body', $body_field);
+
+  if (!empty($body_field[0]['value'])) {
+    $body_field[0]['value'] = '<h2>Before you start</h2>' . $body_field[0]['value'];
+    $row->setSourceProperty('body', $body_field);
+  }
 
   // Add a title to the additional info field.
   $addinfo_field = $row->getSourceProperty('field_additional_info');
-  $addinfo_field[0]['value'] = '<h2>Additional information</h2>' . $addinfo_field[0]['value'];
-  $row->setSourceProperty('field_additional_info', $addinfo_field);
+
+  if (!empty($addinfo_field[0]['value'])) {
+    $addinfo_field[0]['value'] = '<h2>Additional information</h2>' . $addinfo_field[0]['value'];
+    $row->setSourceProperty('field_additional_info', $addinfo_field);
+  }
 }
