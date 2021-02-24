@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains migrate_nidirect_node_application.module.
+ */
+
 use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
@@ -9,10 +14,12 @@ use Drupal\migrate\Row;
  */
 function migrate_nidirect_node_application_migrate_node_application_prepare_row(Row $row, MigrateSourceInterface $source, MigrationInterface $migration) {
 
+  // Add a title to the body field.
   $body_field = $row->getSourceProperty('body');
   $body_field[0]['value'] = '<h2>Before you start</h2>' . $body_field[0]['value'];
   $row->setSourceProperty('body', $body_field);
 
+  // Add a title to the additional info field.
   $addinfo_field = $row->getSourceProperty('field_additional_info');
   $addinfo_field[0]['value'] = '<h2>Additional information</h2>' . $addinfo_field[0]['value'];
   $row->setSourceProperty('field_additional_info', $addinfo_field);
