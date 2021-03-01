@@ -46,13 +46,3 @@ services:
     arguments: []
     tags:
       - { name: drupal.command }
-  migrate_nidirect_utils.nidirect_migrate_pre_feature_nodes:
-    class: Drupal\migrate_nidirect_utils\Command\NidirectMigratePreFeatureNodesCommand
-    arguments: []
-    tags:
-      - { name: drupal.command }
-  migrate_nidirect_utils.nidirect_migrate_post_feature_nodes:
-    class: Drupal\migrate_nidirect_utils\Command\NidirectMigratePostFeatureNodesCommand
-    arguments: [ ]
-    tags:
-      - { name: drupal.command }
