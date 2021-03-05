@@ -15,6 +15,7 @@ label: 'Public files'
 source:
   plugin: d7_file
   scheme: public
+  batch_size: 1000
   constants:
     source_base_path: '/app/imports/files/'
 process:

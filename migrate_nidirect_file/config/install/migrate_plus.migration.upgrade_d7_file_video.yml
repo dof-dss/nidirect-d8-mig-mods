@@ -15,6 +15,7 @@ label: 'Public files'
 source:
   plugin: file_entity
   type: video
+  batch_size: 1000
   constants:
     bundle: 'remote_video'
 process:

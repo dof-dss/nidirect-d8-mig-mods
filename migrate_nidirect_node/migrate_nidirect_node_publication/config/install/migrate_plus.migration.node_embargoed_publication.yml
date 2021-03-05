@@ -17,6 +17,7 @@ label: 'Nodes (Embargoed publication)'
 source:
   plugin: d7_node
   node_type: embargoed_publication
+  batch_size: 1000
 process:
   nid: tnid
   vid: vid

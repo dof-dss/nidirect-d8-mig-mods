@@ -15,6 +15,7 @@ label: 'Taxonomy terms (Site topics)'
 source:
   plugin: d7_taxonomy_term
   bundle: site_topics
+  batch_size: 1000
 process:
   tid: tid
   vid:

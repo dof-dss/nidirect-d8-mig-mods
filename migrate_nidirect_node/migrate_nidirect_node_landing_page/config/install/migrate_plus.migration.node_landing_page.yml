@@ -17,6 +17,7 @@ label: 'Nodes (Landing page)'
 source:
   plugin: d7_node
   node_type: landing_page
+  batch_size: 1000
 process:
   nid: tnid
   vid: vid

@@ -14,6 +14,7 @@ label: 'Nodes (Nidirect driving instructor)'
 source:
   plugin: driving_instructor_node_source
   node_type: nidirect_driving_instructor
+  batch_size: 1000
 process:
   nid: tnid
   vid: vid
