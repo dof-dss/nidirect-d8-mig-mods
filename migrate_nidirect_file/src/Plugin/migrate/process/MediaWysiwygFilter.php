@@ -90,7 +90,7 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
 
     $messenger = $this->messenger();
     $nid = $row->getSourceProperty('nid');
-    $value['value'] = preg_replace_callback($pattern, function ($matches) use ($replacement_template, $messenger, $nid) {
+    $value['value'] = preg_replace_callback($pattern, function ($matches) use ($messenger, $nid) {
       $decoder = new JsonDecode(TRUE);
 
       try {
