@@ -15,6 +15,7 @@ label: 'Taxonomy terms (Health Conditions - information sources)'
 source:
   plugin: d7_taxonomy_term
   bundle: hc_info_sources
+  batch_size: 1000
 process:
   tid: tid
   vid:

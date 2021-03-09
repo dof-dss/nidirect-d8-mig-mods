@@ -19,6 +19,7 @@ label: 'Node revisions (Article)'
 source:
   plugin: d7_node_revision
   node_type: article
+  batch_size: 1000
 process:
   nid: nid
   vid: vid

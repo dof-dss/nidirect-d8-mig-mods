@@ -15,6 +15,7 @@ label: 'Public files'
 source:
   plugin: file_entity
   type: document
+  batch_size: 1000
   constants:
     bundle: 'document'
 process:

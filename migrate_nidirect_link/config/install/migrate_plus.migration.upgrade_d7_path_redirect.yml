@@ -14,6 +14,7 @@ migration_group: migrate_drupal_7_link
 label: 'Path Redirect'
 source:
   plugin: d7_path_redirect
+  batch_size: 1000
 process:
   rid:
     -

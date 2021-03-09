@@ -15,6 +15,7 @@ label: 'Taxonomy terms (Driving instructor categories)'
 source:
   plugin: d7_taxonomy_term
   bundle: di_categories
+  batch_size: 1000
 process:
   tid: tid
   vid:

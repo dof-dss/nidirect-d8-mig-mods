@@ -90,7 +90,7 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
 
     $messenger = $this->messenger();
     $nid = $row->getSourceProperty('nid');
-    $value['value'] = preg_replace_callback($pattern, function ($matches) use ($replacement_template, $messenger, $nid) {
+    $value['value'] = preg_replace_callback($pattern, function ($matches) use ($messenger, $nid) {
       $decoder = new JsonDecode(TRUE);
 
       try {
@@ -227,6 +227,8 @@ TEMPLATE;
     $media = $query->execute()->fetchAssoc();
 
     // Updated image formats when converting from D7 to D8 site.
+    // The first style for each orientation will be used as a default if no
+    // value if found in the tag.
     $style_map = [
       'landscape' => [
         'inline' => 'landscape_float',
@@ -244,12 +246,15 @@ TEMPLATE;
     // image dimensions.
     $orientation = ($media['width'] > $media['height']) ? 'landscape' : 'portrait';
 
-    // Assign the image style to the embedded image.
-    if (array_key_exists($tag_info['attributes']['data-picture-mapping'], $style_map)) {
-      $image_style = $style_map[$orientation][$tag_info['attributes']['data-picture-mapping']];
-    }
-    else {
-      $image_style = $style_map[$orientation][array_key_first($style_map)];
+    // Set a default image style.
+    $image_style = $style_map[$orientation][array_key_first($style_map[$orientation])];
+
+    // Assign the image style to the embedded image if we can extract it from
+    // the original image tag.
+    if (isset($tag_info['attributes']['data-picture-mapping']) || array_key_exists('data-picture-mapping', $tag_info['attributes'])) {
+      if (array_key_exists($tag_info['attributes']['data-picture-mapping'], $style_map)) {
+        $image_style = $style_map[$orientation][$tag_info['attributes']['data-picture-mapping']];
+      }
     }
 
     // Update drupal-media template values.

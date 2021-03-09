@@ -352,6 +352,8 @@ class MigrationProcessors {
    */
   public function flags($entity_type) {
 
+    $entity_base = '';
+
     // Verify that the flag module is enabled.
     $moduleHandler = \Drupal::service('module_handler');
     if (!$moduleHandler->moduleExists('flag')) {

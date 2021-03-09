@@ -19,6 +19,7 @@ label: 'Nodes (Article)'
 source:
   plugin: d7_node
   node_type: article
+  batch_size: 1000
 process:
   nid: tnid
   vid: vid
