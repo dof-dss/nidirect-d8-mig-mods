@@ -57,10 +57,12 @@ class ContentLinkAliasesFilter extends ProcessPluginBase implements ContainerFac
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-
+    // Match all occurrences of 'href="/node/<id>" as 2 groups.
     preg_match_all('/href="(\/node\/\d+)"/m', $value['value'], $node_urls, PREG_SET_ORDER, 0);
 
     foreach ($node_urls as $url) {
+      // Lookup any path aliases using the second regex match,
+      // the /node/<id> part.
       $alias = $this->aliasManager->getAliasByPath($url[1]);
       if (!empty($alias)) {
         $value['value'] = str_replace($url[1], $alias, $value['value']);
