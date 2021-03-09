@@ -24,7 +24,6 @@ class ContentLinkAliasesFilter extends ProcessPluginBase implements ContainerFac
    */
   protected $aliasManager;
 
-
   /**
    * Class constructor.
    *
@@ -37,7 +36,7 @@ class ContentLinkAliasesFilter extends ProcessPluginBase implements ContainerFac
    * @param \Drupal\path_alias\AliasManager $alias_manager
    *   Path alias manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $alias_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, AliasManager $alias_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->aliasManager = $alias_manager;
   }
