@@ -53,6 +53,8 @@ process:
     -
       plugin: media_wysiwyg_filter
     -
+      plugin: content_link_aliases_filter
+    -
       plugin: str_replace
       regex: true
       search: /(((<[a-zA-Z1-9]*>)+More useful links<\/\S*>.*)(<\/ul>))(.*)/mis
