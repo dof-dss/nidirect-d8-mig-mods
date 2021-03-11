@@ -304,12 +304,18 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
   protected function processPathAliases() {
     $this->logger->notice('Post migrate: Removing duplicate path aliases.');
 
+    $alias_storage =  $this->entityTypeManager->getStorage('path_alias');
     $conn_drupal8 = Database::getConnection('default', 'default');
+
     $aliases = $conn_drupal8->query("SELECT alias, GROUP_CONCAT(id) as ids, COUNT(*) FROM path_alias GROUP BY alias HAVING Count(*) > 1 ORDER BY id");
 
     foreach ($aliases as $alias) {
       $ids = explode(',', $alias->ids);
       array_pop($ids);
+
+      foreach ($ids as $id) {
+        $alias_storage->load($id)->delete();
+      }
     }
 
   }
