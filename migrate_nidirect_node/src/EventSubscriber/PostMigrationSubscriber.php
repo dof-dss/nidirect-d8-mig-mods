@@ -301,15 +301,25 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     $this->logger->notice('... done.');
   }
 
+  /**
+   * Postprocess function to remove duplicate path aliases.
+   *
+   * Older path alias entities will be deleted and the most recent retained.
+   */
   protected function processPathAliases() {
     $this->logger->notice('Post migrate: Removing duplicate path aliases.');
 
     $alias_storage =  $this->entityTypeManager->getStorage('path_alias');
     $conn_drupal8 = Database::getConnection('default', 'default');
 
+    // Select the alias and ids for duplicate path aliases.
+    // We need to use GROUP_CONCAT as Drupal enacts the ONLY_FULL_GROUP_BY
+    // option for mysql which prevents us from selecting the id column without
+    // including it as part of the GROUP BY condition.
     $aliases = $conn_drupal8->query("SELECT alias, GROUP_CONCAT(id) as ids, COUNT(*) FROM path_alias GROUP BY alias HAVING Count(*) > 1 ORDER BY id");
 
     foreach ($aliases as $alias) {
+      // Create the entity id array and remove the most recent id.
       $ids = explode(',', $alias->ids);
       array_pop($ids);
 
@@ -317,7 +327,6 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
         $alias_storage->load($id)->delete();
       }
     }
-
   }
 
 }
