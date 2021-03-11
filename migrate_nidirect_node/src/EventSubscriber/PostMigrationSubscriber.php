@@ -306,10 +306,10 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
    *
    * Older path alias entities will be deleted and the most recent retained.
    */
-  protected function processPathAliases() {
+  protected function processDuplicatePathAliases() {
     $this->logger->notice('Post migrate: Removing duplicate path aliases.');
 
-    $alias_storage =  $this->entityTypeManager->getStorage('path_alias');
+    $alias_storage = $this->entityTypeManager->getStorage('path_alias');
     $conn_drupal8 = Database::getConnection('default', 'default');
 
     // Select the alias and ids for duplicate path aliases.
