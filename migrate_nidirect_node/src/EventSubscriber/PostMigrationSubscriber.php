@@ -117,6 +117,9 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
         $this->logger->notice('Processing audit data for ' . $content_type);
         $this->logger->notice($this->migrationProcessors->audit($content_type));
       }
+
+      // Remove duplicate path aliases.
+      $this->processDuplicatePathAliases();
     }
 
     // One off landing page updates.
