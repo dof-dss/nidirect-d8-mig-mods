@@ -31,7 +31,6 @@ function migrate_nidirect_node_application_migrate_node_application_prepare_row(
   // Checking the value has at least 1 vowel to prevent processing of
   // &nbsp; etc.
   if (!empty($addinfo_field[0]['value']) && preg_match('/[aeiou]/m', $addinfo_field[0]['value'])) {
-
     // Only insert a title of the content doesn't start with an <h2> title
     // element.
     if (preg_match('/^<h2>...+<\/h2>/m', $addinfo_field[0]['value']) === 0) {
