@@ -27,14 +27,16 @@ function migrate_nidirect_node_application_migrate_node_application_prepare_row(
   // Add a title to the additional info field.
   $addinfo_field = $row->getSourceProperty('field_additional_info');
 
-  var_dump($addinfo_field[0]['value']);
-
   // Inject the title if the field has content and that content contains words.
   // Checking the value has at least 1 vowel to prevent processing of
   // &nbsp; etc.
   if (!empty($addinfo_field[0]['value']) && preg_match('/[aeiou]/m', $addinfo_field[0]['value'])) {
-    $addinfo_field[0]['value'] = '<h2>Additional information</h2>' . $addinfo_field[0]['value'];
-    $row->setSourceProperty('field_additional_info', $addinfo_field);
+
+    // Only insert a title of the content doesn't start with an <h2> title
+    // element.
+    if (preg_match('/^<h2>...+<\/h2>/m', $addinfo_field[0]['value']) === 0) {
+      $addinfo_field[0]['value'] = '<h2>Additional information</h2>' . $addinfo_field[0]['value'];
+      $row->setSourceProperty('field_additional_info', $addinfo_field);
+    }
   }
 }
-
