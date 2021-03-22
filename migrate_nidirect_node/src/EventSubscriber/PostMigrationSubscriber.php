@@ -150,6 +150,25 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       'uri' => 'internal:/node/12849',
       'media_id' => 7283,
     ];
+    // COVID-19 features.
+    $this->featureContent[] = [
+      'title' => 'COVID-19 advice and information',
+      'teaser' => 'COVID-19 advice and information',
+      'uri' => 'internal:/node/13394',
+      'media_id' => 9123,
+    ];
+    $this->featureContent[] = [
+      'title' => 'Book a test if you have COVID-19 symptoms',
+      'teaser' => 'Book a test if you have COVID-19 symptoms',
+      'uri' => 'internal:/node/13657',
+      'media_id' => 9124,
+    ];
+    $this->featureContent[] = [
+      'title' => 'COVID-19 restrictions - what they mean to you',
+      'teaser' => 'COVID-19 restrictions - what they mean to you',
+      'uri' => 'internal:/node/13799',
+      'media_id' => 9122,
+    ];
 
     foreach ($this->featureContent as &$feature) {
       $node = Node::create([
@@ -185,7 +204,14 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
         ['target_id' => $this->getFeatureByTitle('Universal Credit')],
         ['target_id' => $this->getFeatureByTitle('Coronavirus (COVID-19)')],
       ],
-      'tag' => 1338,
+    ];
+    $fcl_content[] = [
+      'title' => 'Homepage: COVID-19 information',
+      'features' => [
+        ['target_id' => $this->getFeatureByTitle('COVID-19 advice and information')],
+        ['target_id' => $this->getFeatureByTitle('Book a test if you have COVID-19 symptoms')],
+        ['target_id' => $this->getFeatureByTitle('COVID-19 restrictions - what they mean to you')],
+      ],
     ];
 
     foreach ($fcl_content as $fcl) {
@@ -197,7 +223,6 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
         'uid' => 1,
         'title' => $fcl['title'],
         'field_featured_content' => $fcl['features'],
-        'field_tags' => $fcl['tag'],
       ]);
 
       $node->save();
