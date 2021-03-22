@@ -19,6 +19,7 @@ label: 'Node revisions (Article)'
 source:
   plugin: d7_node_revision
   node_type: article
+  batch_size: 1000
 process:
   nid: nid
   vid: vid
@@ -51,6 +52,8 @@ process:
         https://www.nidirect.gov.uk
     -
       plugin: media_wysiwyg_filter
+    -
+      plugin: content_link_aliases_filter
     -
       plugin: str_replace
       regex: true

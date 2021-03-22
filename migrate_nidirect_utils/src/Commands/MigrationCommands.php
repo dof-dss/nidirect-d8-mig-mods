@@ -50,8 +50,7 @@ class MigrationCommands extends DrushCommands {
    *
    * @aliases mig-prep
    */
-  public function prepare() {
-
+  public function prep() {
     $migrate_tasks = [];
     $class_methods = get_class_methods($this);
 

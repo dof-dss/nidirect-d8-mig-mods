@@ -18,6 +18,7 @@ label: 'Nodes (Health condition)'
 source:
   plugin: d7_node
   node_type: health_condition
+  batch_size: 1000
 process:
   nid: tnid
   vid: vid

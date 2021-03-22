@@ -14,6 +14,7 @@ migration_group: migrate_drupal_7_link
 label: 'URL aliases'
 source:
   plugin: d7_url_alias
+  batch_size: 1000
   constants:
     slash: /
 process:

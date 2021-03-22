@@ -12,6 +12,7 @@ field_plugin_method: alterFieldInstanceMigration
 source:
   plugin: phone_field_node_source
   node_type: nidirect_gp_practice
+  batch_size: 1000
 process:
   nid: tnid
   vid: vid

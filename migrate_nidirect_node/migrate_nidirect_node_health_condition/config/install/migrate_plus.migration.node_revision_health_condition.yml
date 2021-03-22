@@ -18,6 +18,7 @@ label: 'Node revisions (Health condition)'
 source:
   plugin: d7_node_revision
   node_type: health_condition
+  batch_size: 1000
 process:
   nid: nid
   vid: vid

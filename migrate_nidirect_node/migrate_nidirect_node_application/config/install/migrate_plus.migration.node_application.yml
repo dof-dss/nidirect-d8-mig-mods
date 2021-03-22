@@ -12,6 +12,7 @@ dependencies: {  }
 source:
   plugin: d7_node
   node_type: application
+  batch_size: 1000
 destination:
   plugin: 'entity:node'
   default_bundle: application
