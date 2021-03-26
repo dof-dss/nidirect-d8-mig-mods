@@ -13,11 +13,13 @@ use Drupal\migrate\Row;
  * Implements hook_migrate_MIGRATION_ID_prepare_row().
  */
 function migrate_nidirect_node_application_migrate_node_application_prepare_row(Row $row, MigrateSourceInterface $source, MigrationInterface $migration) {
-
   // Add a title to the body field.
   $body_field = $row->getSourceProperty('body');
 
-  if (!empty($body_field[0]['value'])) {
+  // Inject the title if the field has content and that content contains words.
+  // Checking the value has at least 1 vowel to prevent processing of
+  // &nbsp; etc.
+  if (!empty($body_field[0]['value']) && preg_match('/[aeiou]/m', $body_field[0]['value'])) {
     $body_field[0]['value'] = '<h2>Before you start</h2>' . $body_field[0]['value'];
     $row->setSourceProperty('body', $body_field);
   }
@@ -25,8 +27,15 @@ function migrate_nidirect_node_application_migrate_node_application_prepare_row(
   // Add a title to the additional info field.
   $addinfo_field = $row->getSourceProperty('field_additional_info');
 
-  if (!empty($addinfo_field[0]['value'])) {
-    $addinfo_field[0]['value'] = '<h2>Additional information</h2>' . $addinfo_field[0]['value'];
-    $row->setSourceProperty('field_additional_info', $addinfo_field);
+  // Inject the title if the field has content and that content contains words.
+  // Checking the value has at least 1 vowel to prevent processing of
+  // &nbsp; etc.
+  if (!empty($addinfo_field[0]['value']) && preg_match('/[aeiou]/m', $addinfo_field[0]['value'])) {
+    // Only insert a title of the content doesn't start with an <h2> title
+    // element.
+    if (preg_match('/^<h2>...+<\/h2>/m', $addinfo_field[0]['value']) === 0) {
+      $addinfo_field[0]['value'] = '<h2>Additional information</h2>' . $addinfo_field[0]['value'];
+      $row->setSourceProperty('field_additional_info', $addinfo_field);
+    }
   }
 }
