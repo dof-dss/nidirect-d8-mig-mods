@@ -25,8 +25,43 @@ jobs:
           name: PHPCS static analysis
           command: /home/circleci/project/phpcs.sh /home/circleci "/home/circleci/project"
 
+  deprecated_code:
+    docker:
+      - image: circleci/php:7.4.15-apache-browsers
+    steps:
+      - checkout:
+          path: /home/circleci/nidirect-migrations
+      - run:
+          name: Add OS and PHP extensions/config
+          command: |
+            sudo cp /home/circleci/nidirect-migrations/.circleci/docker-php-circleci.ini /usr/local/etc/php/conf.d/
+            sudo apt-get update
+            sudo apt-get install -y libpng-dev
+            sudo docker-php-ext-install gd
+      - run:
+          name: Fetch latest Drupal version
+          command: |
+            cd /home/circleci
+            composer create-project drupal-composer/drupal-project:8.x-dev /home/circleci/project --no-interaction
+      - run:
+          name: Download dependent contrib modules.
+          command: |
+            cd /home/circleci/project
+            composer require mglaman/drupal-check --no-interaction
+      - run:
+          name: Move custom code into position
+          command: |
+            mkdir -p /home/circleci/project/web/modules/migrate/
+            mv /home/circleci/nidirect-migrations /home/circleci/project/web/modules/migrate/
+      - run:
+          name: Deprecated code check
+          command: |
+            cd /home/circleci/project/web
+            ../vendor/bin/drupal-check modules/migrate -e "*/tests/*"
+
 workflows:
   version: 2
-  static-analysis:
+  static_analysis:
     jobs:
       - coding_standards
+      - deprecated_code
