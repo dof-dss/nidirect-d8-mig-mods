@@ -23,6 +23,12 @@ function migrate_nidirect_node_application_migrate_node_revision_application_pre
   _process_application_row($row);
 }
 
+/**
+ * Injects heading text into body and additional info fields.
+ *
+ * @param \Drupal\migrate\Row $row
+ *   Migration row.
+ */
 function _process_application_row(Row &$row) {
   // Add a title to the body field.
   $body_field = $row->getSourceProperty('body');
@@ -50,4 +56,3 @@ function _process_application_row(Row &$row) {
     }
   }
 }
-
