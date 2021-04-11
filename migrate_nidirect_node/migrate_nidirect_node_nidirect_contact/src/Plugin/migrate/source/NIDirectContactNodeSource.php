@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\devel\DevelDumperManagerInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\node\Plugin\migrate\source\d7\Node;
 use Drupal\migrate\Row;
@@ -31,11 +32,19 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
   protected $logger;
 
   /**
+   * Devel Dumper.
+   *
+   * @var \Drupal\devel\DevelDumperManager
+   */
+  protected $dumper;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, StateInterface $state, EntityTypeManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, LoggerChannelFactory $logger) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, StateInterface $state, EntityTypeManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, LoggerChannelFactory $logger, DevelDumperManagerInterface $dumper) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $state, $entity_manager, $module_handler);
     $this->logger = $logger->get('NIDirectContactNodeSource');
+    $this->dumper = $dumper;
   }
 
   /**
@@ -50,7 +59,8 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
       $container->get('state'),
       $container->get('entity.manager'),
       $container->get('module_handler'),
-      $container->get('logger.factory')
+      $container->get('logger.factory'),
+      $container->get('devel.dumper')
     );
   }
 
@@ -83,7 +93,9 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
         $contact_telephone = TelephonePlusUtils::parse($contact_value);
 
         if ($contact_telephone === FALSE) {
-          $this->logger->notice('Unable to process telephone data for nid: ' . $nid);
+          $message = 'Unable to process telephone data for nid: ' . $nid;
+          $this->logger->notice($message);
+          $this->dumper->debug($message);
         }
         else {
           // Set the default title to 'Phone'.
@@ -111,7 +123,9 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
       $fax = TelephonePlusUtils::parse($fax_value);
 
       if ($fax === FALSE) {
-        $this->logger->notice('Unable to process fax data for nid: ' . $nid);
+        $message = 'Unable to process fax data for nid: ' . $nid;
+        $this->logger->notice($message);
+        $this->dumper->debug($message);
       }
       else {
         // Add the entry if we have at least one number.
@@ -145,7 +159,9 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
       $mobile = TelephonePlusUtils::parse($mobile_value);
 
       if ($mobile === FALSE) {
-        $this->logger->notice('Unable to process fax data for nid: ' . $nid);
+        $message = 'Unable to process mobile data for nid: ' . $nid;
+        $this->logger->notice($message);
+        $this->dumper->debug($message);
       }
       else {
         // Add the entry if we have at least one number.
