@@ -192,7 +192,7 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
   /**
    * Writes a message to the screen and drupal debug log.
    *
-   * @param $message string
+   * @param string $message
    *   Message to write.
    */
   protected function dumpAndLog($message) {
