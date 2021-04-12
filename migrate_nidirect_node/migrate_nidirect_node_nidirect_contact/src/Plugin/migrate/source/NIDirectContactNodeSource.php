@@ -93,9 +93,7 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
         $contact_telephone = TelephonePlusUtils::parse($contact_value);
 
         if ($contact_telephone === FALSE) {
-          $message = 'Unable to process telephone data for nid: ' . $nid;
-          $this->logger->notice($message);
-          $this->dumper->debug($message);
+          $this->dumpAndLog("Unable to process telephone data for nid: $nid");
         }
         else {
           // Set the default title to 'Phone'.
@@ -123,9 +121,7 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
       $fax = TelephonePlusUtils::parse($fax_value);
 
       if ($fax === FALSE) {
-        $message = 'Unable to process fax data for nid: ' . $nid;
-        $this->logger->notice($message);
-        $this->dumper->debug($message);
+        $this->dumpAndLog("Unable to process fax data for nid: $nid");
       }
       else {
         // Add the entry if we have at least one number.
@@ -159,9 +155,7 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
       $mobile = TelephonePlusUtils::parse($mobile_value);
 
       if ($mobile === FALSE) {
-        $message = 'Unable to process mobile data for nid: ' . $nid;
-        $this->logger->notice($message);
-        $this->dumper->debug($message);
+        $this->dumpAndLog("Unable to process mobile data for nid: $nid");
       }
       else {
         // Add the entry if we have at least one number.
@@ -187,12 +181,23 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
 
       // Log any nodes with blank telephone info.
       if (!$telephone_processed) {
-        $this->logger->notice("Unable to process any telephone details for NID: $nid");
+        $this->dumpAndLog("Unable to process any telephone details for NID: $nid");
       }
     }
 
     $row->setSourceProperty('telephone_number', $telephone);
     return parent::prepareRow($row);
+  }
+
+  /**
+   * Writes a message to the screen and drupal debug log.
+   *
+   * @param $message string
+   *   Message to write.
+   */
+  protected function dumpAndLog($message) {
+    $this->logger->notice($message);
+    $this->dumper->debug($message);
   }
 
 }
