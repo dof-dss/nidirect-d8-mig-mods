@@ -69,45 +69,51 @@ class TelephonePlusUtils {
 
     // See https://digitaldevelopment.atlassian.net/browse/D8NID-326 for info.
     // Number only regex (D8NID-326 : Case 1).
-    preg_match_all('/^(\h+)?(\+?[0-9\h\(\)]{8,16}\d\d\d)(\h+)?$/m', $input, $matches, PREG_SET_ORDER, 0);
+    preg_match_all('/(\h+)?(\+?[0-9\h\(\)]{8,16}\d\d\d)(\h+)?/m', $input, $matches, PREG_SET_ORDER, 0);
 
     if ($matches) {
-      $telephone[] = [
-        'telephone_title' => self::createLabel($matches[0][0]),
-        'telephone_number' => $matches[0][0],
-        'telephone_extension' => '',
-        'telephone_supplementary' => '',
-        'country_code' => static::COUNTRY_CODE,
-        'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER,
-      ];
+      foreach ($matches as $match) {
+        $telephone[] = [
+          'telephone_title' => self::createLabel($match[0]),
+          'telephone_number' => $match[0],
+          'telephone_extension' => '',
+          'telephone_supplementary' => '',
+          'country_code' => static::COUNTRY_CODE,
+          'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER,
+        ];
+      }
 
       return $telephone;
     }
 
     // Number and title regex (D8NID-326 : Case 2).
-    preg_match_all('/^(\h+)?([a-zA-Z\-\'\h:,]+[a-zA-Z])\h?\:?(\h\-)?\h(\+?[0-9\h\(\)]{8,16}\d\d\d)(\h+)?$/m', $input, $matches, PREG_SET_ORDER, 0);
+    preg_match_all('/(\h+)?([a-zA-Z\-\'\h:,]+[a-zA-Z])\h?\:?(\h\-)?\h(\+?[0-9\h\(\)]{8,16}\d\d\d)(\h+)?/m', $input, $matches, PREG_SET_ORDER, 0);
 
     if ($matches) {
-      if (count($matches) == 4) {
-        $telephone[] = [
-          'telephone_title' => $matches[0][3],
-          'telephone_number' => $matches[0][5],
-          'telephone_extension' => '',
-          'telephone_supplementary' => '',
-          'country_code' => static::COUNTRY_CODE,
-          'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER,
-        ];
+      foreach ($matches as $match) {
+
+        if (count($match) == 4) {
+          $telephone[] = [
+            'telephone_title' => $match[3],
+            'telephone_number' => $match[5],
+            'telephone_extension' => '',
+            'telephone_supplementary' => '',
+            'country_code' => static::COUNTRY_CODE,
+            'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER,
+          ];
+        }
+        else {
+          $telephone[] = [
+            'telephone_title' => $match[2],
+            'telephone_number' => $match[4],
+            'telephone_extension' => '',
+            'telephone_supplementary' => '',
+            'country_code' => static::COUNTRY_CODE,
+            'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER,
+          ];
+        }
       }
-      else {
-        $telephone[] = [
-          'telephone_title' => $matches[0][2],
-          'telephone_number' => $matches[0][4],
-          'telephone_extension' => '',
-          'telephone_supplementary' => '',
-          'country_code' => static::COUNTRY_CODE,
-          'display_international_number' => static::DISPLAY_INTERNATIONAL_NUMBER,
-        ];
-      }
+
       return $telephone;
     }
 
