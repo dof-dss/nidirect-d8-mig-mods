@@ -29,6 +29,7 @@ Run `lando miip --group=<group name>` with the following:
 * migrate_drupal_7_user
 * migrate_drupal_7_file
 * migrate_drupal_7_taxo
+* nidirect_book
 * migrate_nidirect_node_driving_instructor
 * migrate_nidirect_entity_gp
 * migrate_nidirect_node_application
