@@ -10,3 +10,4 @@ dependencies:
   - drupal:migrate_plus
   - drupal:migrate_tools
   - migrate_nidirect_utils
+  - devel:devel

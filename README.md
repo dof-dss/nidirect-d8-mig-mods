@@ -29,7 +29,6 @@ Run `lando miip --group=<group name>` with the following:
 * migrate_drupal_7_user
 * migrate_drupal_7_file
 * migrate_drupal_7_taxo
-* nidirect_book
 * migrate_nidirect_node_driving_instructor
 * migrate_nidirect_entity_gp
 * migrate_nidirect_node_application
@@ -45,8 +44,8 @@ Run `lando miip --group=<group name>` with the following:
 * migrate_drupal_7_link
 
 then run the following individual migrations:
-lando miip node_contact
-lando miip nidirect_book
+* node_contact
+* miip nidirect_book
 
 ## Running tests
 
