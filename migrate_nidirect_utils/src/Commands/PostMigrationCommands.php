@@ -66,14 +66,8 @@ class PostMigrationCommands extends DrushCommands {
 
     // Find all node ids in the D8 site so we know what to look for.
     $d8_nids = [];
-    if ($node_type) {
-      $query = $this->dbConnDrupal8->query("SELECT nid FROM {node} WHERE type = :node_type ORDER BY nid ASC", [':node_type' => $node_type]);
-      $d8_nids = $query->fetchAllAssoc('nid');
-    }
-    else {
-      $query = $this->dbConnDrupal8->query("SELECT nid FROM {node} ORDER BY nid ASC");
-      $d8_nids = $query->fetchAllAssoc('nid');
-    }
+    $query = $this->dbConnDrupal8->query("SELECT nid FROM {node} WHERE type = :node_type ORDER BY nid ASC", [':node_type' => $node_type]);
+    $d8_nids = $query->fetchAllAssoc('nid');
 
     // Load source node publish status fields.
     $query = $this->dbConnMigrate->query("
