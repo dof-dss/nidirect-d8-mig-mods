@@ -3,3 +3,8 @@ services:
     class: \Drupal\migrate_nidirect_utils\Commands\MigrationCommands
     tags:
       - { name: drush.command }
+  post-nidirect-migrate.commands:
+    class: \Drupal\migrate_nidirect_utils\Commands\PostMigrationCommands
+    arguments: [ '@entity_type.manager' ]
+    tags:
+      - { name: drush.command }
