@@ -45,7 +45,7 @@ class PostMigrationCommands extends DrushCommands {
   }
 
   /**
-   * Drush command to publish Unity nodes after migration.
+   * Drush command to publish NIDirect nodes after migration.
    *
    * @command post-migrate-publish
    * @options node_type
