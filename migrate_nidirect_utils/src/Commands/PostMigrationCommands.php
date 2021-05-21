@@ -51,13 +51,17 @@ class PostMigrationCommands extends DrushCommands {
    * @options node_type
    */
   public function updatePublishStatus($node_type = NULL) {
-    // This update should be run from drush after ALL node
-    // and revision migrations have completed. Note that this process
-    // will correctly set current revision and publish status for all
-    // nodes but it will create new revisions. This means that once this
-    // has been run there should be no more 'top up' migrations, the only
-    // option is to roll back all revision and node migrations and start
-    // from scratch.
+    // This update should be run from drush after migrating all
+    // nodes and revisions of a particular type.
+    // Note that this process will correctly set current revision and publish
+    // status for all nodes but it will create new revisions.
+    // This means that there could potentially be problems with
+    // revision id clashes when running 'top up' migrations, so these are best
+    // avoided if at all possible.
+    if (empty($node_type)) {
+      $this->output()->writeln('Please specify a node type e.g. "drush post-migrate-publish article"');
+      return;
+    }
     $this->output()->writeln('Sync node publish status values after migration');
 
     // Find all node ids in the D8 site so we know what to look for.
