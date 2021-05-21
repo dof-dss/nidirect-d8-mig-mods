@@ -48,6 +48,7 @@ class PostMigrationCommands extends DrushCommands {
    * Drush command to publish Unity nodes after migration.
    *
    * @command post-migrate-publish
+   * @options node_type
    */
   public function updatePublishStatus($node_type = NULL) {
     // This update should be run from drush after ALL node
@@ -57,7 +58,6 @@ class PostMigrationCommands extends DrushCommands {
     // has been run there should be no more 'top up' migrations, the only
     // option is to roll back all revision and node migrations and start
     // from scratch.
-
     $this->output()->writeln('Sync node publish status values after migration');
 
     // Find all node ids in the D8 site so we know what to look for.
