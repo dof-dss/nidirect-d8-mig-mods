@@ -25,6 +25,8 @@ are enabled.
 
 ## Migration order
 
+Items in italics typically will not be run on production.
+
 Run `lando miip --group=<group name>` with the following:
 * migrate_drupal_7_user
 * migrate_drupal_7_file
@@ -36,9 +38,10 @@ Run `lando miip --group=<group name>` with the following:
 * migrate_nidirect_node_external_link
 * migrate_nidirect_node_gp_practice
 * migrate_nidirect_node_health_condition
-* migrate_nidirect_node_landing_page
+* _migrate_nidirect_node_landing_page_
 * migrate_nidirect_node_news
-* migrate_nidirect_node_nidirect_contact
+* _migrate_nidirect_node_contact_
+* _migrate_nidirect_node_nidirect_contact_
 * migrate_nidirect_node_page
 * migrate_nidirect_node_publication
 * migrate_drupal_7_link

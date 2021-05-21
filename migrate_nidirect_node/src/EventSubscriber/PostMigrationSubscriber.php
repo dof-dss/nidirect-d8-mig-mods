@@ -105,9 +105,9 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       $this->recreateFeaturedContentListNodes();
 
       $content_type = substr($event_id, 5);
-      $this->logger->notice($this->migrationProcessors->publishingStatus($content_type));
+      // $this->logger->notice($this->migrationProcessors->publishingStatus($content_type));
       if (preg_match('/revision_/', $content_type)) {
-        $this->logger->notice($this->migrationProcessors->revisionStatus($content_type));
+        // $this->logger->notice($this->migrationProcessors->revisionStatus($content_type));
       }
       $this->logger->notice($this->migrationProcessors->flags($content_type));
       $this->logger->notice($this->migrationProcessors->metatags());
