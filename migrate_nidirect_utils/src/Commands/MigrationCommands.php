@@ -83,7 +83,6 @@ class MigrationCommands extends DrushCommands {
     $content_types = [
       'application'                     => 'node',
       'article'                         => 'node',
-      'contact'                         => 'node',
       'driving_instructor'              => 'node',
       'embargoed_publication'           => 'node',
       'external_link'                   => 'node',
