@@ -152,4 +152,37 @@ class PostMigrationCommands extends DrushCommands {
     }
   }
 
+  /**
+   * Drush command to increase node ids.
+   *
+   * @command node-id-renumber
+   * @options node_type
+   * @options starting nid
+   */
+  public function nodeIdRenumber($node_type = NULL, $starting_nid = NULL, $new_nid_start = NULL) {
+    // This command will find any nodes of the specified type ($node_type)
+    // that have nids greater than the starting nid. These nodes will be
+    // deleted and re-created, thus increasing their node ids.
+    // By default, the new nodes will just take the next available nid, but
+    // a specific start point may be supplied by using the optional
+    // $new_nid_start param.
+    if (empty($node_type) || empty($starting_nid)) {
+      $this->output()->writeln('Please specify a node type and a starting id e.g. "drush node-id-renumber article 20000"');
+      return;
+    }
+    // First thing to do is to find a list of affected nids.
+    $query = $this->dbConnDrupal8->query("SELECT nid
+                                                FROM {node}
+                                                WHERE nid > :starting_nid
+                                                AND type = :node_type
+                                                ORDER BY nid ASC", [':starting_nid' => $starting_nid, ':node_type' => $node_type]);
+    $d8_nids = $query->fetchAll();
+
+    foreach ($d8_nids as $row) {
+      $this->output()->writeln("Identified " . $node_type . " with nid = " . $row->nid);
+
+    }
+
+  }
+
 }
