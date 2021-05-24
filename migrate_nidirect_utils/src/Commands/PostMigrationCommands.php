@@ -178,9 +178,31 @@ class PostMigrationCommands extends DrushCommands {
                                                 ORDER BY nid ASC", [':starting_nid' => $starting_nid, ':node_type' => $node_type]);
     $d8_nids = $query->fetchAll();
 
+    $max_nid = $this->dbConnDrupal8->query(
+      "SELECT max(nid) FROM {node}"
+    )->fetchField();
+    if (empty($max_nid)) {
+      $this->output()->writeln('Cannot find maximum nid');
+      return;
+    }
+
     foreach ($d8_nids as $row) {
       $this->output()->writeln("Identified " . $node_type . " with nid = " . $row->nid);
-
+      // Load the node that we are going to renumber.
+      $node = $this->nodeStorage->load($row->nid);
+      if (!empty($node)) {
+        // Load the node again for deletion.
+        $node_for_deletion = $this->nodeStorage->load($row->nid);
+        $node_for_deletion->delete();
+        // Now manipulate the node object to remove the
+        // nid and regenerate the uuid, so that when we
+        // save it a new nid will be assigned.
+        unset($node->nid);
+        $uuid_service = \Drupal::service('uuid');
+        $uuid = $uuid_service->generate();
+        $node->uuid = $uuid;
+        $node->save();
+      }
     }
 
   }
