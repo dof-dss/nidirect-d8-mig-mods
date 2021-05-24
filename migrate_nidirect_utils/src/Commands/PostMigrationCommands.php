@@ -157,15 +157,11 @@ class PostMigrationCommands extends DrushCommands {
    *
    * @command node-id-renumber
    * @options node_type
-   * @options starting nid
    */
-  public function nodeIdRenumber($node_type = NULL, $starting_nid = NULL, $new_nid_start = NULL) {
+  public function nodeIdRenumber($node_type = NULL, $starting_nid = NULL) {
     // This command will find any nodes of the specified type ($node_type)
     // that have nids greater than the starting nid. These nodes will be
     // deleted and re-created, thus increasing their node ids.
-    // By default, the new nodes will just take the next available nid, but
-    // a specific start point may be supplied by using the optional
-    // $new_nid_start param.
     if (empty($node_type) || empty($starting_nid)) {
       $this->output()->writeln('Please specify a node type and a starting id e.g. "drush node-id-renumber article 20000"');
       return;
