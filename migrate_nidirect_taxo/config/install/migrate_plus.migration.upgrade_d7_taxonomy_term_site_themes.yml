@@ -76,6 +76,9 @@ process:
       plugin: get
       source: field_summary
     -
+      plugin: trim
+      source: field_summary
+    -
       plugin: strip_html_filter
   field_teaser: field_teaser
   field_additional_info:
