@@ -26,8 +26,14 @@ process:
       map:
         1: site_themes
   name: name
-  description/value: description
-  description/format: format
+  description/value:
+    -
+      plugin: get
+      source: description
+  description/format:
+    -
+      plugin: default_value
+      default_value: basic_html
   weight: weight
   parent_id:
     -
