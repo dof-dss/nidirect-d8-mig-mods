@@ -16,6 +16,12 @@ source:
   plugin: d7_path_redirect
   batch_size: 1000
 process:
+  status:
+    -
+      plugin: skip_on_value
+      source: status
+      method: row
+      value: 0
   rid:
     -
       plugin: get
