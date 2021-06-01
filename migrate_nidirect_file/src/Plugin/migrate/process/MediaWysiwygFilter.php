@@ -247,7 +247,7 @@ TEMPLATE;
     $orientation = ($media['width'] > $media['height']) ? 'landscape' : 'portrait';
 
     // Set a default image style.
-    $image_style = $style_map[$orientation][array_key_first($style_map[$orientation])];
+    $image_style = 'article_full';
 
     // Assign the image style to the embedded image if we can extract it from
     // the original image tag.
