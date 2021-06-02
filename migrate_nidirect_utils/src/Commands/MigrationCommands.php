@@ -103,6 +103,11 @@ class MigrationCommands extends DrushCommands {
       'contact_categories'              => 'taxonomy_term',
       'ni_postcodes'                    => 'taxonomy_term',
       'site_themes'                     => 'taxonomy_term',
+      'audio'                           => 'media',
+      'document'                        => 'media',
+      'image'                           => 'media',
+      'video'                           => 'media',
+      'remote_video'                    => 'media',
     ];
 
     // Display each bundle and the content count.
@@ -111,6 +116,9 @@ class MigrationCommands extends DrushCommands {
 
       if ($entity == 'taxonomy_term') {
         $entities = $storage->loadByProperties(["vid" => $bundle]);
+      }
+      elseif ($entity == 'media') {
+        $entities = $storage->loadByProperties(["bundle" => $bundle]);
       }
       elseif ($entity !== $bundle) {
         $entities = $storage->loadByProperties(["type" => $bundle]);
@@ -150,6 +158,9 @@ class MigrationCommands extends DrushCommands {
 
       if ($entity === 'taxonomy_term') {
         $entities = $storage->loadByProperties(["vid" => $bundle]);
+      }
+      elseif ($entity == 'media') {
+        $entities = $storage->loadByProperties(["bundle" => $bundle]);
       }
       elseif ($entity !== $bundle) {
         $entities = $storage->loadByProperties(["type" => $bundle]);
