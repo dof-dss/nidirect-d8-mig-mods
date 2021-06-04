@@ -43,6 +43,9 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     $this->entityTypeManager = $entityTypeManager;
     $this->logger = $logger->get('migrate_nidirect_node_article');
 
+    // Array of nodes imported from the Money Advice Service (MAS). These will
+    // be deleted once we have migrated the article revisions as they will be
+    // periodically imported/updated.
     $this->nodes = [
       4779 => "Beginner’s guide to managing your money",
       4780 => "Borrowing and credit basics",
