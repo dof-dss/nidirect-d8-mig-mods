@@ -60,6 +60,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       4792 => "Mortgages – a beginner’s guide",
       4793 => "National Savings & Investments (NS&I)",
       4794 => "Overdrafts explained",
+      4795 => "Quick access to cash – your options",
       4796 => "Review your savings and investments",
       4797 => "Secured and unsecured borrowing explained",
       4798 => "Should you manage money jointly or separately?",
