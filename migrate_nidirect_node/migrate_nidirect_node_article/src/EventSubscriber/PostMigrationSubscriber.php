@@ -91,7 +91,9 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
   public function onMigratePostImport(MigrateImportEvent $event) {
     $event_id = $event->getMigration()->getBaseId();
 
-    if ($event_id == 'node_article' || $event_id == 'node_article_revision') {
+    // Only delete MAS articles when finished with article revisions to prevent
+    // the 'Unable to get entity' error message during revision import.
+    if ($event_id == 'node_article_revision') {
 
       $this->logger->notice('Post migrate processing.');
 
