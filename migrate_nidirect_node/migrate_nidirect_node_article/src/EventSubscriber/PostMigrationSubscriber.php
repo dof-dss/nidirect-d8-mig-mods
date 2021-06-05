@@ -43,6 +43,9 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     $this->entityTypeManager = $entityTypeManager;
     $this->logger = $logger->get('migrate_nidirect_node_article');
 
+    // Array of nodes imported from the Money Advice Service (MAS). These will
+    // be deleted once we have migrated the article revisions as they will be
+    // periodically imported/updated.
     $this->nodes = [
       4779 => "Beginner’s guide to managing your money",
       4780 => "Borrowing and credit basics",
@@ -60,6 +63,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       4792 => "Mortgages – a beginner’s guide",
       4793 => "National Savings & Investments (NS&I)",
       4794 => "Overdrafts explained",
+      4795 => "Quick access to cash – your options",
       4796 => "Review your savings and investments",
       4797 => "Secured and unsecured borrowing explained",
       4798 => "Should you manage money jointly or separately?",
@@ -91,7 +95,9 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
   public function onMigratePostImport(MigrateImportEvent $event) {
     $event_id = $event->getMigration()->getBaseId();
 
-    if ($event_id == 'node_article' || $event_id == 'node_article_revision') {
+    // Only delete MAS articles when finished with article revisions to prevent
+    // the 'Unable to get entity' error message during revision import.
+    if ($event_id == 'node_article_revision') {
 
       $this->logger->notice('Post migrate processing.');
 
