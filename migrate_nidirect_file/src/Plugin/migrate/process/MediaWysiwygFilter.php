@@ -232,12 +232,12 @@ TEMPLATE;
     $style_map = [
       'landscape' => [
         'inline' => 'landscape_float',
-        'inline-expandable' => 'landscape_float_xp',
+        'inline_expandable' => 'landscape_float_xp',
         'inline_xl' => 'landscape_full_xp',
       ],
       'portrait' => [
         'inline' => 'portrait_float',
-        'inline-expandable' => 'portrait_float_xp',
+        'inline_expandable' => 'portrait_float_xp',
         'inline_xl' => 'portrait_full',
       ],
     ];
@@ -252,7 +252,7 @@ TEMPLATE;
     // Assign the image style to the embedded image if we can extract it from
     // the original image tag.
     if (isset($tag_info['attributes']['data-picture-mapping']) || array_key_exists('data-picture-mapping', $tag_info['attributes'])) {
-      if (array_key_exists($tag_info['attributes']['data-picture-mapping'], $style_map)) {
+      if (array_key_exists($tag_info['attributes']['data-picture-mapping'], $style_map[$orientation])) {
         $image_style = $style_map[$orientation][$tag_info['attributes']['data-picture-mapping']];
       }
     }
