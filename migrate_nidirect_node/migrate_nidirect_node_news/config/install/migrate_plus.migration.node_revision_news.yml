@@ -91,7 +91,6 @@ process:
     -
       plugin: strip_html_filter
   field_teaser: field_teaser
-  field_toc_enable: field_enable_toc
   field_related_info:
     -
       plugin: callback
