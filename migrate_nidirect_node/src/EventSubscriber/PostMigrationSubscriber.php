@@ -7,6 +7,8 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateImportEvent;
 use Drupal\node\Entity\Node;
+use Drupal\redirect\Entity\Redirect;
+use Drupal\redirect\RedirectRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\migrate_nidirect_utils\MigrationProcessors;
@@ -47,6 +49,13 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
   protected $featureContent;
 
   /**
+   * Redirect repository service.
+   *
+   * @var \Drupal\redirect\RedirectRepository
+   */
+  protected $redirectRepository;
+
+  /**
    * PostMigrationSubscriber constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -55,13 +64,17 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
    *   Drupal logger.
    * @param \Drupal\migrate_nidirect_utils\MigrationProcessors $migration_processors
    *   Migration processors.
+   * @param \Drupal\redirect\RedirectRepository $redirect_repository
+   *   Redirect repository service.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager,
                               LoggerChannelFactory $logger,
-                              MigrationProcessors $migration_processors) {
+                              MigrationProcessors $migration_processors,
+                              RedirectRepository $redirect_repository) {
+    $this->entityTypeManager = $entity_type_manager;
     $this->logger = $logger->get('migrate_nidirect_node');
     $this->migrationProcessors = $migration_processors;
-    $this->entityTypeManager = $entity_type_manager;
+    $this->redirectRepository = $redirect_repository;
     $this->featureContent = [];
   }
 
@@ -126,6 +139,37 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     if ($event_id == 'node_revision_landing_page') {
       $this->landingPageUpdates();
     }
+
+    // Ensure some redirects of interest are always present.
+    $this->redirects();
+  }
+
+  /**
+   * Guarantee certain redirects exist after each migration.
+   */
+  protected function redirects() {
+    $redirects = [
+      'contacts/contacts-az/police-service-northern-ireland' => 'internal:/node/77',
+      'contacts/contacts-az/migrant-help' => 'internal:/node/166',
+    ];
+
+    foreach ($redirects as $source => $target) {
+      $redirect_entity = $this->redirectRepository->findBySourcePath($source);
+
+      if (!empty($redirect_entity)) {
+        continue;
+      }
+
+      // If it doesn't exist, create it.
+      Redirect::create([
+        'redirect_source' => $source,
+        'redirect_redirect' => $target,
+        'language' => \Drupal::languageManager()->getDefaultLanguage()->getId(),
+        'status_code' => 301,
+      ])->save();
+    }
+
+    $this->logger->notice('Set redirects for known broken links.');
   }
 
   /**

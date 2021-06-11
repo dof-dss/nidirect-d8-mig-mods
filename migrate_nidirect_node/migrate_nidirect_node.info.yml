@@ -11,3 +11,4 @@ dependencies:
   - drupal:migrate_tools
   - migrate_nidirect_user
   - migrate_nidirect_taxo
+  - redirect
