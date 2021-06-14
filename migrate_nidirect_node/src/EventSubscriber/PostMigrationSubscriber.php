@@ -140,36 +140,46 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       $this->landingPageUpdates();
     }
 
-    // Ensure some redirects of interest are always present.
-    $this->redirects();
+    if ($event_id === 'node_contact' || $event_id === 'node_nidirect_contact') {
+      // Add any missing URL aliases as redirects to the required contact nodes.
+      $this->redirects();
+    }
   }
 
   /**
    * Guarantee certain redirects exist after each migration.
    */
   protected function redirects() {
-    $redirects = [
-      'contacts/contacts-az/police-service-northern-ireland' => 'internal:/node/77',
-      'contacts/contacts-az/migrant-help' => 'internal:/node/166',
-    ];
+    $conn_migrate = Database::getConnection('default', 'migrate');
+    $conn_drupal8 = Database::getConnection('default', 'default');
 
-    foreach ($redirects as $source => $target) {
-      $redirect_entity = $this->redirectRepository->findBySourcePath($source);
+    // Get all D7 contacts.
+    $d7_contacts = $conn_migrate->query("
+      SELECT n.nid, n.title, a.alias
+      FROM {node} n
+      JOIN {url_alias} a on substring(a.source, 6, length(a.source)) = n.nid
+      WHERE n.type IN ('contact', 'nidirect_contact') AND a.source LIKE 'node/%'
+      ORDER BY n.title")->fetchAll();
+    // For each one...
+    foreach ($d7_contacts as $row) {
+      // Is there a D8 alias for that node? If not, add a redirect to the node.
+      $aliases = $conn_drupal8->query("SELECT * FROM {path_alias} WHERE path = '/node/:nid'", [':nid' => $row->nid])->fetchAll();
+      if (empty($aliases)) {
+        // Create a redirect if it doesn't exist.
+        $redirect_entity = $this->redirectRepository->findBySourcePath($row->alias);
 
-      if (!empty($redirect_entity)) {
-        continue;
+        if (empty($redirect_entity)) {
+          Redirect::create([
+            'redirect_source' => $row->alias,
+            'redirect_redirect' => 'internal:/node/' . $row->nid,
+            'language' => \Drupal::languageManager()->getDefaultLanguage()->getId(),
+            'status_code' => 301,
+          ])->save();
+
+          $this->logger->notice('Created redirect from ' . $row->alias . ' to node/' . $row->nid);
+        }
       }
-
-      // If it doesn't exist, create it.
-      Redirect::create([
-        'redirect_source' => $source,
-        'redirect_redirect' => $target,
-        'language' => \Drupal::languageManager()->getDefaultLanguage()->getId(),
-        'status_code' => 301,
-      ])->save();
     }
-
-    $this->logger->notice('Set redirects for known broken links.');
   }
 
   /**
