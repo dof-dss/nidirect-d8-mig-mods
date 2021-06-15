@@ -47,11 +47,19 @@ use Drupal\Core\Database\Connection;
 class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The database connection.
+   * The Drupal 8 database connection.
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected $connection;
+  protected $connD8;
+
+  /**
+   * The migration database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connMigrate;
+
 
   /**
    * Constructs a UpdateFileToDocument process plugin instance.
@@ -67,7 +75,8 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
    */
   public function __construct(array $configuration, $plugin_id, array $plugin_definition, Connection $connection) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->connection = $connection;
+    $this->connD8 = $connection;
+    $this->connMigrate = Database::getConnection('default', 'migrate');
   }
 
   /**
@@ -98,7 +107,7 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
         $tag_info = $decoder->decode($matches['tag_info'], JsonEncoder::FORMAT);
 
         // Ensure we have a managed file for the embedded asset.
-        $query = $this->connection->select('file_managed', 'f');
+        $query = $this->connD8->select('file_managed', 'f');
         $query->condition('f.fid', $tag_info['fid'], '=');
         $query->fields('f', ['uuid', 'filename', 'filemime', 'uri']);
         $query->range(0, 1);
@@ -127,7 +136,7 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
         else {
           // Search for oembed/remote media which doesn't have a
           // managed file entry.
-          $query = $this->connection->select('media', 'm');
+          $query = $this->connD8->select('media', 'm');
           $query->condition('m.mid', $tag_info['fid'], '=');
           $query->fields('m', ['uuid']);
           $query->addField('o', 'bundle');
@@ -183,7 +192,7 @@ data-entity-uuid="%s">
 TEMPLATE;
 
     // Extract the base media entity uuid.
-    $query = $this->connection->select('media', 'm');
+    $query = $this->connD8->select('media', 'm');
     $query->fields('m', ['uuid']);
     $query->addField('i', 'entity_id');
     $query->join("media__field_media_" . $media_type, 'i', 'i.entity_id = m.mid');
@@ -216,7 +225,7 @@ data-view-mode="%s">
 TEMPLATE;
 
     // Extract the base media entity uuid.
-    $query = $this->connection->select('media', 'm');
+    $query = $this->connD8->select('media', 'm');
     $query->fields('m', ['uuid']);
     $query->addField('i', 'entity_id');
     $query->addField('i', 'field_media_image_width', 'width');
