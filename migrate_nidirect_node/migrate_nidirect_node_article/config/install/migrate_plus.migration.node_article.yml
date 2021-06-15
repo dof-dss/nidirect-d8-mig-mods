@@ -122,6 +122,13 @@ process:
       plugin: get
       source: field_additional_info
     -
+      plugin: filter_absolute_links
+      replace_urls:
+        http://nidirect.gov.uk
+        http://www.nidirect.gov.uk
+        https://nidirect.gov.uk
+        https://www.nidirect.gov.uk
+    -
       plugin: media_wysiwyg_filter
   field_additional_info/0/format:
     -
