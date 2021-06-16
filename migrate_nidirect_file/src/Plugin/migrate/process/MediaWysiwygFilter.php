@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate_nidirect_file\Plugin\migrate\process;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
@@ -106,6 +107,37 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
         // Extract the D7 embedded media data.
         $tag_info = $decoder->decode($matches['tag_info'], JsonEncoder::FORMAT);
 
+        // Lookup the Migration DB and check if we are referencing an embedded
+        // or file asset.
+        $query = $this->connMigrate->select('file_managed', 'f');
+        $query->condition('f.fid', $tag_info['fid'], '=');
+        $query->fields('f', ['filemime']);
+        $query->range(0, 1);
+        $media = $query->execute()->fetchAssoc();
+
+        if ($media['filemime'] === 'video/oembed') {
+          // Search for oembed/remote media which doesn't have a
+          // managed file entry.
+          $query = $this->connD8->select('media', 'm');
+          $query->condition('m.mid', $tag_info['fid'], '=');
+          $query->fields('m', ['uuid']);
+          $query->addField('o', 'bundle');
+          $query->join('media__field_media_oembed_video', 'o', 'o.entity_id = m.mid');
+          $query->range(0, 1);
+          $oembed = $query->execute()->fetchAssoc();
+
+          if ($oembed['bundle'] === 'remote_video') {
+            $replacement_template = <<<'TEMPLATE'
+<drupal-media
+data-align="center"
+data-entity-type="media"
+data-entity-uuid="%s">
+</drupal-media>
+TEMPLATE;
+          }
+            return sprintf($replacement_template, $oembed['uuid']);
+        }
+
         // Ensure we have a managed file for the embedded asset.
         $query = $this->connD8->select('file_managed', 'f');
         $query->condition('f.fid', $tag_info['fid'], '=');
@@ -132,30 +164,6 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
             default:
               break;
           }
-        }
-        else {
-          // Search for oembed/remote media which doesn't have a
-          // managed file entry.
-          $query = $this->connD8->select('media', 'm');
-          $query->condition('m.mid', $tag_info['fid'], '=');
-          $query->fields('m', ['uuid']);
-          $query->addField('o', 'bundle');
-          $query->join('media__field_media_oembed_video', 'o', 'o.entity_id = m.mid');
-          $query->range(0, 1);
-          $oembed = $query->execute()->fetchAssoc();
-
-          if ($oembed['bundle'] === 'remote_video') {
-            $replacement_template = <<<'TEMPLATE'
-<drupal-media
-data-align="center"
-data-entity-type="media"
-data-entity-uuid="%s">
-</drupal-media>
-TEMPLATE;
-
-            return sprintf($replacement_template, $oembed['uuid']);
-          }
-
         }
       }
       catch (NotEncodableValueException $e) {
@@ -223,6 +231,8 @@ data-entity-uuid="%s"
 data-view-mode="%s">
 </drupal-media>
 TEMPLATE;
+
+
 
     // Extract the base media entity uuid.
     $query = $this->connD8->select('media', 'm');
