@@ -61,7 +61,6 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ContainerFactoryPl
    */
   protected $connMigrate;
 
-
   /**
    * Constructs a UpdateFileToDocument process plugin instance.
    *
@@ -231,8 +230,6 @@ data-entity-uuid="%s"
 data-view-mode="%s">
 </drupal-media>
 TEMPLATE;
-
-
 
     // Extract the base media entity uuid.
     $query = $this->connD8->select('media', 'm');
