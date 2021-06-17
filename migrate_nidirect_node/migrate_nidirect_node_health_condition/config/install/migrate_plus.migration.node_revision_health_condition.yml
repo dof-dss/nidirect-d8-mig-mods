@@ -51,6 +51,11 @@ process:
         https://www.nidirect.gov.uk
     -
       plugin: media_wysiwyg_filter
+    -
+      plugin: str_replace
+      regex: true
+      search: /(<p>[<br>|\s]*&nbsp;<\/p>)/im
+      replace: ''
   body/0/format:
     -
       plugin: static_map

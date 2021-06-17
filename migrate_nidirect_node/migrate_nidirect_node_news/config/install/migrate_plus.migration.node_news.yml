@@ -50,6 +50,11 @@ process:
       regex: true
       search: /(((<[a-zA-Z1-9]*>)+(&nbsp;)*More useful links<\/\S*>.*)(<\/ul>))(.*)/mis
       replace: ${7}
+    -
+      plugin: str_replace
+      regex: true
+      search: /(<p>[<br>|\s]*&nbsp;<\/p>)/im
+      replace: ''
   body/0/format:
     -
       plugin: static_map
