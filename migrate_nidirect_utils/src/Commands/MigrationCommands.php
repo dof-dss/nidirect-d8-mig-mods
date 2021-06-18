@@ -239,6 +239,14 @@ class MigrationCommands extends DrushCommands {
   }
 
   /**
+   * Strip unwanted \r\n from field_summary data.
+   */
+  protected function prepareSummaryField() {
+    $this->drupal7DatabaseQuery("UPDATE {field_data_field_summary} SET field_summary_value = REGEXP_REPLACE(field_summary_value, '\r\n', '')");
+    $this->drupal7DatabaseQuery("UPDATE {field_revision_field_summary} SET field_summary_value = REGEXP_REPLACE(field_summary_value, '\r\n', '')");
+  }
+
+  /**
    * Fix Health Condition revision with broken JSON contents.
    */
   protected function prepareRemoveBrokenHealthConditionRevision() {
