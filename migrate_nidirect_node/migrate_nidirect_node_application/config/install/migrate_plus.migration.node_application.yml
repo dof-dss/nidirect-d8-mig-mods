@@ -66,12 +66,19 @@ process:
       plugin: get
       source: field_additional_info
     -
+      plugin: filter_absolute_links
+      replace_urls:
+        http://nidirect.gov.uk
+        http://www.nidirect.gov.uk
+        https://nidirect.gov.uk
+        https://www.nidirect.gov.uk
+    -
       plugin: media_wysiwyg_filter
     -
       plugin: str_replace
       regex: true
-      search: /(((<[a-zA-Z1-9]*>)+More useful links<\/\S*>.*)(<\/ul>))(.*)/mis
-      replace: ${5}
+      search: /(((<[a-zA-Z1-9]*>)+(&nbsp;)*More useful links<\/\S*>.*)(<\/ul>))(.*)/mis
+      replace: ${7}
   field_additional_info/0/format:
     -
       plugin: static_map

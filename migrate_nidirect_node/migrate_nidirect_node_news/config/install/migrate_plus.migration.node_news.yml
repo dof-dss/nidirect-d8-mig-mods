@@ -48,8 +48,13 @@ process:
     -
       plugin: str_replace
       regex: true
-      search: /(((<[a-zA-Z1-9]*>)+More useful links<\/\S*>.*)(<\/ul>))(.*)/mis
-      replace: ${5}
+      search: /(((<[a-zA-Z1-9]*>)+(&nbsp;)*More useful links<\/\S*>.*)(<\/ul>))(.*)/mis
+      replace: ${7}
+    -
+      plugin: str_replace
+      regex: true
+      search: /(<p>[<br>|\s]*&nbsp;<\/p>)/im
+      replace: ''
   body/0/format:
     -
       plugin: static_map
@@ -89,7 +94,6 @@ process:
     -
       plugin: strip_html_filter
   field_teaser: field_teaser
-  field_toc_enable: field_enable_toc
   field_related_info:
     -
       plugin: callback

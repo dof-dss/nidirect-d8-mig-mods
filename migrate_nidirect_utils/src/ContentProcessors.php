@@ -39,7 +39,7 @@ class ContentProcessors {
     foreach ($matches as $link) {
       $links[] = [
         'uri' => (strpos($link[1], '/') === 0 ? 'internal:' . $link[1] : $link[1]),
-        'title' => $link[2],
+        'title' => strip_tags(html_entity_decode($link[2])),
         'options' => [
           'attributes' => [],
         ],
