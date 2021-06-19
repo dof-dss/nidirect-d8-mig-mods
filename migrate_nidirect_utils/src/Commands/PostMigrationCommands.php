@@ -124,7 +124,12 @@ class PostMigrationCommands extends DrushCommands {
       if ($status == 1) {
         $revision->setpublished();
       }
-      $revision->save();
+      $result = $revision->save();
+      // If the revision save method doesn't return 1 (new) or 2 (updated) there
+      // may be issues with the published revision for the current node.
+      if ($result === 0) {
+        $this->output()->writeln('Revision save returned 0 (revision: ' . $vid . ' - node: ' . $nid . ')');
+      }
     }
 
     // Publish node if necessary.
