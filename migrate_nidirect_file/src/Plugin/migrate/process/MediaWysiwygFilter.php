@@ -260,7 +260,7 @@ TEMPLATE;
 
     // Select the appropriate display orientation based on the
     // image dimensions.
-    $orientation = ($media['width'] > $media['height']) ? 'landscape' : 'portrait';
+    $orientation = ($media['width'] >= $media['height']) ? 'landscape' : 'portrait';
 
     // Set a default image style.
     $image_style = 'article_full';
