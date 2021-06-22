@@ -50,7 +50,7 @@ process:
     -
       plugin: str_replace
       regex: true
-      search: /(((<[a-zA-Z1-9]*>)+(&nbsp;)*More useful links<\/\S*>.*)(<\/ul>))(.*)/mis
+      search: /(((<[a-zA-Z1-9]*>|<span[^>]*style=.*?>)+(&nbsp;)*More useful links(&nbsp;)*<\/\S*>.*)(<\/ul>))(.*)/mis
       replace: ${7}
   body/0/format:
     -
