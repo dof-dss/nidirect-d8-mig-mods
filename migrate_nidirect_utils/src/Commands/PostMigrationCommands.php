@@ -207,7 +207,7 @@ class PostMigrationCommands extends DrushCommands {
   }
 
   /**
-   * {@inheritdoc}
+   * Batch up the node ids for audit.
    */
   protected function updateNodeAudit($flag_results, $queue) {
     // Add these nids to the queue so that the 'audit due' date will
@@ -233,7 +233,7 @@ class PostMigrationCommands extends DrushCommands {
   }
 
   /**
-   * {@inheritdoc}
+   * Add this batch of node ids to the queue.
    */
   protected function addToQueue($nids, $queue) {
     // Add the nids to the queue in batches of 200.
