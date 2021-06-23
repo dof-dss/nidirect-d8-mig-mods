@@ -193,25 +193,13 @@ class PostMigrationCommands extends DrushCommands {
     );
     $flag_results = $query->fetchAll();
 
-    // Select nids already set for audit.
-    $query = $this->dbConnDrupal8->query(
-      "SELECT entity_id
-            FROM node__field_next_audit_due
-            WHERE field_next_audit_due_value is not null"
-    );
-    $already_set_results = $query->fetchAll();
-    $already_set = [];
-    foreach ($already_set_results as $thisresult) {
-      $already_set[] = $thisresult->entity_id;
-    }
-
     // Make sure audit update queue exists (there is no harm in
     // trying to recreate an existing queue).
     $this->queueFactory->get('audit_date_updates')->createQueue();
     $queue = $this->queueFactory->get('audit_date_updates');
 
     // Update the 'next audit due' node in D8.
-    $n = $this->updateNodeAudit($flag_results, $already_set, $queue);
+    $n = $this->updateNodeAudit($flag_results, $queue);
 
     $this->output()->writeln(
       'Queued audit date updates on ' . $n . ' nodes.'
@@ -221,23 +209,21 @@ class PostMigrationCommands extends DrushCommands {
   /**
    * {@inheritdoc}
    */
-  protected function updateNodeAudit($flag_results, $already_set, $queue) {
+  protected function updateNodeAudit($flag_results, $queue) {
     // Add these nids to the queue so that the 'audit due' date will
     // be set later by the cron task 'nidirect_common_cron'.
     $today = date('Y-m-d', \Drupal::time()->getCurrentTime());
     $nids = [];
     $n = 0;
     foreach ($flag_results as $i => $row) {
-      // Don't bother to update nodes that have already been updated.
-      if (!in_array($row->entity_id, $already_set)) {
-        $nids[] = $row->entity_id;
-        $n++;
-        if ($n > 199) {
-          // Add the nids to the queue in batches of 200.
-          $this->addToQueue($nids, $queue);
-          $n = 0;
-          $nids = [];
-        }
+      $nids[] = $row->entity_id;
+      $this->output()->writeln("Queueing " . $row->entity_id);
+      $n++;
+      if ($n > 199) {
+        // Add the nids to the queue in batches of 200.
+        $this->addToQueue($nids, $queue);
+        $n = 0;
+        $nids = [];
       }
     }
     if ($n > 0) {
