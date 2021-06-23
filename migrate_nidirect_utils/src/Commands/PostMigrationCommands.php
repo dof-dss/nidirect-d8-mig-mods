@@ -92,6 +92,10 @@ class PostMigrationCommands extends DrushCommands {
     }
 
     $this->output()->writeln('Updated revisions on ' . count($migrate_nid_status) . ' nodes.');
+    // This processing will have messed up audit dates by updating the nodes,
+    // so run the task to set them correctly.
+    $this->output()->writeln('Updating audit dates...');
+    $this->updateAuditDates($node_type);
     $this->output()->writeln('Clearing all caches...');
     drupal_flush_all_caches();
   }
@@ -217,7 +221,6 @@ class PostMigrationCommands extends DrushCommands {
     $n = 0;
     foreach ($flag_results as $i => $row) {
       $nids[] = $row->entity_id;
-      $this->output()->writeln("Queueing " . $row->entity_id);
       $n++;
       if ($n > 199) {
         // Add the nids to the queue in batches of 200.
