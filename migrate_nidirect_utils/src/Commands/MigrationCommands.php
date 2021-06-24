@@ -121,9 +121,6 @@ class MigrationCommands extends DrushCommands {
       elseif ($entity == 'media') {
         $entities = $storage->loadByProperties(["bundle" => $bundle]);
       }
-      elseif ($entity == 'path_alias') {
-        $entities = $storage->loadByProperties(['langcode' => 'und']);
-      }
       elseif ($entity !== $bundle) {
         $entities = $storage->loadByProperties(["type" => $bundle]);
       }
@@ -165,9 +162,6 @@ class MigrationCommands extends DrushCommands {
       }
       elseif ($entity == 'media') {
         $entities = $storage->loadByProperties(["bundle" => $bundle]);
-      }
-      elseif ($entity == 'path_alias') {
-        $entities = $storage->loadByProperties(['langcode' => 'und']);
       }
       elseif ($entity !== $bundle) {
         $entities = $storage->loadByProperties(["type" => $bundle]);
