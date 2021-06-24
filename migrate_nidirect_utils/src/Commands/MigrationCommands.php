@@ -108,6 +108,7 @@ class MigrationCommands extends DrushCommands {
       'image'                           => 'media',
       'video'                           => 'media',
       'remote_video'                    => 'media',
+      'path_alias'                      => 'path_alias'
     ];
 
     // Display each bundle and the content count.
