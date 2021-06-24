@@ -245,5 +245,4 @@ class PostMigrationCommands extends DrushCommands {
     $queue->createItem($item);
   }
 
-
 }
