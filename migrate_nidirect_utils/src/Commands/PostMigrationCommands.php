@@ -5,6 +5,7 @@ namespace Drupal\migrate_nidirect_utils\Commands;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Driver\mysql\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Queue\QueueFactory;
 use Drush\Commands\DrushCommands;
 
 /**
@@ -36,10 +37,18 @@ class PostMigrationCommands extends DrushCommands {
   protected $dbConnDrupal8;
 
   /**
+   * The queue service.
+   *
+   * @var \Drupal\Core\Queue\QueueFactory
+   */
+  protected $queueFactory;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, QueueFactory $queue_factory) {
     $this->nodeStorage = $entity_type_manager->getStorage('node');
+    $this->queueFactory = $queue_factory;
     $this->dbConnMigrate = Database::getConnection('default', 'migrate');
     $this->dbConnDrupal8 = Database::getConnection('default', 'default');
   }
@@ -83,6 +92,10 @@ class PostMigrationCommands extends DrushCommands {
     }
 
     $this->output()->writeln('Updated revisions on ' . count($migrate_nid_status) . ' nodes.');
+    // This processing will have messed up audit dates by updating the nodes,
+    // so run the task to set them correctly.
+    $this->output()->writeln('Updating audit dates...');
+    $this->updateAuditDates($node_type);
     $this->output()->writeln('Clearing all caches...');
     drupal_flush_all_caches();
   }
@@ -155,6 +168,81 @@ class PostMigrationCommands extends DrushCommands {
         $node->save();
       }
     }
+  }
+
+  /**
+   * Drush command to update audit dates after migration.
+   *
+   * @command post-migrate-audit-dates
+   * @options node_type
+   */
+  public function updateAuditDates($node_type = NULL) {
+    $this->output()->writeln('Started post migration audit processing.');
+
+    // Verify Drupal 7 flag table exists.
+    if (!$this->dbConnMigrate->schema()->tableExists('flagging')) {
+      $this->output()->writeln("Flag table does not exist in Drupal 7");
+      return;
+    }
+
+    // Select content flagged with 'content_audit' from D7.
+    $query = $this->dbConnMigrate->query(
+      "SELECT
+              f.entity_id
+            FROM flagging f
+            JOIN node n
+            ON f.entity_id = n.nid
+            WHERE n.type in ('article', 'contact', 'page')
+            AND f.fid = 1"
+    );
+    $flag_results = $query->fetchAll();
+
+    // Make sure audit update queue exists (there is no harm in
+    // trying to recreate an existing queue).
+    $this->queueFactory->get('audit_date_updates')->createQueue();
+    $queue = $this->queueFactory->get('audit_date_updates');
+
+    // Update the 'next audit due' node in D8.
+    $n = $this->updateNodeAudit($flag_results, $queue);
+
+    $this->output()->writeln(
+      'Queued audit date updates on ' . $n . ' nodes.'
+    );
+  }
+
+  /**
+   * Batch up the node ids for audit.
+   */
+  protected function updateNodeAudit($flag_results, $queue) {
+    // Add these nids to the queue so that the 'audit due' date will
+    // be set later by the cron task 'nidirect_common_cron'.
+    $today = date('Y-m-d', \Drupal::time()->getCurrentTime());
+    $nids = [];
+    $n = 0;
+    foreach ($flag_results as $i => $row) {
+      $nids[] = $row->entity_id;
+      $n++;
+      if ($n > 199) {
+        // Add the nids to the queue in batches of 200.
+        $this->addToQueue($nids, $queue);
+        $n = 0;
+        $nids = [];
+      }
+    }
+    if ($n > 0) {
+      $this->addToQueue($nids, $queue);
+    }
+    return $n;
+  }
+
+  /**
+   * Add this batch of node ids to the queue.
+   */
+  protected function addToQueue($nids, $queue) {
+    // Add the nids to the queue in batches of 200.
+    $item = new \stdClass();
+    $item->nids = implode(',', $nids);
+    $queue->createItem($item);
   }
 
 }

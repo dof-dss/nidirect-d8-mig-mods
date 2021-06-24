@@ -5,6 +5,6 @@ services:
       - { name: drush.command }
   post-nidirect-migrate.commands:
     class: \Drupal\migrate_nidirect_utils\Commands\PostMigrationCommands
-    arguments: [ '@entity_type.manager' ]
+    arguments: [ '@entity_type.manager', '@migrate_nidirect_utils.queue_factory' ]
     tags:
       - { name: drush.command }
