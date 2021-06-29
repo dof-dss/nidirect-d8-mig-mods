@@ -134,7 +134,6 @@ class PostMigrationCommands extends DrushCommands {
     if ($node_type != 'contact') {
       $revision = $this->nodeStorage->loadRevision($vid);
       if (!empty($revision)) {
-        $this->output()->writeln("Updating revision " . $vid . " on node " . $nid);
         $revision->isDefaultRevision(TRUE);
         if ($status == 1) {
           $revision->setpublished();
@@ -150,7 +149,6 @@ class PostMigrationCommands extends DrushCommands {
 
     // Publish node if necessary.
     if ($status == 1) {
-      $this->output()->writeln("Publishing node " . $nid);
       // If node was published on D7, make sure that it is published on D8.
       $node = $this->nodeStorage->load($nid);
       if (!empty($node)) {
@@ -166,7 +164,6 @@ class PostMigrationCommands extends DrushCommands {
         where hid = (select max(hid) from {workbench_moderation_node_history} where nid = :nid)
           ", [':nid' => $nid])->fetchField();
       if ($moderation_status == 'needs_review') {
-        $this->output()->writeln("Updating moderation state on node " . $nid);
         // Make sure state is 'needs review' on D8.
         $node = $this->nodeStorage->load($nid);
         $node->set('moderation_state', 'needs_review');
