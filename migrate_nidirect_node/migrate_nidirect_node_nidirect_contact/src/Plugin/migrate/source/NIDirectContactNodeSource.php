@@ -72,37 +72,34 @@ class NIDirectContactNodeSource extends Node implements ContainerFactoryPluginIn
     $nid = $ids['nid'];
 
     // Check if we have a telephone lookup table entry for the node.
-    $telephone = TelephonePlusUtils::lookup($nid);
+    // This feature was removed from NIDirect, leaving here for possible
+    // future reference.
+    // $telephone = TelephonePlusUtils::lookup($nid);
+    $telephone = [];
 
-    // If we don't have a lookup fetch the value for parsing.
-    if (empty($telephone)) {
+    $query = $this->getDatabase()->query('
+      SELECT field_contact_phone_value
+      FROM {field_data_field_contact_phone}
+      WHERE entity_id = :nid', [
+        ':nid' => $nid,
+      ]
+    );
 
-      $telephone = [];
+    $contact_value = $query->fetchField();
 
-      $query = $this->getDatabase()->query('
-        SELECT field_contact_phone_value
-        FROM {field_data_field_contact_phone}
-        WHERE entity_id = :nid', [
-          ':nid' => $nid,
-        ]
-      );
+    if (!empty($contact_value)) {
+      $contact_telephone = TelephonePlusUtils::parse($contact_value);
 
-      $contact_value = $query->fetchField();
-
-      if (!empty($contact_value)) {
-        $contact_telephone = TelephonePlusUtils::parse($contact_value);
-
-        if ($contact_telephone === FALSE) {
-          $this->dumpAndLog("Unable to process telephone data for nid: $nid");
+      if ($contact_telephone === FALSE) {
+        $this->dumpAndLog("Unable to process telephone data for nid: $nid");
+      }
+      else {
+        // Set the default title to 'Phone'.
+        if (empty($contact_telephone[0]['telephone_title'])) {
+          $contact_telephone[0]['telephone_title'] = 'Phone';
         }
-        else {
-          // Set the default title to 'Phone'.
-          if (empty($contact_telephone[0]['telephone_title'])) {
-            $contact_telephone[0]['telephone_title'] = 'Phone';
-          }
 
-          $telephone = $contact_telephone;
-        }
+        $telephone = $contact_telephone;
       }
     }
 
