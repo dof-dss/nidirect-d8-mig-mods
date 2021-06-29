@@ -88,7 +88,7 @@ class PostMigrationCommands extends DrushCommands {
 
     // Sync our D8 node publish values and revisions with those from D7.
     foreach ($migrate_nid_status as $row) {
-      $this->processNodeStatus($row->nid, $row->status);
+      $this->processNodeStatus($row->nid, $row->status, $node_type);
     }
 
     $this->output()->writeln('Updated revisions on ' . count($migrate_nid_status) . ' nodes.');
@@ -107,8 +107,10 @@ class PostMigrationCommands extends DrushCommands {
    *   The node id.
    * @param string $status
    *   The status of the node.
+   * @param string $node_type
+   *   The content type.
    */
-  public function processNodeStatus(int $nid, string $status) {
+  public function processNodeStatus(int $nid, string $status, string $node_type) {
     // Need to fetch the D8 revision ID for any node as it doesn't
     // always match the source db.
     $d8_vid = $this->dbConnDrupal8->query(
@@ -131,17 +133,19 @@ class PostMigrationCommands extends DrushCommands {
     }
 
     // Make the revision current and publish if necessary.
-    $revision = $this->nodeStorage->loadRevision($vid);
-    if (!empty($revision)) {
-      $revision->isDefaultRevision(TRUE);
-      if ($status == 1) {
-        $revision->setpublished();
-      }
-      $result = $revision->save();
-      // If the revision save method doesn't return 1 (new) or 2 (updated) there
-      // may be issues with the published revision for the current node.
-      if ($result === 0) {
-        $this->output()->writeln('Revision save returned 0 (revision: ' . $vid . ' - node: ' . $nid . ')');
+    if ($node_type != 'contact') {
+      $revision = $this->nodeStorage->loadRevision($vid);
+      if (!empty($revision)) {
+        $revision->isDefaultRevision(TRUE);
+        if ($status == 1) {
+          $revision->setpublished();
+        }
+        $result = $revision->save();
+        // If the revision save method doesn't return 1 (new) or 2 (updated) there
+        // may be issues with the published revision for the current node.
+        if ($result === 0) {
+          $this->output()->writeln('Revision save returned 0 (revision: ' . $vid . ' - node: ' . $nid . ')');
+        }
       }
     }
 
