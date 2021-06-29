@@ -88,7 +88,7 @@ class PostMigrationCommands extends DrushCommands {
 
     // Sync our D8 node publish values and revisions with those from D7.
     foreach ($migrate_nid_status as $row) {
-      $this->processNodeStatus($row->nid, $row->status);
+      $this->processNodeStatus($row->nid, $row->status, $node_type);
     }
 
     $this->output()->writeln('Updated revisions on ' . count($migrate_nid_status) . ' nodes.');
@@ -108,7 +108,7 @@ class PostMigrationCommands extends DrushCommands {
    * @param string $status
    *   The status of the node.
    */
-  public function processNodeStatus(int $nid, string $status) {
+  public function processNodeStatus(int $nid, string $status, string $node_type) {
     // Need to fetch the D8 revision ID for any node as it doesn't
     // always match the source db.
     $d8_vid = $this->dbConnDrupal8->query(
@@ -131,22 +131,26 @@ class PostMigrationCommands extends DrushCommands {
     }
 
     // Make the revision current and publish if necessary.
-    $revision = $this->nodeStorage->loadRevision($vid);
-    if (!empty($revision)) {
-      $revision->isDefaultRevision(TRUE);
-      if ($status == 1) {
-        $revision->setpublished();
-      }
-      $result = $revision->save();
-      // If the revision save method doesn't return 1 (new) or 2 (updated) there
-      // may be issues with the published revision for the current node.
-      if ($result === 0) {
-        $this->output()->writeln('Revision save returned 0 (revision: ' . $vid . ' - node: ' . $nid . ')');
+    if ($node_type != 'contact') {
+      $revision = $this->nodeStorage->loadRevision($vid);
+      if (!empty($revision)) {
+        $this->output()->writeln("Updating revision " . $vid . " on node " . $nid);
+        $revision->isDefaultRevision(TRUE);
+        if ($status == 1) {
+          $revision->setpublished();
+        }
+        $result = $revision->save();
+        // If the revision save method doesn't return 1 (new) or 2 (updated) there
+        // may be issues with the published revision for the current node.
+        if ($result === 0) {
+          $this->output()->writeln('Revision save returned 0 (revision: ' . $vid . ' - node: ' . $nid . ')');
+        }
       }
     }
 
     // Publish node if necessary.
     if ($status == 1) {
+      $this->output()->writeln("Publishing node " . $nid);
       // If node was published on D7, make sure that it is published on D8.
       $node = $this->nodeStorage->load($nid);
       if (!empty($node)) {
@@ -162,6 +166,7 @@ class PostMigrationCommands extends DrushCommands {
         where hid = (select max(hid) from {workbench_moderation_node_history} where nid = :nid)
           ", [':nid' => $nid])->fetchField();
       if ($moderation_status == 'needs_review') {
+        $this->output()->writeln("Updating moderation state on node " . $nid);
         // Make sure state is 'needs review' on D8.
         $node = $this->nodeStorage->load($nid);
         $node->set('moderation_state', 'needs_review');
