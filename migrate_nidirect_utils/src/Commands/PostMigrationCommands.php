@@ -107,6 +107,8 @@ class PostMigrationCommands extends DrushCommands {
    *   The node id.
    * @param string $status
    *   The status of the node.
+   * @param string $node_type
+   *   The content type.
    */
   public function processNodeStatus(int $nid, string $status, string $node_type) {
     // Need to fetch the D8 revision ID for any node as it doesn't
